@@ -1,7 +1,7 @@
 {
   "name": "prof-sylve",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Prof. Sylve's Living Dex, for the most hardcore trainers.",
   "main": "server.js",
   "scripts": {
@@ -20,7 +20,11 @@
     "test:watch": "karma start --autoWatch=true --singleRun=false"
   },
   "repository": "https://github.com/carab/Prof-Sylve",
-  "keywords": ["pokemon", "pokedex", "livingdex"],
+  "keywords": [
+    "pokemon",
+    "pokedex",
+    "livingdex"
+  ],
   "author": {
     "name": "Camille Rabatel",
     "email": "camille.rabatel+github@gmail.com"
