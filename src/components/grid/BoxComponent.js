@@ -27,6 +27,7 @@ class BoxComponent extends React.Component {
         </Toolbar>
         <GridList
           cols={cols}
+          cellHeight={150}
         >
           {_.map(box.pokemons, (pokemon) => (
             <PokemonComponent

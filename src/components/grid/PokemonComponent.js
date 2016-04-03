@@ -40,7 +40,6 @@ class PokemonComponent extends React.Component {
         className="pokemon-component"
         style={style}
         title={this.props.pokemon.name}
-        subtitle={this.props.pokemon.id}
         actionIcon={<Checkbox checked={this.state.collected} onCheck={this.handleCollected}/>}
       >
         <img alt={this.props.pokemon.name} src={image}/>
