@@ -31,7 +31,7 @@ class PokemonComponent extends React.Component {
 
     let style = {};
 
-    if (!this.state.collected) {
+    if (this.state.collected) {
       style.opacity = '0.5';
     }
 
