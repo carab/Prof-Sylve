@@ -1,12 +1,11 @@
 'use strict';
 
 import React from 'react';
-import Firebase from 'firebase/lib/firebase-web';
+
+import FirebaseUtils from '../../utils/firebase-utils';
 
 import GridTile from 'material-ui/lib/grid-list/grid-tile';
 import Checkbox from 'material-ui/lib/checkbox';
-
-const firebaseUrl = 'https://prof-sylve.firebaseio.com';
 
 require('styles/grid/Pokemon.css');
 
@@ -18,7 +17,7 @@ class PokemonComponent extends React.Component {
 
     this.handleCollected = this.handleCollected.bind(this);
 
-    this.collectedRef = new Firebase(firebaseUrl + '/carab/collected').child(props.pokemon.id);
+    this.collectedRef = FirebaseUtils.getUserRef().child('collected').child(props.pokemon.id);
     this.collectedRef.once('value', (snap) => {
       let collected = snap.val() || false;
       this.state.collected = collected;

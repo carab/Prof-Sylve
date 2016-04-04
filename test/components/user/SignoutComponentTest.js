@@ -7,16 +7,16 @@
 // import TestUtils from 'react-addons-test-utils';
 import createComponent from 'helpers/shallowRenderHelper';
 
-import RoutesComponent from 'components//RoutesComponent.js';
+import SignoutComponent from 'components/user/SignoutComponent.js';
 
-describe('RoutesComponent', () => {
+describe('SignoutComponent', () => {
   let component;
 
   beforeEach(() => {
-    component = createComponent(RoutesComponent);
+    component = createComponent(SignoutComponent);
   });
 
   it('should have its component name as default className', () => {
-    expect(component.props.className).to.equal('routes-component');
+    expect(component.props.className).to.equal('signout-component');
   });
 });

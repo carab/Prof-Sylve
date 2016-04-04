@@ -2,7 +2,8 @@
 
 import React from 'react';
 import _ from 'lodash';
-import Firebase from 'firebase/lib/firebase-web';
+
+import FirebaseUtils from '../../utils/firebase-utils';
 
 import ToolbarGroup from 'material-ui/lib/toolbar/toolbar-group';
 import IconButton from 'material-ui/lib/icon-button';
@@ -12,8 +13,6 @@ import ImageNavigateNext from 'material-ui/lib/svg-icons/image/navigate-next';
 import BoxComponent from 'components/grid/BoxComponent';
 
 require('styles/grid/Pc.css');
-
-const firebaseUrl = 'https://prof-sylve.firebaseio.com';
 
 const BOX_COLS = 6;
 const BOX_ROWS = 5;
@@ -27,7 +26,7 @@ class PcComponent extends React.Component {
       pokemons: []
     };
 
-    let pokemonsRef = new Firebase(firebaseUrl + '/pokemons');
+    let pokemonsRef = FirebaseUtils.getRootRef().child('pokemons');
 
     pokemonsRef.once('value', (snap) => {
       let boxes = [];
