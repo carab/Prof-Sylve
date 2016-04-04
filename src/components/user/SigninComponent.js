@@ -47,7 +47,7 @@ class SigninComponent extends React.Component {
               type="password"
             />
           </CardText>
-          <CardActions style={{textAlign: 'center'}}>
+          <CardActions>
             <RaisedButton type="submit" label="Sign in" primary={true} />
           </CardActions>
         </Card>

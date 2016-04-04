@@ -54,7 +54,7 @@ class SignupComponent extends React.Component {
               type="password"
             />
           </CardText>
-          <CardActions style={{textAlign: 'center'}}>
+          <CardActions>
             <RaisedButton type="submit" label="Sign up" secondary={true} />
           </CardActions>
         </Card>
