@@ -42,10 +42,8 @@ class SigninComponent extends React.Component {
             type="password"
           />
           <RaisedButton type="submit" label="Sign in" primary={true} />
-          or
-          <FlatButton label="Sign up"
+          <FlatButton label="Or sign up"
             containerElement={<Link to="/signup" />}
-            linkButton={true}
             secondary={true}/>
         </form>
       </div>

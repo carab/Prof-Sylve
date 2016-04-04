@@ -13,9 +13,9 @@ class PokemonComponent extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
-
     this.handleCollected = this.handleCollected.bind(this);
+
+    this.state = {};
 
     this.collectedRef = FirebaseUtils.getUserRef().child('collected').child(props.pokemon.id);
     this.collectedRef.once('value', (snap) => {
@@ -48,7 +48,13 @@ class PokemonComponent extends React.Component {
 
   handleCollected() {
     this.state.collected = !this.state.collected;
-    this.collectedRef.set(this.state.collected);
+
+    if (this.state.collected) {
+      this.collectedRef.set(this.state.collected);
+    } else {
+      this.collectedRef.remove();
+    }
+
     this.setState(this.state);
   }
 }

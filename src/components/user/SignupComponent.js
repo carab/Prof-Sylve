@@ -49,8 +49,7 @@ class SignupComponent extends React.Component {
             type="password"
           />
           <RaisedButton type="submit" label="Sign up" primary={true} />
-          or
-          <FlatButton label="Sign in"
+          <FlatButton label="Or sign in"
             containerElement={<Link to="/signin" />}
             linkButton={true}
             secondary={true}/>
