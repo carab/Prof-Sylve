@@ -39,7 +39,7 @@ class ToolbarComponent extends React.Component {
     return (
       <Toolbar>
         <ToolbarGroup float="left">
-          <ToolbarTitle text={'Pokémon collected: ' + this.state.collected + '/' + this.props.pokemons.length}/>
+          <ToolbarTitle text={this.state.collected + '/' + this.props.pokemons.length}/>
         </ToolbarGroup>
         <ToolbarGroup float="right">
           <IconButton tooltip="Previous Box" onClick={this.props.onPreviousBox}>
