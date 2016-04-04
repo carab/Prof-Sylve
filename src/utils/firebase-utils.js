@@ -58,8 +58,14 @@ class FirebaseUtils {
     this.cachedUser = null;
   }
 
-  isSignedin() {
+  isLoggedIn() {
     return this.cachedUser && true || this.getRootRef().getAuth() || false;
+  }
+
+  onAuth(cb) {
+    this.getRootRef().onAuth((authData) => {
+      cb(authData);
+    });
   }
 }
 

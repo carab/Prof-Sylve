@@ -7,8 +7,7 @@ import FirebaseUtils from '../utils/firebase-utils';
 
 import App from 'components/App';
 import PcComponent from 'components/grid/PcComponent';
-import SigninComponent from 'components/user/SigninComponent';
-import SignupComponent from 'components/user/SignupComponent';
+import SignComponent from 'components/user/SignComponent';
 import SignoutComponent from 'components/user/SignoutComponent';
 
 class Routes extends React.Component {
@@ -17,8 +16,7 @@ class Routes extends React.Component {
       <Router history={browserHistory}>
         <Route path="/" component={App}>
           <IndexRoute component={PcComponent} onEnter={requireAuth}/>
-          <Route path="signup" component={SignupComponent}/>
-          <Route path="signin" component={SigninComponent}/>
+          <Route path="sign" component={SignComponent}/>
           <Route path="signout" component={SignoutComponent}/>
         </Route>
       </Router>
@@ -27,9 +25,9 @@ class Routes extends React.Component {
 }
 
 function requireAuth(nextState, replace) {
-  if (!FirebaseUtils.getRootRef().getAuth()) {
+  if (!FirebaseUtils.isLoggedIn()) {
     replace({
-      pathname: '/signin',
+      pathname: '/sign',
       state: { nextPathname: nextState.location.pathname }
     })
   }

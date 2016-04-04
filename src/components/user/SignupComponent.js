@@ -1,13 +1,16 @@
 'use strict';
 
 import React from 'react';
-import { Link } from 'react-router';
 
 import FirebaseUtils from '../../utils/firebase-utils';
 
 import RaisedButton from 'material-ui/lib/raised-button';
 import FlatButton from 'material-ui/lib/flat-button';
 import TextField from 'material-ui/lib/text-field';
+import Card from 'material-ui/lib/card/card';
+import CardActions from 'material-ui/lib/card/card-actions';
+import CardTitle from 'material-ui/lib/card/card-title';
+import CardText from 'material-ui/lib/card/card-text';
 
 require('styles/user/Signup.css');
 
@@ -26,35 +29,36 @@ class SignupComponent extends React.Component {
 
   render() {
     return (
-      <div className="signup-component">
-        <form onSubmit={this.handleSubmit}>
-          <TextField
-            ref="email"
-            floatingLabelText="Email Address"
-            fullWidth={true}
-            errorText={this.state.errors.email}
-          />
-          <TextField
-            ref="password"
-            floatingLabelText="Password"
-            fullWidth={true}
-            errorText={this.state.errors.password}
-            type="password"
-          />
-          <TextField
-            ref="passwordConfirmation"
-            floatingLabelText="Password Confirmation"
-            fullWidth={true}
-            errorText={this.state.errors.passwordConfirmation}
-            type="password"
-          />
-          <RaisedButton type="submit" label="Sign up" primary={true} />
-          <FlatButton label="Or sign in"
-            containerElement={<Link to="/signin" />}
-            linkButton={true}
-            secondary={true}/>
-        </form>
-      </div>
+      <form onSubmit={this.handleSubmit}>
+        <Card>
+          <CardTitle title="Sign up" subtitle="If you want to catch'em all"/>
+          <CardText>
+            <TextField
+              ref="email"
+              floatingLabelText="Email Address"
+              fullWidth={true}
+              errorText={this.state.errors.email}
+            />
+            <TextField
+              ref="password"
+              floatingLabelText="Password"
+              fullWidth={true}
+              errorText={this.state.errors.password}
+              type="password"
+            />
+            <TextField
+              ref="passwordConfirmation"
+              floatingLabelText="Password Confirmation"
+              fullWidth={true}
+              errorText={this.state.errors.passwordConfirmation}
+              type="password"
+            />
+          </CardText>
+          <CardActions style={{textAlign: 'center'}}>
+            <RaisedButton type="submit" label="Sign up" secondary={true} />
+          </CardActions>
+        </Card>
+      </form>
     );
   }
 

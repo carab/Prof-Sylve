@@ -1,11 +1,14 @@
 'use strict';
 
 import React from 'react';
-import { Link } from 'react-router';
 
 import RaisedButton from 'material-ui/lib/raised-button';
 import FlatButton from 'material-ui/lib/flat-button';
 import TextField from 'material-ui/lib/text-field';
+import Card from 'material-ui/lib/card/card';
+import CardActions from 'material-ui/lib/card/card-actions';
+import CardTitle from 'material-ui/lib/card/card-title';
+import CardText from 'material-ui/lib/card/card-text';
 
 import FirebaseUtils from '../../utils/firebase-utils';
 
@@ -26,27 +29,29 @@ class SigninComponent extends React.Component {
 
   render() {
     return (
-      <div className="signin-component">
-        <form onSubmit={this.handleSubmit}>
-          <TextField
-            ref="email"
-            floatingLabelText="Email Address"
-            errorText={this.state.errors.email}
-            fullWidth={true}
-          />
-          <TextField
-            ref="password"
-            floatingLabelText="Password"
-            fullWidth={true}
-            errorText={this.state.errors.password}
-            type="password"
-          />
-          <RaisedButton type="submit" label="Sign in" primary={true} />
-          <FlatButton label="Or sign up"
-            containerElement={<Link to="/signup" />}
-            secondary={true}/>
-        </form>
-      </div>
+      <form onSubmit={this.handleSubmit}>
+        <Card>
+          <CardTitle title="Sign in" subtitle="If you already have an account"/>
+          <CardText>
+            <TextField
+              ref="email"
+              floatingLabelText="Email Address"
+              errorText={this.state.errors.email}
+              fullWidth={true}
+            />
+            <TextField
+              ref="password"
+              floatingLabelText="Password"
+              fullWidth={true}
+              errorText={this.state.errors.password}
+              type="password"
+            />
+          </CardText>
+          <CardActions style={{textAlign: 'center'}}>
+            <RaisedButton type="submit" label="Sign in" primary={true} />
+          </CardActions>
+        </Card>
+      </form>
     );
   }
 

@@ -20,9 +20,7 @@ class SignoutComponent extends React.Component {
 
   render() {
     return (
-      <div className="signout-component">
-        <p>You are now logged out</p>
-      </div>
+      <div></div>
     );
   }
 }

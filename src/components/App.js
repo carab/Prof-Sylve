@@ -19,35 +19,59 @@ import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert';
 import PowerSettingsNew from 'material-ui/lib/svg-icons/action/power-settings-new';
 import Settings from 'material-ui/lib/svg-icons/action/settings';
 
+import FirebaseUtils from '../utils/firebase-utils';
+
+require('flexboxgrid/dist/flexboxgrid.css');
 require('styles/App.css');
 
 class AppComponent extends React.Component {
   constructor(props) {
     super(props);
+
+    this.handleAuth = this.handleAuth.bind(this);
+
+    this.state = {
+      loggedIn: FirebaseUtils.isLoggedIn()
+    }
+
+    FirebaseUtils.onAuth(this.handleAuth);
   }
 
   render() {
+    let userMenu;
+
+    if (this.state.loggedIn) {
+      userMenu = (
+        <IconMenu
+          iconButtonElement={
+            <IconButton><MoreVertIcon /></IconButton>
+          }
+          targetOrigin={{horizontal: 'right', vertical: 'top'}}
+          anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+        >
+          <MenuItem primaryText="Settings" leftIcon={<Settings />}/>
+          <Divider/>
+          <MenuItem primaryText="Sign out" leftIcon={<PowerSettingsNew />} containerElement={<Link to="/signout" />}/>
+        </IconMenu>
+      );
+    }
+
     return (
       <div>
         <AppBar
           title="Prof. Sylve's Living Dex"
-          iconElementRight={
-            <IconMenu
-              iconButtonElement={
-                <IconButton><MoreVertIcon /></IconButton>
-              }
-              targetOrigin={{horizontal: 'right', vertical: 'top'}}
-              anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-            >
-              <MenuItem primaryText="Settings" leftIcon={<Settings />}/>
-              <Divider/>
-              <MenuItem primaryText="Sign out" leftIcon={<PowerSettingsNew />} containerElement={<Link to="/signout" />}/>
-            </IconMenu>
-          }
+          showMenuIconButton={false}
+          iconElementRight={userMenu}
         />
         {this.props.children}
       </div>
     );
+  }
+
+  handleAuth(loggedIn) {
+    this.setState({
+      loggedIn: loggedIn
+    });
   }
 }
 
