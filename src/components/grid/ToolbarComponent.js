@@ -30,7 +30,7 @@ class ToolbarComponent extends React.Component {
       let collected = snap.val();
 
       this.setState({
-        collected: _.size(collected)
+        collected: Object.keys(collected).length
       });
     });
   }

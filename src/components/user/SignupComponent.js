@@ -5,7 +5,6 @@ import React from 'react';
 import FirebaseUtils from '../../utils/firebase-utils';
 
 import RaisedButton from 'material-ui/lib/raised-button';
-import FlatButton from 'material-ui/lib/flat-button';
 import TextField from 'material-ui/lib/text-field';
 import Card from 'material-ui/lib/card/card';
 import CardActions from 'material-ui/lib/card/card-actions';
