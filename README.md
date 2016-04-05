@@ -18,9 +18,10 @@ So please enjoy using this if you need it too, and don't hesitate to ask for fea
 - [x] Pokémons listed in grids to replicate in-game boxes.
 - [x] Checkbox by Pokémon to mark them as collected.
 - [ ] Implement a search.
+- [ ] Multiple state for Pokémon captured but not yet evolved.
 - [ ] Multi-language support.
 - [ ] Location data.
-- [ ] Filters on simple list (by Region, collected or not, ...).
+- [ ] Filters on simple list (by generation/region, by location, collected or not, ...).
 - [ ] Share user progress.
 - [ ] Exchange market place ?
 
