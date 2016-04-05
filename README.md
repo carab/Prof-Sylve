@@ -32,33 +32,6 @@ So please enjoy using this if you need it too, and don't hesitate to ask for fea
 - Add unit-tests maybe ?
 - Better grid on mobile would help.
 
-## Changelog
-
-### v0.5.0
-
-- Fusion sign in and sign up pages.
-
-### v0.4.0
-
-- Fix some Pokémon names to match their image file name.
-- Improve the grid UI by adding navigation through boxes and a user menu.
-- Fix Firebase index rewrite.
-
-### v0.3.0
-
-- Add router.
-- Add user account.
-- Add opacity change for collected Pokémon.
-
-### v0.2.0
-
-- Technical fixes.
-
-### v0.1.0
-
-- Grid of all Pokémon.
-- Mark a Pokémon as collected.
-
 ## Contributing
 
 As the project is built on the react-webpack Yeoman generator, you can read its readme to know how to start developing : https://github.com/newtriks/generator-react-webpack
