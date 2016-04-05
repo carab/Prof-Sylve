@@ -16,9 +16,9 @@ So please enjoy using this if you need it too, and don't hesitate to ask for fea
 - [x] Mobile-friendly.
 - [x] User accounts.
 - [x] Pokémons listed in grids to replicate in-game boxes.
-- [x] Checkbox by Pokémon to mark them as collected.
+- [x] Pokémon can be marked as "collected".
+- [x] Pokémon can be marksed as "pre-evolution collected" in case you plan to breed them first, then to evolve them later.
 - [ ] Implement a search.
-- [ ] Multiple state for Pokémon captured but not yet evolved.
 - [ ] Multi-language support.
 - [ ] Location data.
 - [ ] Filters on simple list (by generation/region, by location, collected or not, ...).
