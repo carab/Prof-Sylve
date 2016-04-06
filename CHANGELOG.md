@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## v0.7.0 (2016-04-06)
+
+- Add translation system.
+- Add external service link.
+
 ## v0.6.0 (2016-04-06)
 
 - Add left menu and simple list page.
