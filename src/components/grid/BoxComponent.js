@@ -15,26 +15,20 @@ class BoxComponent extends React.Component {
     let cols = this.props.cols;
 
     return (
-      <div className="box-component">
-        <GridList
-          cols={cols}
-          cellHeight={150}
-        >
-          {_.map(box.pokemons, (pokemon) => (
-            <PokemonComponent
-              key={pokemon.id}
-              pokemon={pokemon}/>
-          ))}
-        </GridList>
-      </div>
+      <GridList
+        cols={cols}
+        cellHeight={150}
+      >
+        {_.map(box.pokemons, (pokemon) => (
+          <PokemonComponent
+            key={pokemon.id}
+            pokemon={pokemon}/>
+        ))}
+      </GridList>
     );
   }
 }
 
 BoxComponent.displayName = 'GridBoxComponent';
-
-// Uncomment properties you need
-// BoxComponent.propTypes = {};
-// BoxComponent.defaultProps = {};
 
 export default BoxComponent;

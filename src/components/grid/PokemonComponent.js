@@ -26,15 +26,18 @@ class PokemonComponent extends React.Component {
     this.state = {};
 
     this.collectedRef = FirebaseUtils.getUserRef().child('collected').child(props.pokemon.id);
+    this.preCollectedRef = FirebaseUtils.getUserRef().child('preCollected').child(props.pokemon.id);
+  }
+
+  componentDidMount() {
     this.collectedRef.once('value', (snap) => {
-      this.state.collected = snap.val() || false;
-      this.setState(this.state);
+      let collected = snap.val() || false;
+      this.setState({ collected });
     });
 
-    this.preCollectedRef = FirebaseUtils.getUserRef().child('preCollected').child(props.pokemon.id);
     this.preCollectedRef.once('value', (snap) => {
-      this.state.preCollected = snap.val() || false;
-      this.setState(this.state);
+      let preCollected = snap.val() || false;
+      this.setState({ preCollected });
     });
   }
 
@@ -92,27 +95,27 @@ class PokemonComponent extends React.Component {
   }
 
   handleCollected() {
-    this.state.collected = !this.state.collected;
+    let collected = !this.state.collected;
 
-    if (this.state.collected) {
-      this.collectedRef.set(this.state.collected);
+    if (collected) {
+      this.collectedRef.set(collected);
     } else {
       this.collectedRef.remove();
     }
 
-    this.setState(this.state);
+    this.setState({ collected });
   }
 
   handlePreCollected() {
-    this.state.preCollected = !this.state.preCollected;
+    let preCollected = !this.state.preCollected;
 
-    if (this.state.preCollected) {
-      this.preCollectedRef.set(this.state.preCollected);
+    if (preCollected) {
+      this.preCollectedRef.set(preCollected);
     } else {
       this.preCollectedRef.remove();
     }
 
-    this.setState(this.state);
+    this.setState({ preCollected });
   }
 }
 

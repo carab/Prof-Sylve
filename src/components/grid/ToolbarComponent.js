@@ -20,19 +20,21 @@ class ToolbarComponent extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      collected: 0
-    };
+    this.state = { collected: 0 };
 
-    let collectedRef = FirebaseUtils.getUserRef().child('collected');
+    this.collectedRef = FirebaseUtils.getUserRef().child('collected');
+  }
 
-    collectedRef.on('value', (snap) => {
-      let collected = snap.val();
+  componentDidMount() {
+    this.onValueChange = this.collectedRef.on('value', (snap) => {
+      let collected = Object.keys(snap.val()).length;
 
-      this.setState({
-        collected: Object.keys(collected).length
-      });
+      this.setState({ collected });
     });
+  }
+
+  componentWillUnmount() {
+    this.collectedRef.off('value', this.onValueChange);
   }
 
   render() {
@@ -60,9 +62,5 @@ class ToolbarComponent extends React.Component {
 }
 
 ToolbarComponent.displayName = 'GridToolbarComponent';
-
-// Uncomment properties you need
-// ToolbarComponent.propTypes = {};
-// ToolbarComponent.defaultProps = {};
 
 export default ToolbarComponent;

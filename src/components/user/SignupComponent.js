@@ -64,7 +64,7 @@ class SignupComponent extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
 
-    this.state.errors = {};
+    let errors = {};
 
     let email = this.refs.email.getValue();
     let password = this.refs.password.getValue();
@@ -78,15 +78,15 @@ class SignupComponent extends React.Component {
         password
       }, (error) => {
         if (error) {
-          this.state.errors.email = error;
-          this.setState(this.state);
+          errors.email = error;
+          this.setState({ errors });
         } else {
           this.context.router.replace('/');
         }
       });
     }
 
-    this.setState(this.state);
+    this.setState({ errors });
   }
 }
 

@@ -33,7 +33,9 @@ class AppComponent extends React.Component {
     this.state = {
       loggedIn: FirebaseUtils.isLoggedIn()
     }
+  }
 
+  componentDidMount() {
     FirebaseUtils.onAuth(this.handleAuth);
   }
 

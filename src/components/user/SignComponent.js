@@ -26,8 +26,4 @@ class SignComponent extends React.Component {
 
 SignComponent.displayName = 'UserSignComponent';
 
-// Uncomment properties you need
-// SignComponent.propTypes = {};
-// SignComponent.defaultProps = {};
-
 export default SignComponent;

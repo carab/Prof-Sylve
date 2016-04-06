@@ -22,30 +22,30 @@ class PcComponent extends React.Component {
     this.handlePreviousBox = this.handlePreviousBox.bind(this);
     this.handleNextBox = this.handleNextBox.bind(this);
 
-    this.state = {
-      pokemons: []
-    };
+    this.state = { pokemons: [] };
 
-    let pokemonsRef = FirebaseUtils.getRootRef().child('pokemons');
+    this.pokemonsRef = FirebaseUtils.getRootRef().child('pokemons');
+  }
 
-    pokemonsRef.once('value', (snap) => {
+  componentDidMount() {
+    this.pokemonsRef.once('value', (snap) => {
       let boxes = [];
       let pokemons = snap.val();
-      let currentBox = null;
+      let box = null;
 
       _.each(pokemons, (pokemon) => {
-        if (null === currentBox) {
-          currentBox = this.getEmptyBox();
-          currentBox.start = pokemon.id;
-          boxes.push(currentBox);
+        if (null === box) {
+          box = this.getEmptyBox();
+          box.start = pokemon.id;
+          boxes.push(box);
         }
 
-        currentBox.pokemons.push(pokemon);
-        currentBox.end = pokemon.id;
-        currentBox.count++;
+        box.pokemons.push(pokemon);
+        box.end = pokemon.id;
+        box.count++;
 
-        if (currentBox.count === BOX_SIZE) {
-          currentBox = null;
+        if (box.count === BOX_SIZE) {
+          box = null;
         }
       });
 
@@ -55,8 +55,6 @@ class PcComponent extends React.Component {
         currentBox: 0
       });
     });
-
-    this.state = {};
   }
 
   render() {
@@ -84,28 +82,23 @@ class PcComponent extends React.Component {
     );
   }
 
-  handleSelectBox(event, index, value) {
-    this.state.currentBox = value;
-    this.setState(this.state);
+  handleSelectBox(event, index, currentBox) {
+    this.setState({ currentBox });
   }
 
   handlePreviousBox() {
-    this.state.currentBox--;
+    let currentBox = this.state.currentBox - 1;
 
     if (this.state.currentBox >= 0) {
-      this.setState(this.state);
-    } else {
-      this.state.currentBox = 0;
+      this.setState({ currentBox });
     }
   }
 
   handleNextBox() {
-    this.state.currentBox++;
+    let currentBox = this.state.currentBox + 1;
 
-    if (this.state.currentBox < this.state.boxes.length) {
-      this.setState(this.state);
-    } else {
-      this.state.currentBox = this.state.boxes.length - 1;
+    if (currentBox < this.state.boxes.length) {
+      this.setState({ currentBox });
     }
   }
 
@@ -120,9 +113,5 @@ class PcComponent extends React.Component {
 }
 
 PcComponent.displayName = 'GridPcComponent';
-
-// Uncomment properties you need
-// PcComponent.propTypes = {};
-// PcComponent.defaultProps = {};
 
 export default PcComponent;
