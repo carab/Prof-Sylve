@@ -65,7 +65,7 @@ class PokemonComponent extends React.Component {
 
     return (
       <GridTile
-        className="pokemon-component"
+        className="pokemon-component pokemon-component--tile"
         style={style}
         title={this.props.pokemon.name}
         titleBackground={titleColor}
