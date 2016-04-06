@@ -1,6 +1,12 @@
 Changelog
 =========
 
+## v0.6.0 (2016-04-06)
+
+- Add left menu and simple list page.
+- Add pre-evolution marking.
+- Clean up the sources and delete some warnings.
+
 ## v0.5.1 (2016-04-05)
 
 - Fix collected Pokémon count.
