@@ -1,6 +1,6 @@
 'use strict';
 
-import React from 'react';
+import React, {Component, PropTypes} from 'react';
 
 import FirebaseUtils from '../../utils/firebase-utils';
 
@@ -12,10 +12,32 @@ import MenuItem from 'material-ui/lib/menus/menu-item';
 import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert';
 import CheckBox from 'material-ui/lib/svg-icons/toggle/check-box';
 import CheckBoxOutlineBlank from 'material-ui/lib/svg-icons/toggle/check-box-outline-blank';
+import Launch from 'material-ui/lib/svg-icons/action/launch';
+
+import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
 require('styles/grid/Pokemon.css');
 
-class PokemonComponent extends React.Component {
+const messages = defineMessages({
+  collected: {
+    id: 'pokemon.collected',
+    defaultMessage: 'Collected'
+  },
+  preCollected: {
+    id: 'pokemon.preCollected',
+    defaultMessage: 'Pre-evolution collected'
+  },
+  externalService: {
+    id: 'pokemon.externalService',
+    defaultMessage: 'See on Bulbapedia'
+  },
+  externalUrl: {
+    id: 'pokemon.externalUrl',
+    defaultMessage: 'http://bulbapedia.bulbagarden.net/wiki/{name}'
+  }
+});
+
+class PokemonComponent extends Component {
   constructor(props) {
     super(props);
 
@@ -42,7 +64,18 @@ class PokemonComponent extends React.Component {
   }
 
   render() {
-    let image = 'https://raw.githubusercontent.com/carab/Prof-Sylve-Sprites/master/sprites/' + this.props.pokemon.name + '.gif';
+    const {pokemon} = this.props;
+    const {formatMessage} = this.props.intl;
+    const dynamicMessages = defineMessages({
+      name: {
+        id: 'pokemon.name.' + pokemon.id
+      }
+    });
+
+    const name = formatMessage(dynamicMessages.name);
+    const externalUrl = formatMessage(messages.externalUrl, { name });
+
+    let image = 'https://raw.githubusercontent.com/carab/Prof-Sylve-Sprites/master/sprites/' + pokemon.name + '.gif';
 
     let style = {};
     let titleColor = 'rgba(0, 188, 212, 0.7)';
@@ -54,7 +87,7 @@ class PokemonComponent extends React.Component {
       preCollectedIcon = <CheckBox/>;
     }
 
-    let preCollectedMenuItem = <MenuItem primaryText="Pre-evolution collected" leftIcon={preCollectedIcon} onClick={this.handlePreCollected}/>;
+    let preCollectedMenuItem = <MenuItem primaryText={formatMessage(messages.preCollected)} leftIcon={preCollectedIcon} onClick={this.handlePreCollected}/>;
 
     if (this.state.collected) {
       style.opacity = '0.5';
@@ -67,7 +100,7 @@ class PokemonComponent extends React.Component {
       <GridTile
         className="pokemon-component pokemon-component--tile"
         style={style}
-        title={this.props.pokemon.name}
+        title={name}
         titleBackground={titleColor}
         onClick={this.handleCollected}
         actionIcon={
@@ -78,14 +111,14 @@ class PokemonComponent extends React.Component {
             targetOrigin={{horizontal: 'right', vertical: 'top'}}
             anchorOrigin={{horizontal: 'right', vertical: 'top'}}
           >
-            <MenuItem primaryText="Collected" leftIcon={collectedIcon} onClick={this.handleCollected}/>
+            <MenuItem primaryText={formatMessage(messages.collected)} leftIcon={collectedIcon} onClick={this.handleCollected}/>
             {preCollectedMenuItem}
             <Divider/>
-            <MenuItem primaryText="See Pokepedia page"/>
+            <MenuItem primaryText={formatMessage(messages.externalService)} leftIcon={<Launch/>} href={externalUrl} target="_blank"/>
           </IconMenu>
         }
       >
-        <img alt={this.props.pokemon.name} src={image}/>
+        <img alt={pokemon.name} src={image}/>
       </GridTile>
     );
   }
@@ -121,9 +154,12 @@ class PokemonComponent extends React.Component {
 
 PokemonComponent.displayName = 'GridPokemonComponent';
 
-PokemonComponent.propTypes = {};
+PokemonComponent.propTypes = {
+    pokemon: PropTypes.any.isRequired,
+    intl: intlShape.isRequired
+};
 PokemonComponent.defaultProps = {
   pokemon: {}
 };
 
-export default PokemonComponent;
+export default injectIntl(PokemonComponent);

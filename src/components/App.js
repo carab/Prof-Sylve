@@ -3,17 +3,6 @@
 import React from 'react';
 import { Link } from 'react-router';
 
-import injectTapEventPlugin from 'react-tap-event-plugin';
-// Needed for onTouchTap
-// Can go away when react 1.0 release
-// Check this repo:
-// https://github.com/zilverline/react-tap-event-plugin
-try {
-  injectTapEventPlugin();
-} catch (e) {
-
-}
-
 import AppBar from 'material-ui/lib/app-bar';
 import LeftNav from 'material-ui/lib/left-nav';
 import Divider from 'material-ui/lib/divider';
@@ -27,8 +16,39 @@ import Settings from 'material-ui/lib/svg-icons/action/settings';
 import List from 'material-ui/lib/svg-icons/action/list';
 import ViewModule from 'material-ui/lib/svg-icons/action/view-module';
 import BugReport from 'material-ui/lib/svg-icons/action/bug-report';
+import Language from 'material-ui/lib/svg-icons/action/language';
+
+import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
 import FirebaseUtils from '../utils/firebase-utils';
+import Translations from '../utils/translations-loader';
+
+const messages = defineMessages({
+  app: {
+    id: 'app',
+    defaultMessage: 'Prof. Sylve\'s Living Dex'
+  },
+  byBox: {
+    id: 'nav.byBox',
+    defaultMessage: 'By Box'
+  },
+  byList: {
+    id: 'nav.byList',
+    defaultMessage: 'By List'
+  },
+  bugs: {
+    id: 'nav.bugs',
+    defaultMessage: 'Github/Bugs'
+  },
+  settings: {
+    id: 'user.settings',
+    defaultMessage: 'Settings'
+  },
+  signout: {
+    id: 'user.signout',
+    defaultMessage: 'Sign out'
+  }
+});
 
 require('flexboxgrid/dist/flexboxgrid.css');
 require('styles/App.css');
@@ -38,7 +58,7 @@ const styles = {
     position: 'fixed',
     zIndex: 1301
   },
-  menu: {
+  nav: {
     paddingTop: '64px'
   },
   container: {
@@ -51,8 +71,8 @@ class AppComponent extends React.Component {
     super(props);
 
     this.handleAuth = this.handleAuth.bind(this);
-    this.handleToggleMenu = this.handleToggleMenu.bind(this);
-    this.handleToggleMenuRequest = this.handleToggleMenuRequest.bind(this);
+    this.handleToggleNav = this.handleToggleNav.bind(this);
+    this.handleToggleNavRequest = this.handleToggleNavRequest.bind(this);
 
     this.state = {
       loggedIn: FirebaseUtils.isLoggedIn()
@@ -64,19 +84,21 @@ class AppComponent extends React.Component {
   }
 
   render() {
-    let userMenu;
-    let menuItems;
+    const {formatMessage} = this.props.intl;
+
+    let menu;
+    let navItems;
 
     if (this.state.loggedIn) {
-      menuItems = (
+      navItems = (
         <Menu>
-          <MenuItem onTouchTap={this.handleToggleMenu} leftIcon={<ViewModule />} containerElement={<Link to="/" />}>By Box</MenuItem>
-          <MenuItem onTouchTap={this.handleToggleMenu} leftIcon={<List />} containerElement={<Link to="/list" />}>By List</MenuItem>
+          <MenuItem onTouchTap={this.handleToggleNav} leftIcon={<ViewModule />} containerElement={<Link to="/" />}>{formatMessage(messages.byBox)}</MenuItem>
+          <MenuItem onTouchTap={this.handleToggleNav} leftIcon={<List />} containerElement={<Link to="/list" />}>{formatMessage(messages.byList)}</MenuItem>
           <Divider/>
         </Menu>
       );
 
-      userMenu = (
+      menu = (
         <IconMenu
           iconButtonElement={
             <IconButton><MoreVertIcon /></IconButton>
@@ -84,9 +106,9 @@ class AppComponent extends React.Component {
           targetOrigin={{horizontal: 'right', vertical: 'top'}}
           anchorOrigin={{horizontal: 'right', vertical: 'top'}}
         >
-          <MenuItem primaryText="Settings" leftIcon={<Settings />}/>
+          <MenuItem primaryText={formatMessage(messages.settings)} leftIcon={<Settings />}/>
           <Divider/>
-          <MenuItem primaryText="Sign out" leftIcon={<PowerSettingsNew />} containerElement={<Link to="/signout" />}/>
+          <MenuItem primaryText={formatMessage(messages.signout)} leftIcon={<PowerSettingsNew />} containerElement={<Link to="/signout" />}/>
         </IconMenu>
       );
     }
@@ -94,20 +116,23 @@ class AppComponent extends React.Component {
     return (
       <div className="prof-sylve">
         <AppBar
-          title="Prof. Sylve's Living Dex"
-          onLeftIconButtonTouchTap={this.handleToggleMenu}
-          iconElementRight={userMenu}
+          title={formatMessage(messages.app)}
+          onLeftIconButtonTouchTap={this.handleToggleNav}
+          iconElementRight={menu}
           style={styles.appbar}
         />
         <LeftNav
           docked={false}
-          open={this.state.menuOpen}
-          onRequestChange={this.handleToggleMenuRequest}
+          open={this.state.navOpen}
+          onRequestChange={this.handleToggleNavRequest}
         >
-          <div style={styles.menu}></div>
-          {menuItems}
+          <div style={styles.nav}></div>
+          {navItems}
           <Menu>
-            <MenuItem leftIcon={<BugReport />} href="https://github.com/carab/Prof-Sylve">Github/Bugs</MenuItem>
+            <MenuItem leftIcon={<Language />} onTouchTap={this.handleChangeLocale.bind(this, 'en')}>English</MenuItem>
+            <MenuItem leftIcon={<Language />} onTouchTap={this.handleChangeLocale.bind(this, 'fr')}>Français</MenuItem>
+            <Divider/>
+            <MenuItem leftIcon={<BugReport />} href="https://github.com/carab/Prof-Sylve" target="blank">{formatMessage(messages.bugs)}</MenuItem>
           </Menu>
         </LeftNav>
         <div style={styles.container}>
@@ -117,12 +142,20 @@ class AppComponent extends React.Component {
     );
   }
 
-  handleToggleMenuRequest(open) {
-    this.setState({ menuOpen: open });
+  handleChangeLocale(locale) {
+    Translations.changeLocale(locale);
+    this.setState({ navOpen: false });
+    if (FirebaseUtils.isLoggedIn()) {
+      FirebaseUtils.getUserRef().child('settings/locale').set(locale);
+    }
   }
 
-  handleToggleMenu() {
-    this.setState({ menuOpen: !this.state.menuOpen })
+  handleToggleNavRequest(open) {
+    this.setState({ navOpen: open });
+  }
+
+  handleToggleNav() {
+    this.setState({ navOpen: !this.state.navOpen })
   }
 
   handleAuth(loggedIn) {
@@ -132,4 +165,8 @@ class AppComponent extends React.Component {
 
 AppComponent.defaultProps = {};
 
-export default AppComponent;
+AppComponent.propTypes = {
+    intl: intlShape.isRequired
+};
+
+export default injectIntl(AppComponent);

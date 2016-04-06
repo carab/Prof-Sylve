@@ -2,8 +2,6 @@
 
 import React from 'react';
 
-import FirebaseUtils from '../../utils/firebase-utils';
-
 import RaisedButton from 'material-ui/lib/raised-button';
 import TextField from 'material-ui/lib/text-field';
 import Card from 'material-ui/lib/card/card';
@@ -11,7 +9,38 @@ import CardActions from 'material-ui/lib/card/card-actions';
 import CardTitle from 'material-ui/lib/card/card-title';
 import CardText from 'material-ui/lib/card/card-text';
 
+import {injectIntl, intlShape, defineMessages} from 'react-intl';
+
+import FirebaseUtils from '../../utils/firebase-utils';
+
 require('styles/user/Signup.css');
+
+const messages = defineMessages({
+  signup: {
+    id: 'user.signup',
+    defaultMessage: 'Sign up'
+  },
+  subtitle: {
+    id: 'user.signupSubtitle',
+    defaultMessage: 'If you want to catch\'em all !'
+  },
+  email: {
+    id: 'user.email',
+    defaultMessage: 'Email'
+  },
+  password: {
+    id: 'user.password',
+    defaultMessage: 'Password'
+  },
+  passwordConfirmation: {
+    id: 'user.passwordConfirmation',
+    defaultMessage: 'Password Confirmation'
+  },
+  passwordConfirmationIncorrect: {
+    id: 'user.passwordConfirmationIncorrect',
+    defaultMessage: 'Password confirmation is not correct.'
+  }
+});
 
 class SignupComponent extends React.Component {
   constructor(props, context) {
@@ -27,34 +56,36 @@ class SignupComponent extends React.Component {
   }
 
   render() {
+    const {formatMessage} = this.props.intl;
+
     return (
       <form onSubmit={this.handleSubmit}>
         <Card>
-          <CardTitle title="Sign up" subtitle="If you want to catch'em all"/>
+          <CardTitle title={formatMessage(messages.signup)} subtitle={formatMessage(messages.subtitle)}/>
           <CardText>
             <TextField
               ref="email"
-              floatingLabelText="Email Address"
+              floatingLabelText={formatMessage(messages.email)}
               fullWidth={true}
               errorText={this.state.errors.email}
             />
             <TextField
               ref="password"
-              floatingLabelText="Password"
+              floatingLabelText={formatMessage(messages.password)}
               fullWidth={true}
               errorText={this.state.errors.password}
               type="password"
             />
             <TextField
               ref="passwordConfirmation"
-              floatingLabelText="Password Confirmation"
+              floatingLabelText={formatMessage(messages.passwordConfirmation)}
               fullWidth={true}
               errorText={this.state.errors.passwordConfirmation}
               type="password"
             />
           </CardText>
           <CardActions>
-            <RaisedButton type="submit" label="Sign up" secondary={true} />
+            <RaisedButton type="submit" label={formatMessage(messages.signup)} secondary={true} />
           </CardActions>
         </Card>
       </form>
@@ -71,7 +102,7 @@ class SignupComponent extends React.Component {
     let passwordConfirmation = this.refs.passwordConfirmation.getValue();
 
     if (password !== passwordConfirmation) {
-      this.state.errors.passwordConfirmation = 'Password confirmation is not correct.';
+      this.state.errors.passwordConfirmation = this.props.formatMessage(messages.passwordConfirmationIncorrect);
     } else {
       FirebaseUtils.signup({
         email,
@@ -90,9 +121,12 @@ class SignupComponent extends React.Component {
   }
 }
 
+SignupComponent.propTypes = {
+    intl: intlShape.isRequired
+};
 SignupComponent.displayName = 'UserSignupComponent';
 SignupComponent.contextTypes = {
     router: () => { return React.PropTypes.func.isRequired; }
 };
 
-export default SignupComponent;
+export default injectIntl(SignupComponent);

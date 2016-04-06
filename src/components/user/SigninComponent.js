@@ -9,9 +9,30 @@ import CardActions from 'material-ui/lib/card/card-actions';
 import CardTitle from 'material-ui/lib/card/card-title';
 import CardText from 'material-ui/lib/card/card-text';
 
+import {injectIntl, intlShape, defineMessages} from 'react-intl';
+
 import FirebaseUtils from '../../utils/firebase-utils';
 
 require('styles/user/Signin.css');
+
+const messages = defineMessages({
+  signin: {
+    id: 'user.signin',
+    defaultMessage: 'Sign in'
+  },
+  subtitle: {
+    id: 'user.signinSubtitle',
+    defaultMessage: 'If you already have an account.'
+  },
+  email: {
+    id: 'user.email',
+    defaultMessage: 'Email'
+  },
+  password: {
+    id: 'user.password',
+    defaultMessage: 'Password'
+  }
+});
 
 class SigninComponent extends React.Component {
   constructor(props, context) {
@@ -27,27 +48,29 @@ class SigninComponent extends React.Component {
   }
 
   render() {
+    const {formatMessage} = this.props.intl;
+
     return (
       <form onSubmit={this.handleSubmit}>
         <Card>
-          <CardTitle title="Sign in" subtitle="If you already have an account"/>
+          <CardTitle title={formatMessage(messages.signin)} subtitle={formatMessage(messages.subtitle)}/>
           <CardText>
             <TextField
               ref="email"
-              floatingLabelText="Email Address"
+              floatingLabelText={formatMessage(messages.email)}
               errorText={this.state.errors.email}
               fullWidth={true}
             />
             <TextField
               ref="password"
-              floatingLabelText="Password"
+              floatingLabelText={formatMessage(messages.password)}
               fullWidth={true}
               errorText={this.state.errors.password}
               type="password"
             />
           </CardText>
           <CardActions>
-            <RaisedButton type="submit" label="Sign in" primary={true} />
+            <RaisedButton type="submit" label={formatMessage(messages.signin)} primary={true} />
           </CardActions>
         </Card>
       </form>
@@ -78,9 +101,12 @@ class SigninComponent extends React.Component {
   }
 }
 
+SigninComponent.propTypes = {
+    intl: intlShape.isRequired
+};
 SigninComponent.displayName = 'UserSigninComponent';
 SigninComponent.contextTypes = {
     router: () => { return React.PropTypes.func.isRequired; }
 };
 
-export default SigninComponent;
+export default injectIntl(SigninComponent);

@@ -3,10 +3,10 @@
 import React from 'react';
 import _ from 'lodash';
 
-import FirebaseUtils from '../../utils/firebase-utils';
-
 import BoxComponent from 'components/grid/BoxComponent';
 import ToolbarComponent from 'components/grid/ToolbarComponent';
+
+import FirebaseUtils from '../../utils/firebase-utils';
 
 require('styles/grid/Pc.css');
 
@@ -68,7 +68,7 @@ class PcComponent extends React.Component {
         onPreviousBox={this.handlePreviousBox}
         onNextBox={this.handleNextBox}
         onSelectBox={this.handleSelectBox}
-        pokemons={this.state.pokemons}
+        total={this.state.pokemons.length}
         boxes={this.state.boxes}
         currentBox={this.state.currentBox}
       />;

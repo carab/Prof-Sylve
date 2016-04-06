@@ -3,11 +3,11 @@
 import React from 'react';
 import _ from 'lodash';
 
-import FirebaseUtils from '../../utils/firebase-utils';
-
 import List from 'material-ui/lib/lists/list';
 
 import PokemonComponent from 'components/list/PokemonComponent';
+
+import FirebaseUtils from '../../utils/firebase-utils';
 
 require('styles/list/List.css');
 
