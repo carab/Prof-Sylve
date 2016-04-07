@@ -13,12 +13,13 @@ So please enjoy using this if you need it too, and don't hesitate to ask for fea
 
 ## Features
 
-- [x] Mobile-friendly.
-- [x] User accounts.
 - [x] Pokémons listed in grids to replicate in-game boxes.
 - [x] Pokémon can be marked as "collected".
-- [x] Pokémon can be marksed as "pre-evolution collected" in case you plan to breed them first, then to evolve them later.
+- [x] Pokémon can be marked as "pre-evolution collected" in case you plan to breed them first, then to evolve them later.
 - [x] Multi-language support (app: en/fr, Pokémon names: en/fr/es/it/de/jp/ko/cn)
+- [x] Link to language-specific wiki to find location data or other information.
+- [x] Mobile-friendly.
+- [x] User accounts.
 - [ ] Implement a search.
 - [ ] Location data.
 - [ ] Filters on simple list (by generation/region, by location, collected or not, ...).
