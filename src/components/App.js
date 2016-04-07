@@ -3,6 +3,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 
+import DocumentTitle from 'react-document-title';
 import AppBar from 'material-ui/lib/app-bar';
 import LeftNav from 'material-ui/lib/left-nav';
 import Divider from 'material-ui/lib/divider';
@@ -114,31 +115,33 @@ class AppComponent extends React.Component {
     }
 
     return (
-      <div className="prof-sylve">
-        <AppBar
-          title={formatMessage(messages.app)}
-          onLeftIconButtonTouchTap={this.handleToggleNav}
-          iconElementRight={menu}
-          style={styles.appbar}
-        />
-        <LeftNav
-          docked={false}
-          open={this.state.navOpen}
-          onRequestChange={this.handleToggleNavRequest}
-        >
-          <div style={styles.nav}></div>
-          {navItems}
-          <Menu>
-            <MenuItem leftIcon={<Language />} onTouchTap={this.handleChangeLocale.bind(this, 'en')}>English</MenuItem>
-            <MenuItem leftIcon={<Language />} onTouchTap={this.handleChangeLocale.bind(this, 'fr')}>Français</MenuItem>
-            <Divider/>
-            <MenuItem leftIcon={<BugReport />} href="https://github.com/carab/Prof-Sylve" target="blank">{formatMessage(messages.bugs)}</MenuItem>
-          </Menu>
-        </LeftNav>
-        <div style={styles.container}>
-          {this.props.children}
+      <DocumentTitle title="Prof. Sylve">
+        <div className="prof-sylve">
+          <AppBar
+            title={formatMessage(messages.app)}
+            onLeftIconButtonTouchTap={this.handleToggleNav}
+            iconElementRight={menu}
+            style={styles.appbar}
+          />
+          <LeftNav
+            docked={false}
+            open={this.state.navOpen}
+            onRequestChange={this.handleToggleNavRequest}
+          >
+            <div style={styles.nav}></div>
+            {navItems}
+            <Menu>
+              <MenuItem leftIcon={<Language />} onTouchTap={this.handleChangeLocale.bind(this, 'en')}>English</MenuItem>
+              <MenuItem leftIcon={<Language />} onTouchTap={this.handleChangeLocale.bind(this, 'fr')}>Français</MenuItem>
+              <Divider/>
+              <MenuItem leftIcon={<BugReport />} href="https://github.com/carab/Prof-Sylve" target="blank">{formatMessage(messages.bugs)}</MenuItem>
+            </Menu>
+          </LeftNav>
+          <div style={styles.container}>
+            {this.props.children}
+          </div>
         </div>
-      </div>
+      </DocumentTitle>
     );
   }
 
