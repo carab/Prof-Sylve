@@ -68,8 +68,8 @@ const styles = {
 };
 
 class AppComponent extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
 
     this.handleAuth = this.handleAuth.bind(this);
     this.handleToggleNav = this.handleToggleNav.bind(this);
@@ -162,7 +162,11 @@ class AppComponent extends React.Component {
   }
 
   handleAuth(loggedIn) {
-    this.setState({ loggedIn });
+    if (loggedIn) {
+      this.setState({ loggedIn });
+    } else {
+      this.context.router.replace('/');
+    }
   }
 }
 
@@ -170,6 +174,10 @@ AppComponent.defaultProps = {};
 
 AppComponent.propTypes = {
     intl: intlShape.isRequired
+};
+
+AppComponent.contextTypes = {
+    router: () => { return React.PropTypes.func.isRequired; }
 };
 
 export default injectIntl(AppComponent);

@@ -27,9 +27,11 @@
   },
   "pokemon": {
     "collected": "Collecté",
+    "externalService": "Voir sur Poképedia",
+    "externalUrl": "http://www.pokepedia.fr/{name}#Localisations",
     "tag": {
       "tag": "Marquage",
-      "force": "Forcer l'affichage",
+      "force": "Forcer la couleur",
       "none": "Aucun",
       "color": {
         "red": "Rouge",
@@ -37,11 +39,14 @@
         "green": "Vert",
         "purple": "Violet",
         "indigo": "Indigo",
-        "brown": "Marron"
+        "brown": "Marron",
+        "orange": "Orange",
+        "cyan": "Cyan",
+        "pink": "Rose",
+        "teal": "Bleu sarcelle",
+        "lime": "Citron"
       }
     },
-    "externalService": "Voir sur Poképedia",
-    "externalUrl": "http://www.pokepedia.fr/{name}",
     "name": {
       "1": "Bulbizarre",
       "2": "Herbizarre",
@@ -164,7 +169,7 @@
       "119": "Poissoroy",
       "120": "Stari",
       "121": "Staross",
-      "122": "M",
+      "122": "M. Mime",
       "123": "Insécateur",
       "124": "Lippoutou",
       "125": "Élektek",
@@ -481,7 +486,7 @@
       "436": "Archéomire",
       "437": "Archéodong",
       "438": "Manzaï",
-      "439": "Mime",
+      "439": "Mime Jr.",
       "440": "Ptiravi",
       "441": "Pijako",
       "442": "Spiritomb",

@@ -4,8 +4,6 @@ import React from 'react';
 
 import ListItem from 'material-ui/lib/lists/list-item';
 
-import FirebaseUtils from '../../utils/firebase-utils';
-
 require('styles/list/Pokemon.css');
 
 class PokemonComponent extends React.Component {

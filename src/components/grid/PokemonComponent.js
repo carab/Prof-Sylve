@@ -13,8 +13,8 @@ import MenuItem from 'material-ui/lib/menus/menu-item';
 import Checkbox from 'material-ui/lib/checkbox';
 import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert';
 import LaunchIcon from 'material-ui/lib/svg-icons/action/launch';
-import ArrowRightIcon from 'material-ui/lib/svg-icons/navigation-arrow-drop-right';
 import BookmarkIcon from 'material-ui/lib/svg-icons/action/bookmark';
+import DoneIcon from 'material-ui/lib/svg-icons/action/done';
 
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
@@ -25,16 +25,16 @@ const colors = {
   collected: 'rgba(0, 0, 0, 0.4)',
   tags: [
     { name: 'red', value: '#F44336' },
-    { name: 'yellow', value: '#FFEB3B' },
+    //{ name: 'yellow', value: '#FFEB3B' },
     { name: 'green', value: '#4CAF50' },
     //{ name: 'cyan', value: '#00BCD4' },
     //{ name: 'pink', value: '#E91E63' },
-    //{ name: 'orange', value: '#FF9800' },
-    { name: 'purple', value: '#9C27B0' },
-    { name: 'indigo', value: '#3F51B5' },
+    { name: 'orange', value: '#FF9800' },
+    //{ name: 'purple', value: '#9C27B0' },
+    { name: 'indigo', value: '#3F51B5' }
     //{ name: 'teal', value: '#009688' },
     //{ name: 'lime', value: '#CDDC39' },
-    { name: 'brown', value: '#795548' }
+    //{ name: 'brown', value: '#795548' }
   ]
 };
 
@@ -49,7 +49,7 @@ const messages = defineMessages({
   },
   force: {
     id: 'pokemon.tag.force',
-    defaultMessage: 'Force tag display'
+    defaultMessage: 'Force color'
   },
   none: {
     id: 'pokemon.tag.none',
@@ -67,25 +67,17 @@ const messages = defineMessages({
     id: 'pokemon.tag.color.red',
     defaultMessage: 'Red'
   },
-  yellow: {
-    id: 'pokemon.tag.color.yellow',
-    defaultMessage: 'Yellow'
+  orange: {
+    id: 'pokemon.tag.color.orange',
+    defaultMessage: 'Orange'
   },
   green: {
     id: 'pokemon.tag.color.green',
     defaultMessage: 'Green'
   },
-  purple: {
-    id: 'pokemon.tag.color.purple',
-    defaultMessage: 'Purple'
-  },
   indigo: {
     id: 'pokemon.tag.color.indigo',
     defaultMessage: 'Indigo'
-  },
-  brown: {
-    id: 'pokemon.tag.color.brown',
-    defaultMessage: 'Brown'
   }
 });
 
@@ -148,6 +140,12 @@ class PokemonComponent extends Component {
       color = defaultColor;
     }
 
+    let getColorIcon = (color, referenceColor) => {
+      if (color === referenceColor) {
+        return <DoneIcon/>;
+      }
+    };
+
     return (
       <GridTile
         className="pokemon-component pokemon-component--tile"
@@ -164,20 +162,23 @@ class PokemonComponent extends Component {
             anchorOrigin={{horizontal: 'right', vertical: 'top'}}
           >
             <MenuItem primaryText={formatMessage(messages.collected)} leftIcon={<Checkbox checked={collected}/>} onClick={this.handleCollected}/>
-            <MenuItem primaryText={formatMessage(messages.tag)}
-              insetChildren={true}
-              leftIcon={<BookmarkIcon style={{fill: tagColor || color}}/>}
-              rightIcon={<ArrowRightIcon/>}
-              menuItems={_.concat([
-                <MenuItem primaryText={formatMessage(messages.force)} disabled={!tagColor} leftIcon={<Checkbox disabled={!tagColor} checked={force}/>} onTouchTap={() => this.handleTagForce(!force)}/>,
-                <MenuItem primaryText={formatMessage(messages.none)} leftIcon={<BookmarkIcon style={{fill: defaultColor}}/>} onTouchTap={() => this.handleTagRemove()}/>,
-                <Divider/>
-              ], _.map(colors.tags, (color) => (
-                <MenuItem key={color.name} primaryText={formatMessage(messages[color.name])} leftIcon={<BookmarkIcon style={{fill: color.value}}/>} onTouchTap={() => this.handleTagColor(color.value)}/>
-              )))}
-            />
-            <Divider/>
             <MenuItem primaryText={formatMessage(messages.externalService)} leftIcon={<LaunchIcon/>} href={externalUrl} target="_blank"/>
+            <Divider/>
+            <MenuItem primaryText={formatMessage(messages.none)}
+              leftIcon={<BookmarkIcon style={{fill: defaultColor}}/>}
+              onTouchTap={() => this.handleTagRemove()}
+              rightIcon={getColorIcon(defaultColor, color)}
+            />
+            {_.map(colors.tags, (color) => (
+              <MenuItem primaryText={formatMessage(messages[color.name])}
+                key={color.name}
+                leftIcon={<BookmarkIcon style={{fill: color.value}}/>}
+                onTouchTap={() => this.handleTagColor(color.value)}
+                rightIcon={getColorIcon(color.value, tagColor)}
+              />
+            ))}
+            <Divider/>
+            <MenuItem primaryText={formatMessage(messages.force)} disabled={!tagColor} leftIcon={<Checkbox disabled={!tagColor} checked={force}/>} onTouchTap={() => this.handleTagForce(!force)}/>
           </IconMenu>
         }
       >
@@ -215,9 +216,7 @@ class PokemonComponent extends Component {
   }
 
   handleTagForce(force) {
-    console.log(force)
     let tag = Object.assign({}, this.state.tag, { force });
-    console.log(tag)
     this.tagRef.set(tag);
     this.setState({ tag });
   }

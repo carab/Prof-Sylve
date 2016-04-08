@@ -44,15 +44,13 @@ const messages = defineMessages({
 
 class SignupComponent extends React.Component {
   constructor(props, context) {
-    super(props);
+    super(props, context);
 
     this.state = {
       errors: {}
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
-
-    this.router = context.router;
   }
 
   render() {
