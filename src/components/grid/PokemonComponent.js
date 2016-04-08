@@ -1,6 +1,7 @@
 'use strict';
 
 import React, {Component, PropTypes} from 'react';
+import _ from 'lodash';
 
 import FirebaseUtils from '../../utils/firebase-utils';
 
@@ -9,23 +10,50 @@ import Divider from 'material-ui/lib/divider'
 import IconButton from 'material-ui/lib/icon-button';
 import IconMenu from 'material-ui/lib/menus/icon-menu';
 import MenuItem from 'material-ui/lib/menus/menu-item';
+import Checkbox from 'material-ui/lib/checkbox';
 import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert';
-import CheckBox from 'material-ui/lib/svg-icons/toggle/check-box';
-import CheckBoxOutlineBlank from 'material-ui/lib/svg-icons/toggle/check-box-outline-blank';
-import Launch from 'material-ui/lib/svg-icons/action/launch';
+import LaunchIcon from 'material-ui/lib/svg-icons/action/launch';
+import ArrowRightIcon from 'material-ui/lib/svg-icons/navigation-arrow-drop-right';
+import BookmarkIcon from 'material-ui/lib/svg-icons/action/bookmark';
 
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
 require('styles/grid/Pokemon.css');
+
+const colors = {
+  default: 'rgba(0, 188, 212, 0.7)',
+  collected: 'rgba(0, 0, 0, 0.4)',
+  tags: [
+    { name: 'red', value: '#F44336' },
+    { name: 'yellow', value: '#FFEB3B' },
+    { name: 'green', value: '#4CAF50' },
+    //{ name: 'cyan', value: '#00BCD4' },
+    //{ name: 'pink', value: '#E91E63' },
+    //{ name: 'orange', value: '#FF9800' },
+    { name: 'purple', value: '#9C27B0' },
+    { name: 'indigo', value: '#3F51B5' },
+    //{ name: 'teal', value: '#009688' },
+    //{ name: 'lime', value: '#CDDC39' },
+    { name: 'brown', value: '#795548' }
+  ]
+};
 
 const messages = defineMessages({
   collected: {
     id: 'pokemon.collected',
     defaultMessage: 'Collected'
   },
-  preCollected: {
-    id: 'pokemon.preCollected',
-    defaultMessage: 'Pre-evolution collected'
+  tag: {
+    id: 'pokemon.tag.tag',
+    defaultMessage: 'Tag'
+  },
+  force: {
+    id: 'pokemon.tag.force',
+    defaultMessage: 'Force tag display'
+  },
+  none: {
+    id: 'pokemon.tag.none',
+    defaultMessage: 'None'
   },
   externalService: {
     id: 'pokemon.externalService',
@@ -34,6 +62,30 @@ const messages = defineMessages({
   externalUrl: {
     id: 'pokemon.externalUrl',
     defaultMessage: 'http://bulbapedia.bulbagarden.net/wiki/{name}'
+  },
+  red: {
+    id: 'pokemon.tag.color.red',
+    defaultMessage: 'Red'
+  },
+  yellow: {
+    id: 'pokemon.tag.color.yellow',
+    defaultMessage: 'Yellow'
+  },
+  green: {
+    id: 'pokemon.tag.color.green',
+    defaultMessage: 'Green'
+  },
+  purple: {
+    id: 'pokemon.tag.color.purple',
+    defaultMessage: 'Purple'
+  },
+  indigo: {
+    id: 'pokemon.tag.color.indigo',
+    defaultMessage: 'Indigo'
+  },
+  brown: {
+    id: 'pokemon.tag.color.brown',
+    defaultMessage: 'Brown'
   }
 });
 
@@ -42,13 +94,14 @@ class PokemonComponent extends Component {
     super(props);
 
     this.handleCollected = this.handleCollected.bind(this);
-    this.handlePreCollected = this.handlePreCollected.bind(this);
     this.handleStopPropagation = this.handleStopPropagation.bind(this);
 
-    this.state = {};
+    this.state = {
+      tag: {}
+    };
 
     this.collectedRef = FirebaseUtils.getUserRef().child('collected').child(props.pokemon.id);
-    this.preCollectedRef = FirebaseUtils.getUserRef().child('preCollected').child(props.pokemon.id);
+    this.tagRef = FirebaseUtils.getUserRef().child('tags').child(props.pokemon.id);
   }
 
   componentDidMount() {
@@ -57,14 +110,15 @@ class PokemonComponent extends Component {
       this.setState({ collected });
     });
 
-    this.preCollectedRef.once('value', (snap) => {
-      let preCollected = snap.val() || false;
-      this.setState({ preCollected });
+    this.tagRef.once('value', (snap) => {
+      let tag = snap.val() || {};
+      this.setState({ tag });
     });
   }
 
   render() {
     const {pokemon} = this.props;
+    const {collected, tag} = this.state;
     const {formatMessage} = this.props.intl;
     const dynamicMessages = defineMessages({
       name: {
@@ -78,22 +132,20 @@ class PokemonComponent extends Component {
     let image = 'https://raw.githubusercontent.com/carab/Prof-Sylve-Sprites/master/sprites/' + pokemon.name + '.gif';
 
     let style = {};
-    let titleColor = 'rgba(0, 188, 212, 0.7)';
-    let collectedIcon = <CheckBoxOutlineBlank/>;
-    let preCollectedIcon = <CheckBoxOutlineBlank/>;
+    let defaultColor = colors.default;
+    let tagColor = tag.color || false;
+    let force = tag.force || false;
+    let color;
 
-    if (this.state.preCollected) {
-      titleColor = 'rgba(0, 188, 212, 0.4)';
-      preCollectedIcon = <CheckBox/>;
+    if (collected) {
+      style.opacity = '0.7';
+      defaultColor = colors.collected;
     }
 
-    let preCollectedMenuItem = <MenuItem primaryText={formatMessage(messages.preCollected)} leftIcon={preCollectedIcon} onClick={this.handlePreCollected}/>;
-
-    if (this.state.collected) {
-      style.opacity = '0.5';
-      titleColor = 'rgba(0, 0, 0, 0.4)';
-      collectedIcon = <CheckBox/>;
-      preCollectedMenuItem = '';
+    if (tagColor && (!collected || force)) {
+      color = tagColor;
+    } else {
+      color = defaultColor;
     }
 
     return (
@@ -101,20 +153,31 @@ class PokemonComponent extends Component {
         className="pokemon-component pokemon-component--tile"
         style={style}
         title={name}
-        titleBackground={titleColor}
-        onClick={this.handleCollected}
+        titleBackground={color}
+        onTouchTap={this.handleCollected}
         actionIcon={
           <IconMenu
             iconButtonElement={
-              <IconButton onClick={this.handleStopPropagation}><MoreVertIcon color="#fff" /></IconButton>
+              <IconButton onTouchTap={this.handleStopPropagation}><MoreVertIcon color="#fff" /></IconButton>
             }
             targetOrigin={{horizontal: 'right', vertical: 'top'}}
             anchorOrigin={{horizontal: 'right', vertical: 'top'}}
           >
-            <MenuItem primaryText={formatMessage(messages.collected)} leftIcon={collectedIcon} onClick={this.handleCollected}/>
-            {preCollectedMenuItem}
+            <MenuItem primaryText={formatMessage(messages.collected)} leftIcon={<Checkbox checked={collected}/>} onClick={this.handleCollected}/>
+            <MenuItem primaryText={formatMessage(messages.tag)}
+              insetChildren={true}
+              leftIcon={<BookmarkIcon style={{fill: tagColor || color}}/>}
+              rightIcon={<ArrowRightIcon/>}
+              menuItems={_.concat([
+                <MenuItem primaryText={formatMessage(messages.force)} disabled={!tagColor} leftIcon={<Checkbox disabled={!tagColor} checked={force}/>} onTouchTap={() => this.handleTagForce(!force)}/>,
+                <MenuItem primaryText={formatMessage(messages.none)} leftIcon={<BookmarkIcon style={{fill: defaultColor}}/>} onTouchTap={() => this.handleTagRemove()}/>,
+                <Divider/>
+              ], _.map(colors.tags, (color) => (
+                <MenuItem key={color.name} primaryText={formatMessage(messages[color.name])} leftIcon={<BookmarkIcon style={{fill: color.value}}/>} onTouchTap={() => this.handleTagColor(color.value)}/>
+              )))}
+            />
             <Divider/>
-            <MenuItem primaryText={formatMessage(messages.externalService)} leftIcon={<Launch/>} href={externalUrl} target="_blank"/>
+            <MenuItem primaryText={formatMessage(messages.externalService)} leftIcon={<LaunchIcon/>} href={externalUrl} target="_blank"/>
           </IconMenu>
         }
       >
@@ -139,16 +202,24 @@ class PokemonComponent extends Component {
     this.setState({ collected });
   }
 
-  handlePreCollected() {
-    let preCollected = !this.state.preCollected;
+  handleTagColor(color) {
+    let tag = Object.assign({}, this.state.tag, { color });
+    this.tagRef.set(tag);
+    this.setState({ tag });
+  }
 
-    if (preCollected) {
-      this.preCollectedRef.set(preCollected);
-    } else {
-      this.preCollectedRef.remove();
-    }
+  handleTagRemove() {
+    let tag = {};
+    this.tagRef.remove();
+    this.setState({ tag });
+  }
 
-    this.setState({ preCollected });
+  handleTagForce(force) {
+    console.log(force)
+    let tag = Object.assign({}, this.state.tag, { force });
+    console.log(tag)
+    this.tagRef.set(tag);
+    this.setState({ tag });
   }
 }
 
@@ -158,6 +229,7 @@ PokemonComponent.propTypes = {
     pokemon: PropTypes.any.isRequired,
     intl: intlShape.isRequired
 };
+
 PokemonComponent.defaultProps = {
   pokemon: {}
 };

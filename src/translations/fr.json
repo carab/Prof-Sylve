@@ -27,7 +27,19 @@
   },
   "pokemon": {
     "collected": "Collecté",
-    "preCollected": "Pré-évolution collectée",
+    "tag": {
+      "tag": "Marquage",
+      "force": "Forcer l'affichage",
+      "none": "Aucun",
+      "color": {
+        "red": "Rouge",
+        "yellow": "Jaune",
+        "green": "Vert",
+        "purple": "Violet",
+        "indigo": "Indigo",
+        "brown": "Marron"
+      }
+    },
     "externalService": "Voir sur Poképedia",
     "externalUrl": "http://www.pokepedia.fr/{name}",
     "name": {
