@@ -61,9 +61,6 @@ const styles = {
   },
   nav: {
     paddingTop: '64px'
-  },
-  container: {
-    paddingTop: '64px'
   }
 };
 
@@ -137,7 +134,7 @@ class AppComponent extends React.Component {
               <MenuItem leftIcon={<BugReport />} href="https://github.com/carab/Prof-Sylve" target="blank">{formatMessage(messages.bugs)}</MenuItem>
             </Menu>
           </LeftNav>
-          <div style={styles.container}>
+          <div className="prof-sylve__content">
             {this.props.children}
           </div>
         </div>

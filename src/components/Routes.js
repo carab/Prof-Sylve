@@ -6,8 +6,8 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import FirebaseUtils from '../utils/firebase-utils';
 
 import App from 'components/App';
-import ListComponent from 'components/list/ListComponent';
-import PcComponent from 'components/grid/PcComponent';
+import ListComponent from 'components/pokemon/ListComponent';
+import PcComponent from 'components/pokemon/PcComponent';
 import SignComponent from 'components/user/SignComponent';
 import SignoutComponent from 'components/user/SignoutComponent';
 import SettingsComponent from 'components/user/SettingsComponent';

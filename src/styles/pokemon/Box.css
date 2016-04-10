@@ -1,0 +1,4 @@
+.pokemon-box {
+  flex: 1 1 auto;
+  overflow-x: hidden;
+}

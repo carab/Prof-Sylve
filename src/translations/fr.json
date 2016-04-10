@@ -20,15 +20,13 @@
     "passwordConfirmation": "Confirmation du mot de passe",
     "passwordConfirmationIncorrect": "La confirmation ne correspond pas."
   },
-  "grid": {
+  "pokemon": {
     "toolbar": {
       "counter": "{collected} sur {total}",
       "box": "{start} à {end}",
       "previousBox": "Boîte précédente",
       "nextBox": "Boîte suivante"
-    }
-  },
-  "pokemon": {
+    },
     "collected": "Collecté",
     "externalService": "Voir sur Poképedia",
     "externalUrl": "http://www.pokepedia.fr/{name}#Localisations",

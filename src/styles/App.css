@@ -8,3 +8,9 @@ html, body {
 .prof-sylve {
 
 }
+
+.prof-sylve__content {
+  padding-top: 64px;
+  box-sizing: border-box;
+  height: 100vh;
+}

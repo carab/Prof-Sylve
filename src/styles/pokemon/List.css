@@ -1,0 +1,11 @@
+.pokemon-list {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.pokemon-list__list {
+  box-sizing: border-box;
+  height: 100%;
+  padding-top: 0 !important;
+}
