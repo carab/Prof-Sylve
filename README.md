@@ -13,16 +13,17 @@ So please enjoy using this if you need it too, and don't hesitate to ask for fea
 
 ## Features
 
-- [x] Pokémons listed in grids to replicate in-game boxes.
 - [x] Pokémon can be marked as "collected".
 - [x] Pokémon can be tagged with a color. You can rename a color to match your specific needs, such as "to evolve", "to breed" or "to capture in XY".
+- [x] Pokémons listed in grids to replicate in-game boxes.
+- [x] Simple list with filters (collected, not collected, by tag).
 - [x] Multi-language support (app: en/fr, Pokémon names: en/fr/es/it/de/jp/ko/cn)
 - [x] Link to language-specific wiki to find location data or other information.
 - [x] Mobile-friendly.
 - [x] User accounts.
+- [ ] Add more filters (by generation/region, by location, ...).
 - [ ] Implement a search.
 - [ ] Location data.
-- [ ] Filters on simple list (by generation/region, by location, collected or not, ...).
 - [ ] Share user progress.
 - [ ] Exchange market place ?
 

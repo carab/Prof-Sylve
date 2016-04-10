@@ -1,6 +1,12 @@
 Changelog
 =========
 
+## v0.9.0 (2016-04-10)
+
+- Improve list and add filters.
+- Re-add Pokémon IDs.
+- Some code refactoring.
+
 ## v0.8.0 (2016-04-10)
 
 - Add tag management with colors.
