@@ -1,5 +1,8 @@
 {
   "app": "Living Dex de Prof. Sylve",
+  "label": {
+    "save": "Sauvegarder"
+  },
   "nav": {
     "byBox": "Par Boîte",
     "byList": "Par Liste",

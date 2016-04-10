@@ -107,7 +107,7 @@ class AppComponent extends React.Component {
           targetOrigin={{horizontal: 'right', vertical: 'top'}}
           anchorOrigin={{horizontal: 'right', vertical: 'top'}}
         >
-          <MenuItem primaryText={formatMessage(messages.settings)} leftIcon={<Settings />}/>
+          <MenuItem primaryText={formatMessage(messages.settings)} leftIcon={<Settings />} containerElement={<Link to="/settings" />}/>
           <Divider/>
           <MenuItem primaryText={formatMessage(messages.signout)} leftIcon={<PowerSettingsNew />} containerElement={<Link to="/signout" />}/>
         </IconMenu>

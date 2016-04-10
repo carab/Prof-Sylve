@@ -44,18 +44,24 @@ class ToolbarComponent extends Component {
     this.state = { collected: 0 };
 
     this.collectedRef = FirebaseUtils.getUserRef().child('collected');
+    this.tagsRef = FirebaseUtils.getUserRef().child('tags');
   }
 
   componentDidMount() {
-    this.onValueChange = this.collectedRef.on('value', (snap) => {
+    this.onCollectedChange = this.collectedRef.on('value', (snap) => {
       let collected = Object.keys(snap.val()).length;
 
       this.setState({ collected });
     });
+
+    this.onTagsChange = this.tagsRef.on('value', (snap) => {
+      let tags = snap.val();
+    });
   }
 
   componentWillUnmount() {
-    this.collectedRef.off('value', this.onValueChange);
+    this.collectedRef.off('value', this.onCollectedChange);
+      this.tagsRef.off('value', this.onTagsChange);
   }
 
   render() {

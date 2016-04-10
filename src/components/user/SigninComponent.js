@@ -1,6 +1,6 @@
 'use strict';
 
-import React from 'react';
+import React, {Component, PropTypes} from 'react';
 
 import RaisedButton from 'material-ui/lib/raised-button';
 import TextField from 'material-ui/lib/text-field';
@@ -34,7 +34,7 @@ const messages = defineMessages({
   }
 });
 
-class SigninComponent extends React.Component {
+class SigninComponent extends Component {
   constructor(props, context) {
     super(props, context);
 
@@ -99,12 +99,14 @@ class SigninComponent extends React.Component {
   }
 }
 
+SigninComponent.displayName = 'UserSigninComponent';
+
 SigninComponent.propTypes = {
     intl: intlShape.isRequired
 };
-SigninComponent.displayName = 'UserSigninComponent';
+
 SigninComponent.contextTypes = {
-    router: () => { return React.PropTypes.func.isRequired; }
+    router: () => { return PropTypes.func.isRequired; }
 };
 
 export default injectIntl(SigninComponent);

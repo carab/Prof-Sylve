@@ -3,8 +3,6 @@
 import React, {Component, PropTypes} from 'react';
 import _ from 'lodash';
 
-import FirebaseUtils from '../../utils/firebase-utils';
-
 import GridTile from 'material-ui/lib/grid-list/grid-tile';
 import Divider from 'material-ui/lib/divider'
 import IconButton from 'material-ui/lib/icon-button';
@@ -18,25 +16,10 @@ import DoneIcon from 'material-ui/lib/svg-icons/action/done';
 
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
-require('styles/grid/Pokemon.css');
+import FirebaseUtils from '../../utils/firebase-utils';
+import Colors from '../../utils/colors';
 
-const colors = {
-  default: 'rgba(0, 188, 212, 0.7)',
-  collected: 'rgba(0, 0, 0, 0.4)',
-  tags: [
-    { name: 'red', value: '#F44336' },
-    //{ name: 'yellow', value: '#FFEB3B' },
-    { name: 'green', value: '#4CAF50' },
-    //{ name: 'cyan', value: '#00BCD4' },
-    //{ name: 'pink', value: '#E91E63' },
-    { name: 'orange', value: '#FF9800' },
-    //{ name: 'purple', value: '#9C27B0' },
-    { name: 'indigo', value: '#3F51B5' }
-    //{ name: 'teal', value: '#009688' },
-    //{ name: 'lime', value: '#CDDC39' },
-    //{ name: 'brown', value: '#795548' }
-  ]
-};
+require('styles/grid/Pokemon.css');
 
 const messages = defineMessages({
   collected: {
@@ -78,6 +61,10 @@ const messages = defineMessages({
   indigo: {
     id: 'pokemon.tag.color.indigo',
     defaultMessage: 'Indigo'
+  },
+  purple: {
+    id: 'pokemon.tag.color.purple',
+    defaultMessage: 'Violet'
   }
 });
 
@@ -89,11 +76,13 @@ class PokemonComponent extends Component {
     this.handleStopPropagation = this.handleStopPropagation.bind(this);
 
     this.state = {
-      tag: {}
+      tag: {},
+      colors: {}
     };
 
     this.collectedRef = FirebaseUtils.getUserRef().child('collected').child(props.pokemon.id);
     this.tagRef = FirebaseUtils.getUserRef().child('tags').child(props.pokemon.id);
+    this.colorsRef = FirebaseUtils.getUserRef().child('settings/colors');
   }
 
   componentDidMount() {
@@ -106,11 +95,16 @@ class PokemonComponent extends Component {
       let tag = snap.val() || {};
       this.setState({ tag });
     });
+
+    this.colorsRef.once('value', (snap) => {
+      let colors = snap.val() || {};
+      this.setState({ colors });
+    });
   }
 
   render() {
     const {pokemon} = this.props;
-    const {collected, tag} = this.state;
+    const {collected, tag, colors} = this.state;
     const {formatMessage} = this.props.intl;
     const dynamicMessages = defineMessages({
       name: {
@@ -124,14 +118,14 @@ class PokemonComponent extends Component {
     let image = 'https://raw.githubusercontent.com/carab/Prof-Sylve-Sprites/master/sprites/' + pokemon.name + '.gif';
 
     let style = {};
-    let defaultColor = colors.default;
+    let defaultColor = Colors.default;
     let tagColor = tag.color || false;
     let force = tag.force || false;
     let color;
 
     if (collected) {
       style.opacity = '0.7';
-      defaultColor = colors.collected;
+      defaultColor = Colors.collected;
     }
 
     if (tagColor && (!collected || force)) {
@@ -169,8 +163,8 @@ class PokemonComponent extends Component {
               onTouchTap={() => this.handleTagRemove()}
               rightIcon={getColorIcon(defaultColor, color)}
             />
-            {_.map(colors.tags, (color) => (
-              <MenuItem primaryText={formatMessage(messages[color.name])}
+            {_.map(Colors.tags, (color) => (
+              <MenuItem primaryText={colors[color.name] || formatMessage(messages[color.name])}
                 key={color.name}
                 leftIcon={<BookmarkIcon style={{fill: color.value}}/>}
                 onTouchTap={() => this.handleTagColor(color.value)}
