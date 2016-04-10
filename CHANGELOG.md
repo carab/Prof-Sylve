@@ -1,6 +1,12 @@
 Changelog
 =========
 
+## v0.8.0 (2016-04-10)
+
+- Add tag management with colors.
+- Add settings page with color renaming.
+- Rename HTML title.
+
 ## v0.7.0 (2016-04-06)
 
 - Add translation system.
