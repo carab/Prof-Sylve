@@ -29,11 +29,15 @@ So please enjoy using this if you need it too, and don't hesitate to ask for fea
 
 ## Technical todos
 
+- Show "cancel" button when marking a Pokémon collected or tagging it.
+- Add current box and filters in URL to keep them in history.
+- Review box navigation and layout on mobile.
+- Review list layout in desktop.
+- Review settings layout and add account settings.
+- Improve transitions when signing in, loading Pokémons, etc.
+- Allow filters in grid, removing boxes when applied.
 - Use Redux instead of playing stupidly with Firebase.
-- Add left sidebar to navigate between grid and list.
-- Add settings page (language, password, email, delete account, reset living dex).
-- Add unit-tests maybe ?
-- Better grid on mobile would help.
+- Add unit-tests.
 
 ## Contributing
 
