@@ -88,10 +88,12 @@ class AppComponent extends React.Component {
     let navItems;
 
     if (this.state.loggedIn) {
+      const currentRoute = this.props.location.pathname;
+
       navItems = (
-        <Menu>
-          <MenuItem onTouchTap={this.handleToggleNav} leftIcon={<ViewModule />} containerElement={<Link to="/" />}>{formatMessage(messages.byBox)}</MenuItem>
-          <MenuItem onTouchTap={this.handleToggleNav} leftIcon={<List />} containerElement={<Link to="/list" />}>{formatMessage(messages.byList)}</MenuItem>
+        <Menu value={currentRoute}>
+          <MenuItem value="/" onTouchTap={this.handleToggleNav} leftIcon={<ViewModule />} containerElement={<Link to="/" />}>{formatMessage(messages.byBox)}</MenuItem>
+          <MenuItem value="/list" onTouchTap={this.handleToggleNav} leftIcon={<List />} containerElement={<Link to="/list" />}>{formatMessage(messages.byList)}</MenuItem>
           <Divider/>
         </Menu>
       );
@@ -127,9 +129,9 @@ class AppComponent extends React.Component {
           >
             <div style={styles.nav}></div>
             {navItems}
-            <Menu>
-              <MenuItem leftIcon={<Language />} onTouchTap={this.handleChangeLocale.bind(this, 'en')}>English</MenuItem>
-              <MenuItem leftIcon={<Language />} onTouchTap={this.handleChangeLocale.bind(this, 'fr')}>Français</MenuItem>
+            <Menu value={Translations.locale}>
+              <MenuItem value="en" leftIcon={<Language />} onTouchTap={this.handleChangeLocale.bind(this, 'en')}>English</MenuItem>
+              <MenuItem value="fr" leftIcon={<Language />} onTouchTap={this.handleChangeLocale.bind(this, 'fr')}>Français</MenuItem>
               <Divider/>
               <MenuItem leftIcon={<BugReport />} href="https://github.com/carab/Prof-Sylve" target="blank">{formatMessage(messages.bugs)}</MenuItem>
             </Menu>

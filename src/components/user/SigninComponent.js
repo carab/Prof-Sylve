@@ -55,16 +55,17 @@ class SigninComponent extends Component {
           <CardText>
             <TextField
               ref="email"
+              type="email"
               floatingLabelText={formatMessage(messages.email)}
               errorText={this.state.errors.email}
               fullWidth={true}
             />
             <TextField
               ref="password"
+              type="password"
               floatingLabelText={formatMessage(messages.password)}
               fullWidth={true}
               errorText={this.state.errors.password}
-              type="password"
             />
           </CardText>
           <CardActions>

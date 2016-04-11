@@ -17,11 +17,11 @@ class Routes extends React.Component {
     return (
       <Router history={browserHistory}>
         <Route path="/" component={App}>
-          <IndexRoute component={PcComponent} onEnter={requireAuth}/>
-          <Route path="list" component={ListComponent} onEnter={requireAuth}/>
-          <Route path="settings" component={SettingsComponent}/>
-          <Route path="sign" component={SignComponent}/>
-          <Route path="signout" component={SignoutComponent}/>
+          <IndexRoute name="pc" component={PcComponent} onEnter={requireAuth}/>
+          <Route name="list" path="list" component={ListComponent} onEnter={requireAuth}/>
+          <Route name="settings" path="settings" component={SettingsComponent}/>
+          <Route name="sign" path="sign" component={SignComponent}/>
+          <Route name="signout" path="signout" component={SignoutComponent}/>
         </Route>
       </Router>
     );

@@ -63,23 +63,24 @@ class SignupComponent extends React.Component {
           <CardText>
             <TextField
               ref="email"
+              type="email"
               floatingLabelText={formatMessage(messages.email)}
               fullWidth={true}
               errorText={this.state.errors.email}
             />
             <TextField
               ref="password"
+              type="password"
               floatingLabelText={formatMessage(messages.password)}
               fullWidth={true}
               errorText={this.state.errors.password}
-              type="password"
             />
             <TextField
               ref="passwordConfirmation"
+              type="password"
               floatingLabelText={formatMessage(messages.passwordConfirmation)}
               fullWidth={true}
               errorText={this.state.errors.passwordConfirmation}
-              type="password"
             />
           </CardText>
           <CardActions>
