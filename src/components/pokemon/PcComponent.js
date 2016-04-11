@@ -16,22 +16,13 @@ import ToolbarComponent from 'components/pokemon/ToolbarComponent';
 
 import FirebaseUtils from '../../utils/firebase-utils';
 
-const messages = defineMessages({
-  box: {
-    id: 'pokemon.toolbar.box',
-    defaultMessage: '{start} to {end}'
-  },
-  previousBox: {
-    id: 'pokemon.toolbar.previousBox',
-    defaultMessage: 'Previous Box'
-  },
-  nextBox: {
-    id: 'pokemon.toolbar.nextBox',
-    defaultMessage: 'Next Box'
-  }
-});
+import 'styles/pokemon/Pc.css';
 
-require('styles/pokemon/Pc.css');
+const messages = defineMessages({
+  box: {id: 'pokemon.toolbar.box'},
+  previousBox: {id: 'pokemon.toolbar.previousBox'},
+  nextBox: {id: 'pokemon.toolbar.nextBox'}
+});
 
 const BOX_COLS = 6;
 const BOX_ROWS = 5;

@@ -13,25 +13,13 @@ import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
 import FirebaseUtils from '../../utils/firebase-utils';
 
-require('styles/user/Signin.css');
+import 'styles/user/Signin.css';
 
 const messages = defineMessages({
-  signin: {
-    id: 'user.signin',
-    defaultMessage: 'Sign in'
-  },
-  subtitle: {
-    id: 'user.signinSubtitle',
-    defaultMessage: 'If you already have an account.'
-  },
-  email: {
-    id: 'user.email',
-    defaultMessage: 'Email'
-  },
-  password: {
-    id: 'user.password',
-    defaultMessage: 'Password'
-  }
+  signin: {id: 'user.signin'},
+  subtitle: {id: 'user.signinSubtitle'},
+  email: {id: 'user.email'},
+  password: {id: 'user.password'}
 });
 
 class SigninComponent extends Component {

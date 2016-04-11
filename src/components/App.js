@@ -24,35 +24,17 @@ import {injectIntl, intlShape, defineMessages} from 'react-intl';
 import FirebaseUtils from '../utils/firebase-utils';
 import Translations from '../utils/translations-loader';
 
-const messages = defineMessages({
-  app: {
-    id: 'app',
-    defaultMessage: 'Prof. Sylve\'s Living Dex'
-  },
-  byBox: {
-    id: 'nav.byBox',
-    defaultMessage: 'By Box'
-  },
-  byList: {
-    id: 'nav.byList',
-    defaultMessage: 'By List'
-  },
-  bugs: {
-    id: 'nav.bugs',
-    defaultMessage: 'Github/Bugs'
-  },
-  settings: {
-    id: 'user.settings',
-    defaultMessage: 'Settings'
-  },
-  signout: {
-    id: 'user.signout',
-    defaultMessage: 'Sign out'
-  }
-});
+import 'flexboxgrid/dist/flexboxgrid.css';
+import 'styles/App.css';
 
-require('flexboxgrid/dist/flexboxgrid.css');
-require('styles/App.css');
+const messages = defineMessages({
+  app: {id: 'app'},
+  byBox: {id: 'nav.byBox'},
+  byList: {id: 'nav.byList'},
+  bugs: {id: 'nav.bugs'},
+  settings: {id: 'user.settings'},
+  signout: {id: 'user.signout'}
+});
 
 const styles = {
   appbar: {

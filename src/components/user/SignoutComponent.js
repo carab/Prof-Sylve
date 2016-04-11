@@ -4,7 +4,7 @@ import React from 'react';
 
 import FirebaseUtils from '../../utils/firebase-utils';
 
-require('styles/user/Signout.css');
+import 'styles/user/Signout.css';
 
 class SignoutComponent extends React.Component {
   constructor(props, context) {

@@ -20,53 +20,20 @@ import {injectIntl, intlShape, defineMessages} from 'react-intl';
 import FirebaseUtils from '../../utils/firebase-utils';
 import Colors from '../../utils/colors';
 
-require('styles/pokemon/Pokemon.css');
+import 'styles/pokemon/Pokemon.css';
 
 const messages = defineMessages({
-  collected: {
-    id: 'pokemon.collected',
-    defaultMessage: 'Collected'
-  },
-  tag: {
-    id: 'pokemon.tag.tag',
-    defaultMessage: 'Tag'
-  },
-  force: {
-    id: 'pokemon.tag.force',
-    defaultMessage: 'Force color'
-  },
-  none: {
-    id: 'pokemon.tag.none',
-    defaultMessage: 'None'
-  },
-  externalService: {
-    id: 'pokemon.externalService',
-    defaultMessage: 'See on Bulbapedia'
-  },
-  externalUrl: {
-    id: 'pokemon.externalUrl',
-    defaultMessage: 'http://bulbapedia.bulbagarden.net/wiki/{name}'
-  },
-  red: {
-    id: 'pokemon.tag.color.red',
-    defaultMessage: 'Red'
-  },
-  orange: {
-    id: 'pokemon.tag.color.orange',
-    defaultMessage: 'Orange'
-  },
-  green: {
-    id: 'pokemon.tag.color.green',
-    defaultMessage: 'Green'
-  },
-  indigo: {
-    id: 'pokemon.tag.color.indigo',
-    defaultMessage: 'Indigo'
-  },
-  purple: {
-    id: 'pokemon.tag.color.purple',
-    defaultMessage: 'Violet'
-  }
+  collected: {id: 'pokemon.collected'},
+  tag: {id: 'pokemon.tag.tag'},
+  force: {id: 'pokemon.tag.force'},
+  none: {id: 'pokemon.tag.none'},
+  externalService: {id: 'pokemon.externalService'},
+  externalUrl: {id: 'pokemon.externalUrl'},
+  red: {id: 'pokemon.tag.color.red'},
+  orange: {id: 'pokemon.tag.color.orange'},
+  green: {id: 'pokemon.tag.color.green'},
+  indigo: {id: 'pokemon.tag.color.indigo'},
+  purple: {id: 'pokemon.tag.color.purple'}
 });
 
 class PokemonComponent extends Component {

@@ -7,7 +7,7 @@ import GridList from 'material-ui/lib/grid-list/grid-list';
 
 import PokemonComponent from 'components/pokemon/PokemonComponent';
 
-require('styles/pokemon/Box.css');
+import 'styles/pokemon/Box.css';
 
 class BoxComponent extends React.Component {
   render() {

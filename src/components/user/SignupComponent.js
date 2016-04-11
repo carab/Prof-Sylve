@@ -13,33 +13,15 @@ import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
 import FirebaseUtils from '../../utils/firebase-utils';
 
-require('styles/user/Signup.css');
+import 'styles/user/Signup.css';
 
 const messages = defineMessages({
-  signup: {
-    id: 'user.signup',
-    defaultMessage: 'Sign up'
-  },
-  subtitle: {
-    id: 'user.signupSubtitle',
-    defaultMessage: 'If you want to catch\'em all !'
-  },
-  email: {
-    id: 'user.email',
-    defaultMessage: 'Email'
-  },
-  password: {
-    id: 'user.password',
-    defaultMessage: 'Password'
-  },
-  passwordConfirmation: {
-    id: 'user.passwordConfirmation',
-    defaultMessage: 'Password Confirmation'
-  },
-  passwordConfirmationIncorrect: {
-    id: 'user.passwordConfirmationIncorrect',
-    defaultMessage: 'Password confirmation is not correct.'
-  }
+  signup: {id: 'user.signup'},
+  subtitle: {id: 'user.signupSubtitle'},
+  email: {id: 'user.email'},
+  password: {id: 'user.password'},
+  passwordConfirmation: {id: 'user.passwordConfirmation'},
+  passwordConfirmationIncorrect: {id: 'user.passwordConfirmationIncorrect'}
 });
 
 class SignupComponent extends React.Component {

@@ -5,7 +5,7 @@ import React from 'react';
 import SigninComponent from 'components/user/SigninComponent';
 import SignupComponent from 'components/user/SignupComponent';
 
-require('styles/user/Sign.css');
+import 'styles/user/Sign.css';
 
 class SignComponent extends React.Component {
   render() {

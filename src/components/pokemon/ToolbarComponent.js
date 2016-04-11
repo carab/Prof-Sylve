@@ -1,6 +1,7 @@
 'use strict';
 
 import React, {Component, PropTypes} from 'react';
+import _ from 'lodash';
 
 import Toolbar from 'material-ui/lib/toolbar/toolbar';
 import ToolbarGroup from 'material-ui/lib/toolbar/toolbar-group';
@@ -10,14 +11,12 @@ import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
 import FirebaseUtils from '../../utils/firebase-utils';
 
-const messages = defineMessages({
-  counter: {
-    id: 'pokemon.toolbar.counter',
-    defaultMessage: '{collected} on {total}'
-  }
-});
+import 'styles/pokemon/Toolbar.css';
 
-require('styles/pokemon/Toolbar.css');
+const messages = defineMessages({
+  counter: {id: 'pokemon.toolbar.counter'},
+  filteredPokemons: {id: 'pokemon.toolbar.filteredPokemons'}
+});
 
 class ToolbarComponent extends Component {
   constructor(props) {
@@ -52,13 +51,19 @@ class ToolbarComponent extends Component {
   render() {
     const {formatMessage} = this.props.intl;
     const {collected} = this.state;
-    const {pokemons, right} = this.props;
+    const {pokemons, filteredPokemons, right} = this.props;
+
+    let title = formatMessage(messages.counter, { collected, pokemons: pokemons.length });
+
+    if (_.isArray(filteredPokemons) && filteredPokemons.length < pokemons.length) {
+      title = formatMessage(messages.filteredPokemons, { filteredPokemons: filteredPokemons.length });
+    }
 
     return (
       <div className="pokemon-toolbar">
         <Toolbar>
           <ToolbarGroup float="left">
-            <ToolbarTitle text={formatMessage(messages.counter, { collected, total: pokemons.length })}/>
+            <ToolbarTitle text={title}/>
           </ToolbarGroup>
           <ToolbarGroup float="right">
             {right}

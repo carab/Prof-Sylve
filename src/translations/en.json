@@ -1,5 +1,54 @@
 {
+  "app": "Living Dex du Prof. Sylve",
+  "label": {
+    "save": "Save"
+  },
+  "nav": {
+    "byBox": "By Box",
+    "byList": "By List",
+    "bugs": "Github/Bugs"
+  },
+  "user": {
+    "settings": "Settings",
+    "signout": "Sign out",
+    "signin": "Sign in",
+    "signinSubtitle": "If you already have an account.",
+    "signup": "Sign up",
+    "signupSubtitle": "If you want to catch'em all !",
+    "email": "Email",
+    "password": "Password",
+    "passwordConfirmation": "Password Confirmation",
+    "passwordConfirmationIncorrect": "Password confirmation is not correct."
+  },
   "pokemon": {
+    "toolbar": {
+      "counter": "{collected} on {pokemons}",
+      "filteredPokemons": "{filteredPokemons} Pokémons",
+      "box": "{start} to {end}",
+      "previousBox": "Previous Box",
+      "nextBox": "Next Box"
+    },
+    "collected": "Collected",
+    "externalService": "See on Bulbapedia",
+    "externalUrl": "http://bulbapedia.bulbagarden.net/wiki/{name}",
+    "tag": {
+      "tag": "Tag",
+      "force": "Force the color",
+      "none": "None",
+      "color": {
+        "red": "Red",
+        "yellow": "Yellow",
+        "green": "Green",
+        "purple": "Purple",
+        "indigo": "Indigo",
+        "brown": "Brown",
+        "orange": "Orange",
+        "cyan": "Cyan",
+        "pink": "Pink",
+        "teal": "Teal",
+        "lime": "Lime"
+      }
+    },
     "name": {
       "1": "Bulbasaur",
       "2": "Ivysaur",

@@ -12,7 +12,7 @@
     "settings": "Paramètres",
     "signout": "Déconnexion",
     "signin": "Se connecter",
-    "signinSubtitle": "Si vous avez déjà un compte",
+    "signinSubtitle": "Si vous avez déjà un compte.",
     "signup": "S'inscrire",
     "signupSubtitle": "Si vous voulez tous les attraper !",
     "email": "Adresse email",
@@ -22,10 +22,11 @@
   },
   "pokemon": {
     "toolbar": {
-      "counter": "{collected} sur {total}",
+      "counter": "{collected} sur {pokemons}",
+      "filteredPokemons": "{filteredPokemons} Pokémons",
       "box": "{start} à {end}",
-      "previousBox": "Boîte précédente",
-      "nextBox": "Boîte suivante"
+      "previousBox": "Boîte Précédente",
+      "nextBox": "Boîte Suivante"
     },
     "collected": "Collecté",
     "externalService": "Voir sur Poképedia",

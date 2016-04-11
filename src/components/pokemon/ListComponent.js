@@ -15,7 +15,7 @@ import BookmarkIcon from 'material-ui/lib/svg-icons/action/bookmark';
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
 import { VirtualScroll, AutoSizer } from 'react-virtualized';
-require('react-virtualized/styles.css');
+import 'react-virtualized/styles.css';
 
 import FirebaseUtils from '../../utils/firebase-utils';
 import Colors from '../../utils/colors';
@@ -23,29 +23,14 @@ import Colors from '../../utils/colors';
 import PokemonComponent from 'components/pokemon/PokemonComponent';
 import ToolbarComponent from 'components/pokemon/ToolbarComponent';
 
-require('styles/pokemon/List.css');
+import 'styles/pokemon/List.css';
 
 const messages = defineMessages({
-  red: {
-    id: 'pokemon.tag.color.red',
-    defaultMessage: 'Red'
-  },
-  orange: {
-    id: 'pokemon.tag.color.orange',
-    defaultMessage: 'Orange'
-  },
-  green: {
-    id: 'pokemon.tag.color.green',
-    defaultMessage: 'Green'
-  },
-  indigo: {
-    id: 'pokemon.tag.color.indigo',
-    defaultMessage: 'Indigo'
-  },
-  purple: {
-    id: 'pokemon.tag.color.purple',
-    defaultMessage: 'Violet'
-  }
+  red: {id: 'pokemon.tag.color.red'},
+  orange: {id: 'pokemon.tag.color.orange'},
+  green: {id: 'pokemon.tag.color.green'},
+  indigo: {id: 'pokemon.tag.color.indigo'},
+  purple: {id: 'pokemon.tag.color.purple'}
 });
 
 class ListComponent extends React.Component {
@@ -136,7 +121,7 @@ class ListComponent extends React.Component {
 
     return (
       <div className="pokemon-list">
-        <ToolbarComponent pokemons={pokemons} right={
+        <ToolbarComponent pokemons={pokemons} filteredPokemons={filteredPokemons} right={
           <IconMenu
             iconButtonElement={<IconButton><FilterIcon/></IconButton>}
             value={filter}

@@ -15,37 +15,16 @@ import {injectIntl, intlShape, defineMessages} from 'react-intl';
 import FirebaseUtils from '../../utils/firebase-utils';
 import Colors from '../../utils/colors';
 
-require('styles/user/Settings.css');
+import 'styles/user/Settings.css';
 
 const messages = defineMessages({
-  settings: {
-    id: 'user.settings',
-    defaultMessage: 'Settings'
-  },
-  save: {
-    id: 'label.save',
-    defaultMessage: 'Save'
-  },
-  red: {
-    id: 'pokemon.tag.color.red',
-    defaultMessage: 'Red'
-  },
-  orange: {
-    id: 'pokemon.tag.color.orange',
-    defaultMessage: 'Orange'
-  },
-  green: {
-    id: 'pokemon.tag.color.green',
-    defaultMessage: 'Green'
-  },
-  indigo: {
-    id: 'pokemon.tag.color.indigo',
-    defaultMessage: 'Indigo'
-  },
-  purple: {
-    id: 'pokemon.tag.color.purple',
-    defaultMessage: 'Violet'
-  }
+  settings: {id: 'user.settings'},
+  save: {id: 'label.save'},
+  red: {id: 'pokemon.tag.color.red'},
+  orange: {id: 'pokemon.tag.color.orange'},
+  green: {id: 'pokemon.tag.color.green'},
+  indigo: {id: 'pokemon.tag.color.indigo'},
+  purple: {id: 'pokemon.tag.color.purple'}
 });
 
 class SettingsComponent extends Component {
