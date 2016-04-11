@@ -146,7 +146,7 @@ class PokemonComponent extends Component {
         <GridTile
           className="pokemon-component pokemon-component--tile"
           style={style}
-          title={pokemon.id + ') ' + name}
+          title={pokemon.id + ' - ' + name}
           titleBackground={color}
           onTouchTap={this.handleCollected}
           actionIcon={menu}
@@ -160,7 +160,7 @@ class PokemonComponent extends Component {
       return (
         <ListItem
           className="pokemon-component pokemon-component--item"
-          primaryText={'#' + pokemon.id + ' - ' + name}
+          primaryText={pokemon.id + ' - ' + name}
           rightIconButton={menu}
           onTouchTap={this.handleCollected}
           leftIcon={<BookmarkIcon style={{fill: color}}/>}
