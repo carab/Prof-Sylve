@@ -49,7 +49,6 @@ class ListComponent extends React.Component {
       filter: 'all'
     };
 
-    this.pokemonsRef = FirebaseUtils.getRootRef().child('pokemons');
     this.collectedRef = FirebaseUtils.getUserRef().child('collected');
     this.colorsRef = FirebaseUtils.getUserRef().child('settings/colors');
     this.tagsRef = FirebaseUtils.getUserRef().child('tags');
@@ -61,11 +60,6 @@ class ListComponent extends React.Component {
   }
 
   componentDidMount() {
-    this.pokemonsRef.once('value', (snap) => {
-      let pokemons = snap.val();
-      this.setState({ pokemons });
-    });
-
     this.colorsRef.once('value', (snap) => {
       let colors = snap.val() || {};
       this.setState({ colors });
@@ -89,7 +83,8 @@ class ListComponent extends React.Component {
 
   render() {
     const {formatMessage} = this.props.intl;
-    const {pokemons, collected, tags, colors, filter} = this.state;
+    const {pokemons} = this.props;
+    const {collected, tags, colors, filter} = this.state;
     const filters = {
       all: () => {
         return true;

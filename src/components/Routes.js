@@ -6,7 +6,7 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import FirebaseUtils from '../utils/firebase-utils';
 
 import App from 'components/App';
-import ListComponent from 'components/pokemon/ListComponent';
+import PokemonList from '../containers/PokemonList';
 import PcComponent from 'components/pokemon/PcComponent';
 import SignComponent from 'components/user/SignComponent';
 import SignoutComponent from 'components/user/SignoutComponent';
@@ -18,7 +18,7 @@ class Routes extends React.Component {
       <Router history={browserHistory}>
         <Route path="/" component={App}>
           <IndexRoute name="pc" component={PcComponent} onEnter={requireAuth}/>
-          <Route name="list" path="list" component={ListComponent} onEnter={requireAuth}/>
+          <Route name="list" path="list" component={PokemonList} onEnter={requireAuth}/>
           <Route name="settings" path="settings" component={SettingsComponent}/>
           <Route name="sign" path="sign" component={SignComponent}/>
           <Route name="signout" path="signout" component={SignoutComponent}/>

@@ -80,8 +80,11 @@
     "react-document-title": "^2.0.1",
     "react-dom": "^0.14.8",
     "react-intl": "^2.0.0-rc-1",
+    "react-redux": "^4.4.2",
     "react-router": "^2.0.1",
     "react-tap-event-plugin": "^0.2.2",
-    "react-virtualized": "^6.1.1"
+    "react-virtualized": "^6.1.1",
+    "redux": "^3.4.0",
+    "redux-thunk": "^2.0.1"
   }
 }
