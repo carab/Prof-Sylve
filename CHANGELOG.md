@@ -1,6 +1,12 @@
 Changelog
 =========
 
+## v0.10.0 (2016-04-13)
+
+- Add Oddish as favicon.
+- Add Pokémon number.
+- Implement Redux for Pokémon lists and actions.
+
 ## v0.9.0 (2016-04-10)
 
 - Improve list and add filters.
