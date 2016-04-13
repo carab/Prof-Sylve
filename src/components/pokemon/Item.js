@@ -87,14 +87,6 @@ class PokemonComponent extends Component {
 
     const menu = (
       <IconMenu
-        style={
-          {
-            display: 'block',
-            position: 'absolute',
-            top: 0,
-            right:'4px'
-          }
-        }
         iconButtonElement={menuButton}
         targetOrigin={targetOrigin}
         anchorOrigin={anchorOrigin}
