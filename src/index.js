@@ -39,6 +39,8 @@ class Root extends Component {
     Translations.onLocaleChange(this.handleLocaleChange.bind(this));
 
     if (FirebaseUtils.isLoggedIn()) {
+      store.dispatch(actions.startListeningToUser());
+
       FirebaseUtils.getUserRef().child('settings/locale').once('value', (snapshot) => {
         Translations.changeLocale(snapshot.val());
         this.setState({ localeLoaded: true });

@@ -1,14 +1,16 @@
 import { connect } from 'react-redux';
-//import { toggleTodo } from '../actions';
-import PokemonList from '../components/pokemon/ListComponent';
+
+import PokemonList from '../components/pokemon/List';
 
 const mapStateToProps = (state) => {
   return {
-    pokemons: state.pokemons.data
+    pokemons: state.pokemons.data,
+    collected: state.user.data.collected,
+    tags: state.user.data.tags
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = () => {
   return {};
 }
 

@@ -1,17 +1,19 @@
 export default {
   feedback: [],
-  auth: {
+  user: {
     currently: 'AUTH_GUEST',
-    username: null,
-    uid: null
-  },
-  settings: {
-    locale: null,
-    tags: []
+    hasReceived: false,
+    data: {
+      settings: {
+        locale: null,
+        colors: {}
+      },
+      collected: {},
+      tags: {}
+    }
   },
   pokemons: {
     hasReceived: false,
-    filteredData: [],
     data: []
   }
 };
