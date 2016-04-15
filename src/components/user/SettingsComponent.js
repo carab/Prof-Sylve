@@ -3,12 +3,9 @@
 import React, {Component, PropTypes} from 'react';
 import _ from 'lodash';
 
-import RaisedButton from 'material-ui/lib/raised-button';
-import TextField from 'material-ui/lib/text-field';
-import Card from 'material-ui/lib/card/card';
-import CardActions from 'material-ui/lib/card/card-actions';
-import CardTitle from 'material-ui/lib/card/card-title';
-import CardText from 'material-ui/lib/card/card-text';
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
+import {Card, CardActions, CardTitle, CardText} from 'material-ui/Card';
 
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
 

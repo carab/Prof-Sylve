@@ -2,20 +2,19 @@
 
 import React from 'react';
 import _ from 'lodash';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
-import List from 'material-ui/lib/lists/list';
-import ListItem from 'material-ui/lib/lists/list-item';
-import Divider from 'material-ui/lib/divider';
-import IconMenu from 'material-ui/lib/menus/icon-menu';
-import MenuItem from 'material-ui/lib/menus/menu-item';
-import IconButton from 'material-ui/lib/icon-button';
-import FilterIcon from 'material-ui/lib/svg-icons/content/filter-list';
-import BookmarkIcon from 'material-ui/lib/svg-icons/action/bookmark';
+import {List, ListItem} from 'material-ui/List';
+import Divider from 'material-ui/Divider';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import IconButton from 'material-ui/IconButton';
+import FilterIcon from 'material-ui/svg-icons/content/filter-list';
+import BookmarkIcon from 'material-ui/svg-icons/action/bookmark';
 
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
-import { VirtualScroll, AutoSizer } from 'react-virtualized';
+import {VirtualScroll, AutoSizer} from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
 import Colors from '../../utils/colors';

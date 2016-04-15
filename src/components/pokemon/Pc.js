@@ -2,13 +2,13 @@
 
 import React from 'react';
 import _ from 'lodash';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
-import IconButton from 'material-ui/lib/icon-button';
-import DropDownMenu from 'material-ui/lib/DropDownMenu';
-import MenuItem from 'material-ui/lib/menus/menu-item';
-import ImageNavigateBefore from 'material-ui/lib/svg-icons/image/navigate-before';
-import ImageNavigateNext from 'material-ui/lib/svg-icons/image/navigate-next';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
+import IconButton from 'material-ui/IconButton';
+import ImageNavigateBefore from 'material-ui/svg-icons/image/navigate-before';
+import ImageNavigateNext from 'material-ui/svg-icons/image/navigate-next';
 
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
 

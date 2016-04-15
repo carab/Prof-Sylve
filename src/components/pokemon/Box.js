@@ -3,7 +3,7 @@
 import React from 'react';
 import _ from 'lodash';
 
-import GridList from 'material-ui/lib/grid-list/grid-list';
+import {GridList} from 'material-ui/GridList';
 
 import PokemonItem from 'components/pokemon/Item';
 

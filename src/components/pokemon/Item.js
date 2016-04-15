@@ -1,20 +1,21 @@
 'use strict';
 
 import React, {Component, PropTypes} from 'react';
-import { connect } from 'react-redux';
+import _ from 'lodash';
+import {connect} from 'react-redux';
 
-import GridTile from 'material-ui/lib/grid-list/grid-tile';
-import ListItem from 'material-ui/lib/lists/list-item';
-import Divider from 'material-ui/lib/divider';
-import IconButton from 'material-ui/lib/icon-button';
-import IconMenu from 'material-ui/lib/menus/icon-menu';
-import MenuItem from 'material-ui/lib/menus/menu-item';
-import Checkbox from 'material-ui/lib/checkbox';
-import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert';
-import LaunchIcon from 'material-ui/lib/svg-icons/action/launch';
-import BookmarkIcon from 'material-ui/lib/svg-icons/action/bookmark';
+import {GridTile} from 'material-ui/GridList';
+import {ListItem} from 'material-ui/List';
+import Divider from 'material-ui/Divider';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import IconButton from 'material-ui/IconButton';
+import Checkbox from 'material-ui/Checkbox';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import LaunchIcon from 'material-ui/svg-icons/action/launch';
+import BookmarkIcon from 'material-ui/svg-icons/action/bookmark';
 
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
 import Colors from '../../utils/colors';
 import Actions from '../../actions';

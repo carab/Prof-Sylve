@@ -1,23 +1,25 @@
 'use strict';
 
 import React from 'react';
-import { Link } from 'react-router';
+import {Link} from 'react-router';
 
 import DocumentTitle from 'react-document-title';
-import AppBar from 'material-ui/lib/app-bar';
-import LeftNav from 'material-ui/lib/left-nav';
-import Divider from 'material-ui/lib/divider';
-import IconButton from 'material-ui/lib/icon-button';
-import IconMenu from 'material-ui/lib/menus/icon-menu';
-import Menu from 'material-ui/lib/menus/menu';
-import MenuItem from 'material-ui/lib/menus/menu-item';
-import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert';
-import PowerSettingsNew from 'material-ui/lib/svg-icons/action/power-settings-new';
-import Settings from 'material-ui/lib/svg-icons/action/settings';
-import List from 'material-ui/lib/svg-icons/action/list';
-import ViewModule from 'material-ui/lib/svg-icons/action/view-module';
-import BugReport from 'material-ui/lib/svg-icons/action/bug-report';
-import Language from 'material-ui/lib/svg-icons/action/language';
+
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import AppBar from 'material-ui/AppBar';
+import Drawer from 'material-ui/Drawer';
+import Divider from 'material-ui/Divider';
+import IconMenu from 'material-ui/IconMenu';
+import Menu from 'material-ui/Menu';
+import MenuItem from 'material-ui/MenuItem';
+import IconButton from 'material-ui/IconButton';
+import MoreVertIconIcon from 'material-ui/svg-icons/navigation/more-vert';
+import PowerSettingsNewIcon from 'material-ui/svg-icons/action/power-settings-new';
+import SettingsIcon from 'material-ui/svg-icons/action/settings';
+import ListIcon from 'material-ui/svg-icons/action/list';
+import ViewModuleIcon from 'material-ui/svg-icons/action/view-module';
+import BugReportIcon from 'material-ui/svg-icons/action/bug-report';
+import LanguageIcon from 'material-ui/svg-icons/action/language';
 
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
@@ -59,6 +61,12 @@ class AppComponent extends React.Component {
     }
   }
 
+  getChildContext() {
+    return {
+      muiTheme: getMuiTheme(),
+    };
+  }
+
   componentDidMount() {
     FirebaseUtils.onAuth(this.handleAuth);
   }
@@ -74,8 +82,8 @@ class AppComponent extends React.Component {
 
       navItems = (
         <Menu value={currentRoute}>
-          <MenuItem value="/" onTouchTap={this.handleToggleNav} leftIcon={<ViewModule />} containerElement={<Link to="/" />}>{formatMessage(messages.byBox)}</MenuItem>
-          <MenuItem value="/list" onTouchTap={this.handleToggleNav} leftIcon={<List />} containerElement={<Link to="/list" />}>{formatMessage(messages.byList)}</MenuItem>
+          <MenuItem value="/" onTouchTap={this.handleToggleNav} leftIcon={<ViewModuleIcon/>} containerElement={<Link to="/" />}>{formatMessage(messages.byBox)}</MenuItem>
+          <MenuItem value="/list" onTouchTap={this.handleToggleNav} leftIcon={<ListIcon/>} containerElement={<Link to="/list" />}>{formatMessage(messages.byList)}</MenuItem>
           <Divider/>
         </Menu>
       );
@@ -83,14 +91,14 @@ class AppComponent extends React.Component {
       menu = (
         <IconMenu
           iconButtonElement={
-            <IconButton><MoreVertIcon /></IconButton>
+            <IconButton><MoreVertIconIcon/></IconButton>
           }
           targetOrigin={{horizontal: 'right', vertical: 'top'}}
           anchorOrigin={{horizontal: 'right', vertical: 'top'}}
         >
-          <MenuItem primaryText={formatMessage(messages.settings)} leftIcon={<Settings />} containerElement={<Link to="/settings" />}/>
+          <MenuItem primaryText={formatMessage(messages.settings)} leftIcon={<SettingsIcon/>} containerElement={<Link to="/settings" />}/>
           <Divider/>
-          <MenuItem primaryText={formatMessage(messages.signout)} leftIcon={<PowerSettingsNew />} containerElement={<Link to="/signout" />}/>
+          <MenuItem primaryText={formatMessage(messages.signout)} leftIcon={<PowerSettingsNewIcon/>} containerElement={<Link to="/signout" />}/>
         </IconMenu>
       );
     }
@@ -104,7 +112,7 @@ class AppComponent extends React.Component {
             iconElementRight={menu}
             style={styles.appbar}
           />
-          <LeftNav
+          <Drawer
             docked={false}
             open={this.state.navOpen}
             onRequestChange={this.handleToggleNavRequest}
@@ -112,12 +120,12 @@ class AppComponent extends React.Component {
             <div style={styles.nav}></div>
             {navItems}
             <Menu value={Translations.locale}>
-              <MenuItem value="en" leftIcon={<Language />} onTouchTap={this.handleChangeLocale.bind(this, 'en')}>English</MenuItem>
-              <MenuItem value="fr" leftIcon={<Language />} onTouchTap={this.handleChangeLocale.bind(this, 'fr')}>Français</MenuItem>
+              <MenuItem value="en" leftIcon={<LanguageIcon/>} onTouchTap={this.handleChangeLocale.bind(this, 'en')}>English</MenuItem>
+              <MenuItem value="fr" leftIcon={<LanguageIcon/>} onTouchTap={this.handleChangeLocale.bind(this, 'fr')}>Français</MenuItem>
               <Divider/>
-              <MenuItem leftIcon={<BugReport />} href="https://github.com/carab/Prof-Sylve" target="blank">{formatMessage(messages.bugs)}</MenuItem>
+              <MenuItem leftIcon={<BugReportIcon/>} href="https://github.com/carab/Prof-Sylve" target="blank">{formatMessage(messages.bugs)}</MenuItem>
             </Menu>
-          </LeftNav>
+          </Drawer>
           <div className="prof-sylve__content">
             {this.props.children}
           </div>
@@ -159,6 +167,10 @@ AppComponent.propTypes = {
 
 AppComponent.contextTypes = {
   router: () => { return React.PropTypes.func.isRequired; },
+};
+
+AppComponent.childContextTypes = {
+  muiTheme: React.PropTypes.object,
 };
 
 export default injectIntl(AppComponent);
