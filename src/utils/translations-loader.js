@@ -1,5 +1,6 @@
 import {addLocaleData} from 'react-intl';
 import frLocaleData from 'react-intl/locale-data/fr';
+import _ from 'lodash';
 
 addLocaleData(frLocaleData);
 
@@ -26,7 +27,13 @@ class Translations {
   }
 
   loadLocale() {
-    return navigator.language.split('-')[0];
+    const locale = navigator.language.split('-')[0];
+
+    if (_.includes(['en', 'fr'], locale)) {
+      return locale;
+    }
+
+    return 'en';
   }
 
   loadMessages(locale) {
