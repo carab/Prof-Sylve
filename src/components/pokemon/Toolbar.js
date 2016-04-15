@@ -2,9 +2,11 @@
 
 import React, {Component, PropTypes} from 'react';
 import _ from 'lodash';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
-import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar';
+import Toolbar from 'material-ui/lib/toolbar/toolbar';
+import ToolbarGroup from 'material-ui/lib/toolbar/toolbar-group';
+import ToolbarTitle from 'material-ui/lib/toolbar/toolbar-title';
 
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
@@ -14,7 +16,7 @@ import 'styles/pokemon/Toolbar.css';
 
 const messages = defineMessages({
   counter: {id: 'pokemon.toolbar.counter'},
-  filteredPokemons: {id: 'pokemon.toolbar.filteredPokemons'},
+  filteredPokemons: {id: 'pokemon.toolbar.filteredPokemons'}
 });
 
 class PokemonToolbar extends Component {
@@ -22,7 +24,7 @@ class PokemonToolbar extends Component {
     super(props);
 
     this.state = {
-      collected: null,
+      collected: null
     };
 
     this.collectedRef = FirebaseUtils.getUserRef().child('collected');
@@ -78,12 +80,12 @@ PokemonToolbar.displayName = 'PokemonToolbarComponent';
 PokemonToolbar.propTypes = {
     pokemons: PropTypes.array.isRequired,
     right: PropTypes.object,
-    intl: intlShape.isRequired,
+    intl: intlShape.isRequired
 };
 
 const mapStateToProps = (state) => {
   return {
-    pokemons: state.pokemons.data,
+    pokemons: state.pokemons.data
   };
 };
 

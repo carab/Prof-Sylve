@@ -2,12 +2,12 @@
 
 import React from 'react';
 import {Link} from 'react-router';
+import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
 import DocumentTitle from 'react-document-title';
 
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import Divider from 'material-ui/Divider';
 import IconMenu from 'material-ui/IconMenu';
@@ -22,10 +22,10 @@ import ViewModuleIcon from 'material-ui/svg-icons/action/view-module';
 import BugReportIcon from 'material-ui/svg-icons/action/bug-report';
 import LanguageIcon from 'material-ui/svg-icons/action/language';
 
-import {injectIntl, intlShape, defineMessages} from 'react-intl';
-
 import FirebaseUtils from '../utils/firebase-utils';
 import Translations from '../utils/translations-loader';
+
+import AppBar from './ui/AppBar';
 
 import 'flexboxgrid/dist/flexboxgrid.css';
 import 'styles/App.css';
@@ -104,12 +104,7 @@ class AppComponent extends React.Component {
       <MuiThemeProvider muiTheme={muiTheme}>
         <DocumentTitle title="Prof. Sylve">
           <div className="prof-sylve">
-            <AppBar
-              title={formatMessage(messages.app)}
-              onLeftIconButtonTouchTap={this.handleToggleNav}
-              iconElementRight={menu}
-              style={styles.appbar}
-            />
+            <AppBar/>
             <Drawer
               docked={false}
               open={this.state.navOpen}
