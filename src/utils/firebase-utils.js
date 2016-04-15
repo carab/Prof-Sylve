@@ -31,7 +31,7 @@ class FirebaseUtils {
             this.getRootRef().child('users').child(authData.uid).set({
               email: user.email,
               uid: authData.uid,
-              token: authData.token
+              token: authData.token,
             });
 
             cb(null, authData);

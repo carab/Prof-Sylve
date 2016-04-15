@@ -6,14 +6,14 @@ export default {
     data: {
       settings: {
         locale: null,
-        colors: {}
+        colors: {},
       },
       collected: {},
-      tags: {}
-    }
+      tags: {},
+    },
   },
   pokemons: {
     hasReceived: false,
-    data: []
-  }
+    data: [],
+  },
 };

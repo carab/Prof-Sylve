@@ -52,7 +52,7 @@ const actions = {
       const forceRef = FirebaseUtils.getUserRef().child('tags').child(pokemon.id).child('force');
       forceRef.set(force)
     };
-  }
+  },
 };
 
 export default actions;

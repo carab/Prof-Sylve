@@ -33,17 +33,17 @@ const messages = defineMessages({
   byList: {id: 'nav.byList'},
   bugs: {id: 'nav.bugs'},
   settings: {id: 'user.settings'},
-  signout: {id: 'user.signout'}
+  signout: {id: 'user.signout'},
 });
 
 const styles = {
   appbar: {
     position: 'fixed',
-    zIndex: 1301
+    zIndex: 1301,
   },
   nav: {
-    paddingTop: '64px'
-  }
+    paddingTop: '64px',
+  },
 };
 
 class AppComponent extends React.Component {
@@ -55,7 +55,7 @@ class AppComponent extends React.Component {
     this.handleToggleNavRequest = this.handleToggleNavRequest.bind(this);
 
     this.state = {
-      loggedIn: FirebaseUtils.isLoggedIn()
+      loggedIn: FirebaseUtils.isLoggedIn(),
     }
   }
 
@@ -154,11 +154,11 @@ class AppComponent extends React.Component {
 AppComponent.defaultProps = {};
 
 AppComponent.propTypes = {
-    intl: intlShape.isRequired
+  intl: intlShape.isRequired,
 };
 
 AppComponent.contextTypes = {
-    router: () => { return React.PropTypes.func.isRequired; }
+  router: () => { return React.PropTypes.func.isRequired; },
 };
 
 export default injectIntl(AppComponent);

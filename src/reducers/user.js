@@ -5,7 +5,7 @@ export default (state = initial.user, action) => {
     case 'RECEIVE_USER_DATA':
       return Object.assign({}, state, {
         hasReceived: true,
-        data: action.data
+        data: action.data,
       });
     default: return state;
   }

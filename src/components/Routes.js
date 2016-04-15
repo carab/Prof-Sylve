@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import { Router, Route, IndexRoute, browserHistory } from 'react-router';
+import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 
 import FirebaseUtils from '../utils/firebase-utils';
 
@@ -32,7 +32,7 @@ function requireAuth(nextState, replace) {
   if (!FirebaseUtils.isLoggedIn()) {
     replace({
       pathname: '/sign',
-      state: { nextPathname: nextState.location.pathname }
+      state: { nextPathname: nextState.location.pathname },
     })
   }
 }

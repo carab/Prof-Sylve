@@ -30,7 +30,7 @@ const messages = defineMessages({
   orange: {id: 'pokemon.tag.color.orange'},
   green: {id: 'pokemon.tag.color.green'},
   indigo: {id: 'pokemon.tag.color.indigo'},
-  purple: {id: 'pokemon.tag.color.purple'}
+  purple: {id: 'pokemon.tag.color.purple'},
 });
 
 class ListComponent extends React.Component {
@@ -42,7 +42,7 @@ class ListComponent extends React.Component {
     this.noItemRenderer = this.noItemRenderer.bind(this);
 
     this.state = {
-      filter: 'all'
+      filter: 'all',
     };
   }
 
@@ -59,7 +59,7 @@ class ListComponent extends React.Component {
       },
       notCollected: (pokemon) => {
         return !collected[pokemon.id];
-      }
+      },
     };
 
     const colorsList = _.map(Colors.tags, (color) => {
@@ -72,7 +72,7 @@ class ListComponent extends React.Component {
       return {
         text: colors[color.name] || formatMessage(messages[color.name]),
         value: color.value,
-        key: key
+        key: key,
       };
     });
 
@@ -121,7 +121,7 @@ class ListComponent extends React.Component {
 
   handleFilterChange(event, value) {
     this.setState({
-      filter: value
+      filter: value,
     });
   }
 
@@ -143,7 +143,7 @@ class ListComponent extends React.Component {
 ListComponent.displayName = 'PokemonListComponent';
 
 ListComponent.propTypes = {
-  intl: intlShape.isRequired
+  intl: intlShape.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -151,7 +151,7 @@ const mapStateToProps = (state) => {
     pokemons: state.pokemons.data,
     collected: state.user.data.collected,
     tags: state.user.data.tags,
-    colors: state.user.data.settings.colors
+    colors: state.user.data.settings.colors,
   };
 };
 

@@ -6,7 +6,7 @@ export default (state = initial.pokemons, action) => {
     case 'RECEIVE_POKEMONS_DATA':
       return Object.assign({}, state, {
         hasReceived: true,
-        data: action.data
+        data: action.data,
       });
 
     default:

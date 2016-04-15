@@ -21,7 +21,7 @@ const messages = defineMessages({
   email: {id: 'user.email'},
   password: {id: 'user.password'},
   passwordConfirmation: {id: 'user.passwordConfirmation'},
-  passwordConfirmationIncorrect: {id: 'user.passwordConfirmationIncorrect'}
+  passwordConfirmationIncorrect: {id: 'user.passwordConfirmationIncorrect'},
 });
 
 class SignupComponent extends React.Component {
@@ -29,7 +29,7 @@ class SignupComponent extends React.Component {
     super(props, context);
 
     this.state = {
-      errors: {}
+      errors: {},
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -87,7 +87,7 @@ class SignupComponent extends React.Component {
     } else {
       FirebaseUtils.signup({
         email,
-        password
+        password,
       }, (error) => {
         if (error) {
           errors.email = error;
@@ -102,12 +102,14 @@ class SignupComponent extends React.Component {
   }
 }
 
-SignupComponent.propTypes = {
-    intl: intlShape.isRequired
-};
 SignupComponent.displayName = 'UserSignupComponent';
+
+SignupComponent.propTypes = {
+    intl: intlShape.isRequired,
+};
+
 SignupComponent.contextTypes = {
-    router: () => { return React.PropTypes.func.isRequired; }
+    router: () => { return React.PropTypes.func.isRequired; },
 };
 
 export default injectIntl(SignupComponent);

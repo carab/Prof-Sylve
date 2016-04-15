@@ -27,7 +27,7 @@ class SignoutComponent extends React.Component {
 
 SignoutComponent.displayName = 'UserSignoutComponent';
 SignoutComponent.contextTypes = {
-    router: () => { return React.PropTypes.func.isRequired; }
+    router: () => { return React.PropTypes.func.isRequired; },
 };
 
 export default SignoutComponent;

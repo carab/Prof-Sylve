@@ -29,7 +29,7 @@ class Root extends Component {
     this.state = {
       localeLoaded: false,
       locale: Translations.locale,
-      messages: Translations.messages
+      messages: Translations.messages,
     };
   }
 

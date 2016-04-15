@@ -4,7 +4,7 @@ import user from './user';
 
 const ProfSylveApp = combineReducers({
   pokemons,
-  user
+  user,
 })
 
 export default ProfSylveApp;

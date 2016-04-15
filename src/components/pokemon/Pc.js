@@ -20,7 +20,7 @@ import 'styles/pokemon/Pc.css';
 const messages = defineMessages({
   box: {id: 'pokemon.toolbar.box'},
   previousBox: {id: 'pokemon.toolbar.previousBox'},
-  nextBox: {id: 'pokemon.toolbar.nextBox'}
+  nextBox: {id: 'pokemon.toolbar.nextBox'},
 });
 
 const BOX_COLS = 6;
@@ -62,7 +62,7 @@ class PokemonPc extends React.Component {
 
     this.setState({
       boxes,
-      currentBox: 0
+      currentBox: 0,
     });
   }
 
@@ -131,7 +131,7 @@ class PokemonPc extends React.Component {
       pokemons: [],
       count: 0,
       start: 0,
-      end: 0
+      end: 0,
     };
   }
 }
@@ -139,12 +139,12 @@ class PokemonPc extends React.Component {
 PokemonPc.displayName = 'PokemonPcComponent';
 
 PokemonPc.propTypes = {
-    intl: intlShape.isRequired
+    intl: intlShape.isRequired,
 };
 
 const mapStateToProps = (state) => {
   return {
-    pokemons: state.pokemons.data
+    pokemons: state.pokemons.data,
   };
 };
 

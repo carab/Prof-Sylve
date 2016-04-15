@@ -32,7 +32,7 @@ const messages = defineMessages({
   orange: {id: 'pokemon.tag.color.orange'},
   green: {id: 'pokemon.tag.color.green'},
   indigo: {id: 'pokemon.tag.color.indigo'},
-  purple: {id: 'pokemon.tag.color.purple'}
+  purple: {id: 'pokemon.tag.color.purple'},
 });
 
 const anchorOrigin = {horizontal: 'right', vertical: 'top'};
@@ -169,7 +169,7 @@ PokemonComponent.propTypes = {
   onTagRemove: PropTypes.func.isRequired,
   onTagColor: PropTypes.func.isRequired,
   onTagForce: PropTypes.func.isRequired,
-  intl: intlShape.isRequired
+  intl: intlShape.isRequired,
 };
 
 const mapStateToProps = (state, props) => {
@@ -178,7 +178,7 @@ const mapStateToProps = (state, props) => {
   return {
     collected: state.user.data.collected[pokemon.id] || false,
     tag: state.user.data.tags[pokemon.id] || {},
-    colors: state.user.data.settings.colors
+    colors: state.user.data.settings.colors,
   };
 };
 
@@ -197,7 +197,7 @@ const mapDispatchToProps = (dispatch, props) => {
     },
     onTagForce: (force) => {
       dispatch(Actions.pokemonTagForce(pokemon, force));
-    }
+    },
   };
 }
 

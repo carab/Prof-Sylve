@@ -19,7 +19,7 @@ const messages = defineMessages({
   signin: {id: 'user.signin'},
   subtitle: {id: 'user.signinSubtitle'},
   email: {id: 'user.email'},
-  password: {id: 'user.password'}
+  password: {id: 'user.password'},
 });
 
 class SigninComponent extends Component {
@@ -27,7 +27,7 @@ class SigninComponent extends Component {
     super(props, context);
 
     this.state = {
-      errors: {}
+      errors: {},
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -74,7 +74,7 @@ class SigninComponent extends Component {
 
     FirebaseUtils.signin({
       email,
-      password
+      password,
     }, (error) => {
       if (error) {
         errors.email = error;
@@ -91,11 +91,11 @@ class SigninComponent extends Component {
 SigninComponent.displayName = 'UserSigninComponent';
 
 SigninComponent.propTypes = {
-    intl: intlShape.isRequired
+    intl: intlShape.isRequired,
 };
 
 SigninComponent.contextTypes = {
-    router: () => { return PropTypes.func.isRequired; }
+    router: () => { return PropTypes.func.isRequired; },
 };
 
 export default injectIntl(SigninComponent);

@@ -9,11 +9,11 @@ const Colors = {
     //{ name: 'pink', value: '#E91E63' },
     { name: 'orange', value: '#FF9800' },
     { name: 'purple', value: '#9C27B0' },
-    { name: 'indigo', value: '#3F51B5' }
+    { name: 'indigo', value: '#3F51B5' },
     //{ name: 'teal', value: '#009688' },
     //{ name: 'lime', value: '#CDDC39' },
-    //{ name: 'brown', value: '#795548' }
-  ]
+    //{ name: 'brown', value: '#795548' },
+  ],
 };
 
 export default Colors;

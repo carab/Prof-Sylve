@@ -24,7 +24,7 @@ const messages = defineMessages({
   orange: {id: 'pokemon.tag.color.orange'},
   green: {id: 'pokemon.tag.color.green'},
   indigo: {id: 'pokemon.tag.color.indigo'},
-  purple: {id: 'pokemon.tag.color.purple'}
+  purple: {id: 'pokemon.tag.color.purple'},
 });
 
 class SettingsComponent extends Component {
@@ -33,8 +33,8 @@ class SettingsComponent extends Component {
 
     this.state = {
       settings: {
-        colors: {}
-      }
+        colors: {},
+      },
     };
 
     this.settingsRef = FirebaseUtils.getUserRef().child('settings');
@@ -109,11 +109,11 @@ class SettingsComponent extends Component {
 SettingsComponent.displayName = 'UserSettingsComponent';
 
 SettingsComponent.propTypes = {
-    intl: intlShape.isRequired
+    intl: intlShape.isRequired,
 };
 
 SettingsComponent.contextTypes = {
-    router: () => { return PropTypes.func.isRequired; }
+    router: () => { return PropTypes.func.isRequired; },
 };
 
 export default injectIntl(SettingsComponent);
