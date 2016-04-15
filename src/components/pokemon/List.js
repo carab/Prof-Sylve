@@ -26,6 +26,8 @@ import Toolbar from './Toolbar';
 import 'styles/pokemon/List.css';
 
 const messages = defineMessages({
+  collected: {id: 'pokemon.collected'},
+  notCollected: {id: 'pokemon.notCollected'},
   red: {id: 'pokemon.tag.color.red'},
   orange: {id: 'pokemon.tag.color.orange'},
   green: {id: 'pokemon.tag.color.green'},
@@ -88,8 +90,8 @@ class ListComponent extends React.Component {
             onChange={this.handleFilterChange}
           >
             <MenuItem value="all" primaryText="All" insetChildren={true}/>
-            <MenuItem value="notCollected" primaryText="Not Collected" insetChildren={true}/>
-            <MenuItem value="collected" primaryText="Collected" insetChildren={true}/>
+            <MenuItem value="collected" primaryText={formatMessage(messages.collected)} insetChildren={true}/>
+            <MenuItem value="notCollected" primaryText={formatMessage(messages.notCollected)} insetChildren={true}/>
             <Divider/>
             {_.map(colorsList, (color) => (
               <MenuItem primaryText={color.text}

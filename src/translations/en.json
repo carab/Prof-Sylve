@@ -29,6 +29,7 @@
       "nextBox": "Next Box"
     },
     "collected": "Collected",
+    "notCollected": "Not Collected",
     "externalService": "See on Bulbapedia",
     "externalUrl": "http://bulbapedia.bulbagarden.net/wiki/{name}",
     "tag": {

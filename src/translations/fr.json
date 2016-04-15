@@ -29,6 +29,7 @@
       "nextBox": "Boîte Suivante"
     },
     "collected": "Collecté",
+    "notCollected": "Non Collecté",
     "externalService": "Voir sur Poképedia",
     "externalUrl": "http://www.pokepedia.fr/{name}#Localisations",
     "tag": {
