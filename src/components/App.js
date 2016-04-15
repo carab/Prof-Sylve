@@ -6,6 +6,7 @@ import {Link} from 'react-router';
 import DocumentTitle from 'react-document-title';
 
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import Divider from 'material-ui/Divider';
@@ -48,6 +49,8 @@ const styles = {
   },
 };
 
+const muiTheme = getMuiTheme();
+
 class AppComponent extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -59,12 +62,6 @@ class AppComponent extends React.Component {
     this.state = {
       loggedIn: FirebaseUtils.isLoggedIn(),
     }
-  }
-
-  getChildContext() {
-    return {
-      muiTheme: getMuiTheme(),
-    };
   }
 
   componentDidMount() {
@@ -104,33 +101,35 @@ class AppComponent extends React.Component {
     }
 
     return (
-      <DocumentTitle title="Prof. Sylve">
-        <div className="prof-sylve">
-          <AppBar
-            title={formatMessage(messages.app)}
-            onLeftIconButtonTouchTap={this.handleToggleNav}
-            iconElementRight={menu}
-            style={styles.appbar}
-          />
-          <Drawer
-            docked={false}
-            open={this.state.navOpen}
-            onRequestChange={this.handleToggleNavRequest}
-          >
-            <div style={styles.nav}></div>
-            {navItems}
-            <Menu value={Translations.locale}>
-              <MenuItem value="en" leftIcon={<LanguageIcon/>} onTouchTap={this.handleChangeLocale.bind(this, 'en')}>English</MenuItem>
-              <MenuItem value="fr" leftIcon={<LanguageIcon/>} onTouchTap={this.handleChangeLocale.bind(this, 'fr')}>Français</MenuItem>
-              <Divider/>
-              <MenuItem leftIcon={<BugReportIcon/>} href="https://github.com/carab/Prof-Sylve" target="blank">{formatMessage(messages.bugs)}</MenuItem>
-            </Menu>
-          </Drawer>
-          <div className="prof-sylve__content">
-            {this.props.children}
+      <MuiThemeProvider muiTheme={muiTheme}>
+        <DocumentTitle title="Prof. Sylve">
+          <div className="prof-sylve">
+            <AppBar
+              title={formatMessage(messages.app)}
+              onLeftIconButtonTouchTap={this.handleToggleNav}
+              iconElementRight={menu}
+              style={styles.appbar}
+            />
+            <Drawer
+              docked={false}
+              open={this.state.navOpen}
+              onRequestChange={this.handleToggleNavRequest}
+            >
+              <div style={styles.nav}></div>
+              {navItems}
+              <Menu value={Translations.locale}>
+                <MenuItem value="en" leftIcon={<LanguageIcon/>} onTouchTap={this.handleChangeLocale.bind(this, 'en')}>English</MenuItem>
+                <MenuItem value="fr" leftIcon={<LanguageIcon/>} onTouchTap={this.handleChangeLocale.bind(this, 'fr')}>Français</MenuItem>
+                <Divider/>
+                <MenuItem leftIcon={<BugReportIcon/>} href="https://github.com/carab/Prof-Sylve" target="blank">{formatMessage(messages.bugs)}</MenuItem>
+              </Menu>
+            </Drawer>
+            <div className="prof-sylve__content">
+              {this.props.children}
+            </div>
           </div>
-        </div>
-      </DocumentTitle>
+        </DocumentTitle>
+      </MuiThemeProvider>
     );
   }
 
@@ -167,10 +166,6 @@ AppComponent.propTypes = {
 
 AppComponent.contextTypes = {
   router: () => { return React.PropTypes.func.isRequired; },
-};
-
-AppComponent.childContextTypes = {
-  muiTheme: React.PropTypes.object,
 };
 
 export default injectIntl(AppComponent);
