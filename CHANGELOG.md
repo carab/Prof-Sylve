@@ -1,10 +1,15 @@
 Changelog
 =========
 
+## v0.11.0 (2016-04-15)
+
+- Upgrade dependencies to React 15 and Material UI 15-beta.1.
+- Manually restrict locale to EN or FR.
+- Fix some translations.
+
 ## v0.10.0 (2016-04-13)
 
 - Add Oddish as favicon.
-- Add Pokémon number.
 - Implement Redux for Pokémon lists and actions.
 
 ## v0.9.0 (2016-04-10)
