@@ -1,6 +1,7 @@
 'use strict';
 
 import React, {Component, PropTypes} from 'react';
+import {connect} from 'react-redux';
 import _ from 'lodash';
 
 import RaisedButton from 'material-ui/RaisedButton';
@@ -9,8 +10,8 @@ import {Card, CardActions, CardTitle, CardText} from 'material-ui/Card';
 
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
-import FirebaseUtils from '../../utils/firebase-utils';
 import Colors from '../../utils/colors';
+import Actions from '../../actions';
 
 import 'styles/user/Settings.css';
 
@@ -18,43 +19,29 @@ const messages = defineMessages({
   settings: {id: 'user.settings'},
   save: {id: 'label.save'},
   red: {id: 'pokemon.tag.color.red'},
-  orange: {id: 'pokemon.tag.color.orange'},
+  yellow: {id: 'pokemon.tag.color.yellow'},
   green: {id: 'pokemon.tag.color.green'},
-  indigo: {id: 'pokemon.tag.color.indigo'},
+  cyan: {id: 'pokemon.tag.color.cyan'},
+  pink: {id: 'pokemon.tag.color.pink'},
+  orange: {id: 'pokemon.tag.color.orange'},
   purple: {id: 'pokemon.tag.color.purple'},
+  indigo: {id: 'pokemon.tag.color.indigo'},
+  teal: {id: 'pokemon.tag.color.teal'},
+  lime: {id: 'pokemon.tag.color.lime'},
+  brown: {id: 'pokemon.tag.color.brown'},
 });
 
 class SettingsComponent extends Component {
   constructor(props, context) {
     super(props, context);
 
-    this.state = {
-      settings: {
-        colors: {},
-      },
-    };
-
-    this.settingsRef = FirebaseUtils.getUserRef().child('settings');
-  }
-
-  componentDidMount() {
-    this.settingsRef.once('value', (snap) => {
-      let settings = snap.val();
-
-      if (_.isObject(settings)) {
-        if (!_.isObject(settings.colors)) {
-          settings.colors = {};
-        }
-
-        this.setState({ settings });
-      }
-    });
+    this.state = {};
   }
 
   render() {
     const {formatMessage} = this.props.intl;
-    const {settings} = this.state;
-    const {colors} = settings;
+    const profile = this.state.profile || this.props.profile;
+    const {tags} = profile;
 
     return (
       <div className="settings-component">
@@ -62,14 +49,14 @@ class SettingsComponent extends Component {
           <Card>
             <CardTitle title={formatMessage(messages.settings)}/>
             <CardText>
-              {_.map(Colors.tags, (color) => (
+              {_.map(Colors.tags, (color, name) => (
                 <TextField
-                  key={color.name}
-                  ref={'color-' + color.name}
-                  floatingLabelText={formatMessage(messages[color.name])}
+                  key={name}
+                  ref={'color-' + name}
+                  floatingLabelText={formatMessage(messages[name])}
                   fullWidth={true}
-                  value={colors[color.name] || ''}
-                  onChange={(event) => this.handleColorChange(color.name, event.target.value)}
+                  value={tags[name] && tags[name].title || ''}
+                  onChange={(event) => this.handleTagTitle(name, event.target.value)}
                 />
               ))}
             </CardText>
@@ -82,35 +69,48 @@ class SettingsComponent extends Component {
     );
   }
 
-  handleColorChange(color, value) {
-    let {settings} = this.state;
-    settings.colors[color] = value;
+  handleTagTitle(tag, title) {
+    const profile = this.state.profile || this.props.profile;
 
-    this.setState({ settings });
+    if (!profile.tags[tag]) {
+      profile.tags[tag] = { title }
+    } else {
+      profile.tags[tag].title = title;
+    }
+
+    this.setState({ profile });
   }
 
   handleSubmit(e) {
     e.preventDefault();
 
-    const {settings} = this.state;
-    this.settingsRef.set(settings, (error) => {
-      if (error) {
-        // TODO
-      } else {
-        this.context.router.replace('/');
-      }
-    });
+    const {profile, onProfileSave} = this.props;
+    onProfileSave(profile);
+    this.context.router.replace('/');
   }
 }
 
 SettingsComponent.displayName = 'UserSettingsComponent';
 
-SettingsComponent.propTypes = {
-    intl: intlShape.isRequired,
-};
-
 SettingsComponent.contextTypes = {
-    router: () => { return PropTypes.func.isRequired; },
+  router: () => { return PropTypes.func.isRequired; },
 };
 
-export default injectIntl(SettingsComponent);
+const mapStateToProps = (state) => {
+  return {
+    profile: state.user.data.profile,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onProfileSave: (profile) => {
+      dispatch(Actions.userProfileSet(profile));
+    },
+  };
+}
+
+export default injectIntl(connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SettingsComponent));

@@ -34,9 +34,7 @@ class FirebaseUtils {
   signup(email, password) {
     return firebase.auth().createUserWithEmailAndPassword(email, password)
       .then((user) => {
-        //console.log(user);
         this.signin(email, password).then((user) => {
-          //console.log(user);
           this.getRootRef().child('users').child(user.uid).set({
             email: user.email,
             uid: user.uid,
@@ -45,17 +43,14 @@ class FirebaseUtils {
         });
       })
       .catch((error) => {
-        //console.log(error);
       });
   }
 
   signin(email, password) {
     return firebase.auth().signInWithEmailAndPassword(email, password)
       .then((user) => {
-        //console.log(user);
       })
       .catch((error) => {
-        //console.log(error);
       });
   }
 

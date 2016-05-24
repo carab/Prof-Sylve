@@ -28,10 +28,16 @@ const messages = defineMessages({
   collected: {id: 'pokemon.collected'},
   notCollected: {id: 'pokemon.notCollected'},
   red: {id: 'pokemon.tag.color.red'},
-  orange: {id: 'pokemon.tag.color.orange'},
+  yellow: {id: 'pokemon.tag.color.yellow'},
   green: {id: 'pokemon.tag.color.green'},
-  indigo: {id: 'pokemon.tag.color.indigo'},
+  cyan: {id: 'pokemon.tag.color.cyan'},
+  pink: {id: 'pokemon.tag.color.pink'},
+  orange: {id: 'pokemon.tag.color.orange'},
   purple: {id: 'pokemon.tag.color.purple'},
+  indigo: {id: 'pokemon.tag.color.indigo'},
+  teal: {id: 'pokemon.tag.color.teal'},
+  lime: {id: 'pokemon.tag.color.lime'},
+  brown: {id: 'pokemon.tag.color.brown'},
 });
 
 class ListComponent extends React.Component {
@@ -49,30 +55,31 @@ class ListComponent extends React.Component {
 
   render() {
     const {formatMessage} = this.props.intl;
-    const {pokemons, collected, tags, colors} = this.props;
+    const {pokemons, tags} = this.props;
     const {filter} = this.state;
+
     const filters = {
       all: () => {
         return true;
       },
       collected: (pokemon) => {
-        return !!collected[pokemon.id];
+        return pokemon.collected;
       },
       notCollected: (pokemon) => {
-        return !collected[pokemon.id];
+        return !pokemon.collected;
       },
     };
 
-    const colorsList = _.map(Colors.tags, (color) => {
-      const key = 'color-' + color.name;
+    const colorsList = _.map(Colors.tags, (color, name) => {
+      const key = 'color-' + name;
 
       filters[key] = (pokemon) => {
-        return (tags[pokemon.id] && tags[pokemon.id].color == color.value && !collected[pokemon.id]);
+        return (pokemon.tag == name && !pokemon.collected);
       };
 
       return {
-        text: colors[color.name] || formatMessage(messages[color.name]),
-        value: color.value,
+        text: tags[name] && tags[name].title || formatMessage(messages[name]),
+        value: color,
         key: key,
       };
     });
@@ -149,10 +156,8 @@ ListComponent.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    pokemons: state.pokemons.data,
-    collected: state.user.data.collected,
-    tags: state.user.data.tags,
-    colors: state.user.data.settings.colors,
+    pokemons: state.user.data.pokedex,
+    tags: state.user.data.profile.tags
   };
 };
 

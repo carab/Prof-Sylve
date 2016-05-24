@@ -12,7 +12,7 @@ import 'styles/pokemon/Box.css';
 class Box extends React.Component {
   render() {
     const {box, cols} = this.props;
-
+    
     return (
       <div className="pokemon-box">
         <GridList

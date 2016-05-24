@@ -35,13 +35,18 @@ class PokemonPc extends React.Component {
     this.handlePreviousBox = this.handlePreviousBox.bind(this);
     this.handleNextBox = this.handleNextBox.bind(this);
 
-    this.state = {};
+    this.state = {
+      boxes: [],
+      currentBox: 0,
+    };
   }
 
-  componentWillMount() {
+  render() {
     const {pokemons} = this.props;
-    console.log(pokemons)
-    let boxes = [];
+    const {formatMessage} = this.props.intl;
+    const {boxes, currentBox} = this.state;
+
+    boxes.length = 0;
     let box = null;
 
     _.each(pokemons, (pokemon) => {
@@ -60,23 +65,9 @@ class PokemonPc extends React.Component {
       }
     });
 
-    this.setState({
-      boxes,
-      currentBox: 0,
-    });
-  }
-
-  render() {
-    const {collected, tags} = this.props;
-    const {boxes, currentBox} = this.state;
-    const {formatMessage} = this.props.intl;
-
-    let box;
     let toolbar;
 
-    if (_.isInteger(currentBox)) {
-      let currentBoxObject = boxes[currentBox];
-      box = <Box box={currentBoxObject} cols={BOX_COLS} collected={collected} tags={tags}/>;
+    if (boxes[currentBox]) {
       toolbar = (
         <Toolbar
           right={
@@ -101,9 +92,17 @@ class PokemonPc extends React.Component {
     return (
       <div className="pokemon-pc">
         {toolbar}
-        {box}
+        {this.renderBox()}
       </div>
     );
+  }
+
+  renderBox() {
+    const {boxes, currentBox} = this.state;
+
+    if (boxes[currentBox]) {
+      return <Box box={boxes[currentBox]} cols={BOX_COLS}/>;
+    }
   }
 
   handleSelectBox(event, index, currentBox) {
@@ -138,9 +137,7 @@ class PokemonPc extends React.Component {
 
 PokemonPc.displayName = 'PokemonPcComponent';
 
-PokemonPc.propTypes = {
-    intl: intlShape.isRequired,
-};
+PokemonPc.propTypes = {};
 
 const mapStateToProps = (state) => {
   return {
