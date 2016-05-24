@@ -31,7 +31,7 @@
     "collected": "Collecté",
     "notCollected": "Non Collecté",
     "externalService": "Voir sur Poképedia",
-    "externalUrl": "http://www.pokepedia.fr/{name}#Localisations",
+    "externalUrl": "http://www.pokepedia.fr/{name}",
     "tag": {
       "tag": "Marquage",
       "force": "Forcer la couleur",

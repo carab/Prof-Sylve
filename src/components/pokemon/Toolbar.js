@@ -34,7 +34,11 @@ class PokemonToolbar extends Component {
     const {formatMessage} = this.props.intl;
     const {pokemons, filteredPokemons, right} = this.props;
 
-    let title = formatMessage(messages.counter, { collected: 1, pokemons: pokemons.length });
+    const collected = _.reduce(pokemons, (collected, pokemon) => {
+      return collected + (pokemon.collected ? 1 : 0);
+    }, 0);
+
+    let title = formatMessage(messages.counter, { collected, pokemons: pokemons.length });
 
     if (_.isArray(filteredPokemons) && filteredPokemons.length < pokemons.length) {
       title = formatMessage(messages.filteredPokemons, { filteredPokemons: filteredPokemons.length });
