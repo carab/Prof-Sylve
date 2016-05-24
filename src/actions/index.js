@@ -13,10 +13,21 @@ const actions = {
 
   startListeningToUser() {
     return (dispatch) => {
-      const userRef = FirebaseUtils.getUserRef();
+      let userRef;
 
-      userRef.on('value', (snapshot) => {
-        dispatch({ type: 'RECEIVE_USER_DATA', data: snapshot.val() });
+      FirebaseUtils.onAuth((signedIn) => {
+        if (signedIn) {
+          userRef = FirebaseUtils.getUserRef();
+          userRef.on('value', (snapshot) => {
+            dispatch({ type: 'RECEIVE_USER_DATA', data: snapshot.val() });
+          });
+        } else {
+          if (userRef) {
+            userRef.off('value');
+          }
+
+          dispatch({ type: 'RESET_USER_DATA' });
+        }
       });
     };
   },
