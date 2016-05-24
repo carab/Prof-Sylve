@@ -69,17 +69,14 @@ class SigninComponent extends Component {
     let email = this.refs.email.getValue();
     let password = this.refs.password.getValue();
 
-    FirebaseUtils.signin({
-      email,
-      password,
-    }, (error) => {
-      if (error) {
-        errors.email = error;
-        this.setState({ errors });
-      } else {
+    FirebaseUtils.signin(email, password)
+      .then((user) => {
         this.context.router.replace('/');
-      }
-    });
+      })
+      .catch((error) => {
+        errors.email = error;
+        //this.setState({ errors });
+      });
 
     this.setState({ errors });
   }

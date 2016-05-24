@@ -40,7 +40,7 @@ class PokemonPc extends React.Component {
 
   componentWillMount() {
     const {pokemons} = this.props;
-
+    console.log(pokemons)
     let boxes = [];
     let box = null;
 
@@ -144,7 +144,7 @@ PokemonPc.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    pokemons: state.pokemons.data,
+    pokemons: state.user.data.pokedex,
   };
 };
 

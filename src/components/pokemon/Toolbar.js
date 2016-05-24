@@ -20,39 +20,21 @@ const messages = defineMessages({
 class PokemonToolbar extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      collected: null,
-    };
-
-    this.collectedRef = FirebaseUtils.getUserRef().child('collected');
-    this.tagsRef = FirebaseUtils.getUserRef().child('tags');
   }
 
   componentDidMount() {
-    this.onCollectedChange = this.collectedRef.on('value', (snap) => {
-      let collected = Object.keys(snap.val()).length;
 
-      this.setState({ collected });
-    });
-
-    this.onTagsChange = this.tagsRef.on('value', (snap) => {
-      let tags = snap.val();
-      tags;
-    });
   }
 
   componentWillUnmount() {
-    this.collectedRef.off('value', this.onCollectedChange);
-    this.tagsRef.off('value', this.onTagsChange);
+
   }
 
   render() {
     const {formatMessage} = this.props.intl;
-    const {collected} = this.state;
     const {pokemons, filteredPokemons, right} = this.props;
 
-    let title = formatMessage(messages.counter, { collected, pokemons: pokemons.length });
+    let title = formatMessage(messages.counter, { collected: 1, pokemons: pokemons.length });
 
     if (_.isArray(filteredPokemons) && filteredPokemons.length < pokemons.length) {
       title = formatMessage(messages.filteredPokemons, { filteredPokemons: filteredPokemons.length });
@@ -83,7 +65,7 @@ PokemonToolbar.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    pokemons: state.pokemons.data,
+    pokemons: state.user.data.pokedex,
   };
 };
 

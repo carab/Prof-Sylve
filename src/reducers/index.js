@@ -1,10 +1,7 @@
 import { combineReducers } from 'redux';
-import pokemons from './pokemons';
+
 import user from './user';
 
-const ProfSylveApp = combineReducers({
-  pokemons,
+export default combineReducers({
   user,
-})
-
-export default ProfSylveApp;
+});

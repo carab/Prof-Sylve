@@ -25,6 +25,7 @@ import LanguageIcon from 'material-ui/svg-icons/action/language';
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
 import FirebaseUtils from '../utils/firebase-utils';
+import UserUpdate from '../utils/user-update';
 import Translations from '../utils/translations-loader';
 
 import 'flexboxgrid/dist/flexboxgrid.css';
@@ -65,7 +66,7 @@ class AppComponent extends React.Component {
   }
 
   componentDidMount() {
-    FirebaseUtils.onAuth(this.handleAuth);
+    FirebaseUtils.onAuthStateChanged(this.handleAuth);
   }
 
   render() {
@@ -149,11 +150,33 @@ class AppComponent extends React.Component {
     this.setState({ navOpen: !this.state.navOpen })
   }
 
-  handleAuth(loggedIn) {
-    if (loggedIn) {
-      this.setState({ loggedIn });
+  handleAuth(user) {
+    if (user) {
+      this.setState({
+        loading: true,
+      });
+
+      FirebaseUtils.getRootRef().child('users').child(user.uid).once('value', (snapshot) => {
+        const user = snapshot.val();
+
+        FirebaseUtils.getRootRef().child('pokemons').once('value', (snapshot) => {
+          const pokemons = snapshot.val();
+
+          UserUpdate.perform(user, pokemons).then(() => {
+            FirebaseUtils.getRootRef().child('users').child(user.uid).set(user);
+            this.setState({
+              loading: false,
+              loggedIn: true,
+            });
+          });
+        });
+      });
     } else {
-      this.context.router.replace('/');
+      this.setState({
+        loggedIn: false,
+      });
+
+      this.context.router.replace('/sign');
     }
   }
 }

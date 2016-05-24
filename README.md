@@ -24,7 +24,7 @@ So please enjoy using this if you need it too, and don't hesitate to ask for fea
 - [ ] Add more filters (by generation/region, by location, ...).
 - [ ] Implement a search.
 - [ ] Location data.
-- [ ] Share user progress.
+- [ ] Share user progress with graphics.
 - [ ] Exchange market place ?
 
 ## Technical todos

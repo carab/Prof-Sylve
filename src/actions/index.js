@@ -1,23 +1,13 @@
 import FirebaseUtils from '../utils/firebase-utils';
 
 const actions = {
-  startListeningToPokemons() {
-    return (dispatch) => {
-      const pokemonsRef = FirebaseUtils.getRootRef().child('pokemons');
-
-      pokemonsRef.on('value', (snapshot) => {
-        dispatch({ type: 'RECEIVE_POKEMONS_DATA', data: snapshot.val() });
-      });
-    };
-  },
-
   startListeningToUser() {
     return (dispatch) => {
       let userRef;
 
-      FirebaseUtils.onAuth((signedIn) => {
-        if (signedIn) {
-          userRef = FirebaseUtils.getUserRef();
+      FirebaseUtils.onAuthStateChanged((user) => {
+        if (user) {
+          userRef = FirebaseUtils.getRootRef().child('users').child(user.uid);
           userRef.on('value', (snapshot) => {
             dispatch({ type: 'RECEIVE_USER_DATA', data: snapshot.val() });
           });

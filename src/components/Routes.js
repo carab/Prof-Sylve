@@ -29,12 +29,14 @@ class Routes extends React.Component {
 }
 
 function requireAuth(nextState, replace) {
-  if (!FirebaseUtils.isLoggedIn()) {
-    replace({
-      pathname: '/sign',
-      state: { nextPathname: nextState.location.pathname },
-    })
-  }
+  FirebaseUtils.onAuthStateChanged((user) => {
+    if (!user) {
+      replace({
+        pathname: '/sign',
+        state: { nextPathname: nextState.location.pathname },
+      });
+    }
+  });
 }
 
 Routes.displayName = 'Routes';

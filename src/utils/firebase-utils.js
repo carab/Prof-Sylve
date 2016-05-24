@@ -1,10 +1,22 @@
 'use strict';
 
-import Firebase from 'firebase/lib/firebase-web';
+require('firebase/firebase');
 
 class FirebaseUtils {
   constructor() {
-    this.rootRef = new Firebase('https://prof-sylve.firebaseio.com');
+    const config = {
+      apiKey: 'AIzaSyAa2dt9-n6blULUhfZ1WEm7AC9L_V8f0QM',
+      authDomain: 'prof-sylve.firebaseapp.com',
+      databaseURL: 'https://prof-sylve.firebaseio.com',
+      storageBucket: 'prof-sylve.appspot.com',
+    };
+
+    firebase.initializeApp(config);
+
+    this.rootRef = firebase.database().ref();
+    this.onAuthStateChanged((user) => {
+      this.currentUser = user;
+    });
   }
 
   getRootRef() {
@@ -12,60 +24,51 @@ class FirebaseUtils {
   }
 
   getUserRef() {
-    return this.getRootRef().child('users').child(this.getRootRef().getAuth().uid);
+    return this.getRootRef().child('users').child(this.currentUser.uid);
   }
 
   getUser() {
-    return this.cachedUser;
+    return firebase.auth().currentUser;
   }
 
-  signup(user, cb) {
-    this.getRootRef().createUser(user, (error) => {
-      if (error) {
-        cb(error.code);
-      } else {
-        this.signin(user, (error, authData) => {
-          if (error) {
-            cb(error);
-          } else {
-            this.getRootRef().child('users').child(authData.uid).set({
-              email: user.email,
-              uid: authData.uid,
-              token: authData.token,
-            });
-
-            cb(null, authData);
-          }
+  signup(email, password) {
+    return firebase.auth().createUserWithEmailAndPassword(email, password)
+      .then((user) => {
+        //console.log(user);
+        this.signin(email, password).then((user) => {
+          //console.log(user);
+          this.getRootRef().child('users').child(user.uid).set({
+            email: user.email,
+            uid: user.uid,
+            token: user.token,
+          });
         });
-      }
-    });
+      })
+      .catch((error) => {
+        //console.log(error);
+      });
   }
 
-  signin(user, cb) {
-    this.getRootRef().authWithPassword(user, (error, authData) => {
-      if (error) {
-        cb(error.code);
-      } else {
-        authData.email = user.email;
-        this.cachedUser = authData;
-        cb(null, authData);
-      }
-    });
+  signin(email, password) {
+    return firebase.auth().signInWithEmailAndPassword(email, password)
+      .then((user) => {
+        //console.log(user);
+      })
+      .catch((error) => {
+        //console.log(error);
+      });
   }
 
   signout() {
-    this.getRootRef().unauth();
-    this.cachedUser = null;
+    firebase.auth().signOut();
   }
 
   isLoggedIn() {
-    return this.cachedUser && true || this.getRootRef().getAuth() || false;
+    return this.currentUser && true || false;
   }
 
-  onAuth(cb) {
-    this.getRootRef().onAuth((authData) => {
-      cb(authData);
-    });
+  onAuthStateChanged(cb) {
+    firebase.auth().onAuthStateChanged(cb);
   }
 }
 

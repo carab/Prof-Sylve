@@ -82,17 +82,14 @@ class SignupComponent extends React.Component {
     if (password !== passwordConfirmation) {
       this.state.errors.passwordConfirmation = this.props.formatMessage(messages.passwordConfirmationIncorrect);
     } else {
-      FirebaseUtils.signup({
-        email,
-        password,
-      }, (error) => {
-        if (error) {
+      FirebaseUtils.signup(email, password)
+        .then((user) => {
+          this.context.router.replace('/');
+        })
+        .catch((error) => {
           errors.email = error;
           this.setState({ errors });
-        } else {
-          this.context.router.replace('/');
-        }
-      });
+        });
     }
 
     this.setState({ errors });

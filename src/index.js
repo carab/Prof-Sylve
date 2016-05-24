@@ -30,7 +30,6 @@ class Root extends Component {
   }
 
   componentWillMount() {
-    store.dispatch(actions.startListeningToPokemons());
     store.dispatch(actions.startListeningToUser());
 
     Translations.onLocaleChange(this.handleLocaleChange.bind(this));

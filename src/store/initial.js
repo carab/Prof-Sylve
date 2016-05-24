@@ -4,16 +4,13 @@ export default {
     currently: 'AUTH_GUEST',
     hasReceived: false,
     data: {
-      settings: {
+      profile: {
         locale: null,
-        colors: {},
+        friends: [],
+        public: null,
+        tags: {},
       },
-      collected: {},
-      tags: {},
+      pokedex: [],
     },
-  },
-  pokemons: {
-    hasReceived: false,
-    data: [],
   },
 };
