@@ -127,7 +127,7 @@ class PokemonComponent extends Component {
         </GridTile>
       );
     }
-    
+
     if (type === 'row') {
       return (
         <ListItem
@@ -186,10 +186,10 @@ const mapDispatchToProps = (dispatch, props) => {
 
   return {
     onCollected: () => {
-      dispatch(Actions.pokemonCollected(pokemon));
+      dispatch(Actions.savePokemonCollected(pokemon));
     },
     onTag: (color) => {
-      dispatch(Actions.pokemonTag(pokemon, color));
+      dispatch(Actions.savePokemonTag(pokemon, color));
     },
   };
 }

@@ -23,7 +23,7 @@ const actions = {
     };
   },
 
-  userProfileSet(profile) {
+  saveUserProfile(profile) {
     return () => {
       FirebaseUtils.getUserRef()
         .child('profile')
@@ -31,7 +31,7 @@ const actions = {
     };
   },
 
-  pokemonCollected(pokemon) {
+  savePokemonCollected(pokemon) {
     return () => {
       FirebaseUtils.getUserRef()
         .child('pokedex')
@@ -41,7 +41,7 @@ const actions = {
     };
   },
 
-  pokemonTag(pokemon, tag) {
+  savePokemonTag(pokemon, tag) {
     return () => {
       FirebaseUtils.getUserRef()
         .child('pokedex')

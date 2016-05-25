@@ -11,6 +11,8 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import FilterIcon from 'material-ui/svg-icons/content/filter-list';
 import BookmarkIcon from 'material-ui/svg-icons/action/bookmark';
+import AllInclusiveIcon from 'material-ui/svg-icons/places/all-inclusive';
+import Checkbox from 'material-ui/Checkbox';
 
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
@@ -25,8 +27,10 @@ import Toolbar from './Toolbar';
 import 'styles/pokemon/List.css';
 
 const messages = defineMessages({
-  collected: {id: 'pokemon.collected'},
-  notCollected: {id: 'pokemon.notCollected'},
+  all: {id: 'pokemon.filter.all'},
+  collected: {id: 'pokemon.filter.collected'},
+  notCollected: {id: 'pokemon.filter.notCollected'},
+  noResult: {id: 'pokemon.filter.noResult'},
   red: {id: 'pokemon.tag.color.red'},
   yellow: {id: 'pokemon.tag.color.yellow'},
   green: {id: 'pokemon.tag.color.green'},
@@ -70,17 +74,9 @@ class ListComponent extends React.Component {
       },
     };
 
-    const colorsList = _.map(Colors.tags, (color, name) => {
-      const key = 'color-' + name;
-
-      filters[key] = (pokemon) => {
+    _.each(Colors.tags, (color, name) => {
+      filters[name] = (pokemon) => {
         return (pokemon.tag == name && !pokemon.collected);
-      };
-
-      return {
-        text: tags[name] && tags[name].title || formatMessage(messages[name]),
-        value: color,
-        key: key,
       };
     });
 
@@ -95,15 +91,15 @@ class ListComponent extends React.Component {
             value={filter}
             onChange={this.handleFilterChange}
           >
-            <MenuItem value="all" primaryText="All" insetChildren={true}/>
-            <MenuItem value="collected" primaryText={formatMessage(messages.collected)} insetChildren={true}/>
-            <MenuItem value="notCollected" primaryText={formatMessage(messages.notCollected)} insetChildren={true}/>
+            <MenuItem value="all" primaryText={formatMessage(messages.all)} leftIcon={<AllInclusiveIcon/>}/>
+            <MenuItem value="collected" primaryText={formatMessage(messages.collected)} leftIcon={<Checkbox checked={true}/>}/>
+            <MenuItem value="notCollected" primaryText={formatMessage(messages.notCollected)} leftIcon={<Checkbox checked={false}/>}/>
             <Divider/>
-            {_.map(colorsList, (color) => (
-              <MenuItem primaryText={color.text}
-                key={color.key}
-                value={color.key}
-                leftIcon={<BookmarkIcon style={{fill: color.value}}/>}
+            {_.map(Colors.tags, (color, name) => (
+              <MenuItem primaryText={tags[name] && tags[name].title || formatMessage(messages[name])}
+                key={name}
+                value={name}
+                leftIcon={<BookmarkIcon style={{fill: color}}/>}
               />
             ))}
           </IconMenu>
@@ -134,8 +130,10 @@ class ListComponent extends React.Component {
   }
 
   noItemRenderer() {
+    const {formatMessage} = this.props.intl;
+
     return (
-      <ListItem primaryText="No Pokémon"/>
+      <ListItem primaryText={formatMessage(messages.noResult)}/>
     )
   }
 
@@ -143,7 +141,7 @@ class ListComponent extends React.Component {
     const pokemon = this.filteredPokemons[index];
 
     return (
-      <PokemonItem key={pokemon.id} type="row" pokemon={pokemon}/>
+      <PokemonItem key={pokemon.id} pokemon={pokemon} type="row"/>
     )
   }
 }

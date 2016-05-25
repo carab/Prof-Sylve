@@ -28,6 +28,12 @@
       "previousBox": "Previous Box",
       "nextBox": "Next Box"
     },
+    "filter": {
+      "all": "All",
+      "collected": "Collected",
+      "notCollected": "Not Collected",
+      "noResult": "No Result"
+    },
     "collected": "Collected",
     "notCollected": "Not Collected",
     "externalService": "See on Bulbapedia",

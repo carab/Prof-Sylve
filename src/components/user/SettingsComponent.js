@@ -84,8 +84,8 @@ class SettingsComponent extends Component {
   handleSubmit(e) {
     e.preventDefault();
 
-    const {profile, onProfileSave} = this.props;
-    onProfileSave(profile);
+    const {profile, onSubmit} = this.props;
+    onSubmit(profile);
     this.context.router.replace('/');
   }
 }
@@ -104,8 +104,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onProfileSave: (profile) => {
-      dispatch(Actions.userProfileSet(profile));
+    onSubmit: (profile) => {
+      dispatch(Actions.saveUserProfile(profile));
     },
   };
 }

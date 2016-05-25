@@ -28,6 +28,12 @@
       "previousBox": "Boîte Précédente",
       "nextBox": "Boîte Suivante"
     },
+    "filter": {
+      "all": "Tous",
+      "collected": "Collectés",
+      "notCollected": "Non Collectés",
+      "noResult": "Aucun Résultat"
+    },
     "collected": "Collecté",
     "notCollected": "Non Collecté",
     "externalService": "Voir sur Poképedia",
