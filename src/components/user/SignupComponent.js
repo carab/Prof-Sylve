@@ -32,14 +32,7 @@ class SignupComponent extends Component {
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  componentWillUpdate(nextProps, nextState) {
-    const {signedIn} = nextProps;
-
-    if (signedIn) {
-      this.context.router.replace('/');
-    }
+    //this.context.router.replace('/');
   }
 
   render() {
@@ -47,7 +40,7 @@ class SignupComponent extends Component {
     const {formatMessage} = this.props.intl;
 
     let action = <RaisedButton type="submit" label={formatMessage(messages.signup)} secondary={true} />;
-    
+
     if (loading) {
       action = <CircularProgress size={0.5}/>;
     }

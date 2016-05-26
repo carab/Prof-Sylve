@@ -16,36 +16,6 @@ class Root extends Component {
       <Store/>
     );
   }
-
-  /*/handleAuthStateChanged(user) {
-    if (user) {
-      this.setState({
-        loading: true,
-      });
-
-      FirebaseUtils.getRootRef().child('users').child(user.uid).once('value', (snapshot) => {
-        const user = snapshot.val();
-
-        FirebaseUtils.getRootRef().child('pokemons').once('value', (snapshot) => {
-          const pokemons = snapshot.val();
-
-          UserUpdate.perform(user, pokemons).then(() => {
-            FirebaseUtils.getRootRef().child('users').child(user.uid).set(user);
-            this.setState({
-              loading: false,
-              loggedIn: true,
-            });
-          });
-        });
-      });
-    } else {
-      this.setState({
-        loggedIn: false,
-      });
-
-      this.context.router.replace('/sign');
-    }
-  }/**/
 }
 
 ReactDOM.render(<Root/>, document.getElementById('app'));

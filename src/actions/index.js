@@ -1,3 +1,5 @@
+import { browserHistory } from 'react-router';
+
 import FirebaseUtils from '../utils/firebase-utils';
 import UserUpdate from '../utils/user-update';
 
@@ -14,8 +16,13 @@ const actions = {
           userRef = FirebaseUtils.getRootRef().child('users').child(user.uid);
 
           const listenToUser = () => {
+            let first = true;
             userRef.on('value', (snapshot) => {
               dispatch({ type: 'RECEIVE_USER_DATA', data: snapshot.val() });
+              if (first) {
+                browserHistory.push('/');
+                first = false;
+              }
             });
           };
 
@@ -41,6 +48,7 @@ const actions = {
           }
 
           dispatch({ type: 'RESET_USER_DATA' });
+          browserHistory.push('/sign');
         }
       });
     };

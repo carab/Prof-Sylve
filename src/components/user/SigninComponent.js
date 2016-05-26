@@ -33,18 +33,6 @@ class SigninComponent extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentWillMount() {
-    this.componentWillUpdate(this.props);
-  }
-
-  componentWillUpdate(nextProps, nextState) {
-    const {signedIn} = nextProps;
-
-    if (signedIn) {
-      setTimeout(() => this.context.router.replace('/'), 1);
-    }
-  }
-
   render() {
     const {loading} = this.state;
     const {formatMessage} = this.props.intl;

@@ -30,8 +30,8 @@ So please enjoy using this if you need it too, and don't hesitate to ask for fea
 ## Technical todos
 
 - Fix locale changing and saving, as guest or auth.
-- Fix first load when signed in.
-
+- Refactor user listening.
+- Fix collected/tag in list.
 - Show "cancel" button when marking a Pokémon collected or tagging it.
 - Add current box and filters in URL to keep them in history.
 - Add sort select in list.
