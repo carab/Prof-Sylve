@@ -1,33 +1,39 @@
 'use strict';
 
-import React from 'react';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 
 import FirebaseUtils from '../../utils/firebase-utils';
 
 import 'styles/user/Signout.css';
 
-class SignoutComponent extends React.Component {
-  constructor(props, context) {
-    super(props);
-
-    this.router = context.router;
+class SignoutComponent extends Component {
+  componentWillMount() {
+    FirebaseUtils.signout();
   }
 
-  componentDidMount() {
-    FirebaseUtils.signout();
-    this.context.router.replace('/');
+  componentWillUpdate(nextProps, nextState) {
+    const {signedIn} = nextProps;
+
+    if (!signedIn) {
+      this.context.router.replace('/');
+    }
   }
 
   render() {
-    return (
-      <div></div>
-    );
+    return null;
   }
 }
 
 SignoutComponent.displayName = 'UserSignoutComponent';
 SignoutComponent.contextTypes = {
-    router: () => { return React.PropTypes.func.isRequired; },
+  router: () => { return React.PropTypes.func.isRequired; },
 };
 
-export default SignoutComponent;
+const mapStateToProps = (state) => {
+  return {
+    signedIn: state.user.signedIn,
+  };
+};
+
+export default connect(mapStateToProps)(SignoutComponent);

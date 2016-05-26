@@ -14,3 +14,10 @@ html, body {
   box-sizing: border-box;
   height: 100vh;
 }
+
+.Splash {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

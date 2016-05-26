@@ -2,12 +2,13 @@ export default {
   feedback: [],
   user: {
     currently: 'AUTH_GUEST',
-    hasReceived: false,
+    signedIn: false,
+    isLoaded: false,
     data: {
       profile: {
-        locale: null,
+        locale: 'en',
         friends: [],
-        public: null,
+        public: false,
         tags: {},
       },
       pokedex: [],

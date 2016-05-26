@@ -1,4 +1,5 @@
 import FirebaseUtils from '../utils/firebase-utils';
+import UserUpdate from '../utils/user-update';
 
 const actions = {
   startListeningToUser() {
@@ -7,12 +8,34 @@ const actions = {
 
       FirebaseUtils.onAuthStateChanged((user) => {
         if (user) {
+          // If the user signed in, check if its data needs update and perform it
+          // Eitherway, listen on the user data.
+
           userRef = FirebaseUtils.getRootRef().child('users').child(user.uid);
-          userRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            dispatch({ type: 'RECEIVE_USER_DATA', data });
+
+          const listenToUser = () => {
+            userRef.on('value', (snapshot) => {
+              dispatch({ type: 'RECEIVE_USER_DATA', data: snapshot.val() });
+            });
+          };
+
+          userRef.once('value', (snapshot) => {
+            const user = snapshot.val();
+
+            if (UserUpdate.needs(user)) {
+              FirebaseUtils.getRootRef().child('pokemons').once('value', (snapshot) => {
+                const pokemons = snapshot.val();
+
+                UserUpdate.perform(user, pokemons).then(() => {
+                  userRef.set(user).then(listenToUser);
+                });
+              });
+            } else {
+              listenToUser();
+            }
           });
         } else {
+          // If the user signed out, cancel the listening and reset user data.
           if (userRef) {
             userRef.off('value');
           }
@@ -23,7 +46,19 @@ const actions = {
     };
   },
 
-  saveUserProfile(profile) {
+  setUserLocale(locale) {
+    return (dispatch) => {
+      if (FirebaseUtils.isLoggedIn()) {
+        FirebaseUtils.getUserRef()
+          .child('profile/locale')
+          .set(locale);
+      } else {
+        dispatch({ type: 'SET_USER_LOCALE', locale });
+      }
+    };
+  },
+
+  setUserProfile(profile) {
     return () => {
       FirebaseUtils.getUserRef()
         .child('profile')
@@ -31,7 +66,7 @@ const actions = {
     };
   },
 
-  savePokemonCollected(pokemon) {
+  setPokemonCollected(pokemon) {
     return () => {
       FirebaseUtils.getUserRef()
         .child('pokedex')
@@ -41,7 +76,7 @@ const actions = {
     };
   },
 
-  savePokemonTag(pokemon, tag) {
+  setPokemonTag(pokemon, tag) {
     return () => {
       FirebaseUtils.getUserRef()
         .child('pokedex')

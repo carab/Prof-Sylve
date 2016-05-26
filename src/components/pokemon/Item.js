@@ -1,8 +1,8 @@
 'use strict';
 
 import React, {Component, PropTypes} from 'react';
-import _ from 'lodash';
 import {connect} from 'react-redux';
+import _ from 'lodash';
 
 import {GridTile} from 'material-ui/GridList';
 import {ListItem} from 'material-ui/List';
@@ -101,7 +101,7 @@ class PokemonComponent extends Component {
           value={false}
         />
         {_.map(Colors.tags, (color, name) => (
-          <MenuItem primaryText={tags[name] && tags[name].title || formatMessage(messages[name])}
+          <MenuItem primaryText={tags && tags[name] && tags[name].title || formatMessage(messages[name])}
             key={name}
             leftIcon={<BookmarkIcon style={{fill: color}}/>}
             onTouchTap={this.handleTag.bind(this, name)}
@@ -186,10 +186,10 @@ const mapDispatchToProps = (dispatch, props) => {
 
   return {
     onCollected: () => {
-      dispatch(Actions.savePokemonCollected(pokemon));
+      dispatch(Actions.setPokemonCollected(pokemon));
     },
     onTag: (color) => {
-      dispatch(Actions.savePokemonTag(pokemon, color));
+      dispatch(Actions.setPokemonTag(pokemon, color));
     },
   };
 }

@@ -1,7 +1,8 @@
 'use strict';
 
-import React from 'react';
+import React, {Component} from 'react';
 import {Link} from 'react-router';
+import {connect} from 'react-redux';
 
 import DocumentTitle from 'react-document-title';
 
@@ -14,6 +15,7 @@ import IconMenu from 'material-ui/IconMenu';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
+import CircularProgress from 'material-ui/CircularProgress';
 import MoreVertIconIcon from 'material-ui/svg-icons/navigation/more-vert';
 import PowerSettingsNewIcon from 'material-ui/svg-icons/action/power-settings-new';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
@@ -24,9 +26,7 @@ import LanguageIcon from 'material-ui/svg-icons/action/language';
 
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
-import FirebaseUtils from '../utils/firebase-utils';
-import UserUpdate from '../utils/user-update';
-import Translations from '../utils/translations-loader';
+import actions from '../actions';
 
 import 'flexboxgrid/dist/flexboxgrid.css';
 import 'styles/App.css';
@@ -52,25 +52,44 @@ const styles = {
 
 const muiTheme = getMuiTheme();
 
-class AppComponent extends React.Component {
+class AppComponent extends Component {
   constructor(props, context) {
     super(props, context);
 
     this.handleToggleNav = this.handleToggleNav.bind(this);
     this.handleToggleNavRequest = this.handleToggleNavRequest.bind(this);
 
-    this.state = {
-      loggedIn: FirebaseUtils.isLoggedIn(),
-    }
+    this.state = {};
   }
 
   render() {
+    const {isLoaded} = this.props;
+
+    return (
+      <MuiThemeProvider muiTheme={muiTheme}>
+        <DocumentTitle title="Prof. Sylve">
+          {isLoaded ? this.renderLayout() : this.renderSplash()}
+        </DocumentTitle>
+      </MuiThemeProvider>
+    );
+  }
+
+  renderSplash() {
+    return (
+      <div className="Splash">
+        <CircularProgress size={2}/>
+      </div>
+    );
+  }
+
+  renderLayout() {
+    const {locale, signedIn} = this.props;
     const {formatMessage} = this.props.intl;
 
     let menu;
     let navItems;
 
-    if (this.state.loggedIn) {
+    if (signedIn) {
       const currentRoute = this.props.location.pathname;
 
       navItems = (
@@ -97,44 +116,36 @@ class AppComponent extends React.Component {
     }
 
     return (
-      <MuiThemeProvider muiTheme={muiTheme}>
-        <DocumentTitle title="Prof. Sylve">
-          <div className="prof-sylve">
-            <AppBar
-              title={formatMessage(messages.app)}
-              onLeftIconButtonTouchTap={this.handleToggleNav}
-              iconElementRight={menu}
-              style={styles.appbar}
-            />
-            <Drawer
-              docked={false}
-              open={this.state.navOpen}
-              onRequestChange={this.handleToggleNavRequest}
-            >
-              <div style={styles.nav}></div>
-              {navItems}
-              <Menu value={Translations.locale}>
-                <MenuItem value="en" leftIcon={<LanguageIcon/>} onTouchTap={this.handleChangeLocale.bind(this, 'en')}>English</MenuItem>
-                <MenuItem value="fr" leftIcon={<LanguageIcon/>} onTouchTap={this.handleChangeLocale.bind(this, 'fr')}>Français</MenuItem>
-                <Divider/>
-                <MenuItem leftIcon={<BugReportIcon/>} href="https://github.com/carab/Prof-Sylve" target="blank">{formatMessage(messages.bugs)}</MenuItem>
-              </Menu>
-            </Drawer>
-            <div className="prof-sylve__content">
-              {this.props.children}
-            </div>
-          </div>
-        </DocumentTitle>
-      </MuiThemeProvider>
+      <div className="prof-sylve">
+        <AppBar
+          title={formatMessage(messages.app)}
+          onLeftIconButtonTouchTap={this.handleToggleNav}
+          iconElementRight={menu}
+          style={styles.appbar}
+        />
+        <Drawer
+          docked={false}
+          open={this.state.navOpen}
+          onRequestChange={this.handleToggleNavRequest}
+        >
+          <div style={styles.nav}></div>
+          {navItems}
+          <Menu value={locale}>
+            <MenuItem value="en" leftIcon={<LanguageIcon/>} onTouchTap={this.handleChangeLocale.bind(this, 'en')}>English</MenuItem>
+            <MenuItem value="fr" leftIcon={<LanguageIcon/>} onTouchTap={this.handleChangeLocale.bind(this, 'fr')}>Français</MenuItem>
+            <Divider/>
+            <MenuItem leftIcon={<BugReportIcon/>} href="https://github.com/carab/Prof-Sylve" target="blank">{formatMessage(messages.bugs)}</MenuItem>
+          </Menu>
+        </Drawer>
+        <div className="prof-sylve__content">
+          {this.props.children}
+        </div>
+      </div>
     );
   }
 
   handleChangeLocale(locale) {
-    Translations.changeLocale(locale);
-    this.setState({ navOpen: false });
-    if (FirebaseUtils.isLoggedIn()) {
-      FirebaseUtils.getUserRef().child('settings/locale').set(locale);
-    }
+    this.props.onLocaleChanged(locale);
   }
 
   handleToggleNavRequest(open) {
@@ -146,14 +157,28 @@ class AppComponent extends React.Component {
   }
 }
 
-AppComponent.defaultProps = {};
-
-AppComponent.propTypes = {
-  intl: intlShape.isRequired,
-};
-
+AppComponent.displayName = 'AppComponent';
 AppComponent.contextTypes = {
   router: () => { return React.PropTypes.func.isRequired; },
 };
 
-export default injectIntl(AppComponent);
+const mapStateToProps = (state) => {
+  return {
+    isLoaded: state.user.isLoaded,
+    signedIn: state.user.signedIn,
+    locale: state.user.data.profile.locale,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onLocaleChanged: (locale) => {
+      dispatch(actions.setUserLocale(locale));
+    },
+  };
+}
+
+export default injectIntl(connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AppComponent));

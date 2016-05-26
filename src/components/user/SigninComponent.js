@@ -1,10 +1,12 @@
 'use strict';
 
 import React, {Component, PropTypes} from 'react';
+import {connect} from 'react-redux';
 
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import {Card, CardActions, CardTitle, CardText} from 'material-ui/Card';
+import CircularProgress from 'material-ui/CircularProgress';
 
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
@@ -25,13 +27,33 @@ class SigninComponent extends Component {
 
     this.state = {
       errors: {},
+      loading: false,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentWillMount() {
+    this.componentWillUpdate(this.props);
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    const {signedIn} = nextProps;
+
+    if (signedIn) {
+      setTimeout(() => this.context.router.replace('/'), 1);
+    }
+  }
+
   render() {
+    const {loading} = this.state;
     const {formatMessage} = this.props.intl;
+
+    let action = <RaisedButton type="submit" label={formatMessage(messages.signin)} primary={true} />;
+
+    if (loading) {
+      action = <CircularProgress size={0.5}/>;
+    }
 
     return (
       <form onSubmit={this.handleSubmit}>
@@ -50,11 +72,10 @@ class SigninComponent extends Component {
               type="password"
               floatingLabelText={formatMessage(messages.password)}
               fullWidth={true}
-              errorText={this.state.errors.password}
             />
           </CardText>
           <CardActions>
-            <RaisedButton type="submit" label={formatMessage(messages.signin)} primary={true} />
+            {action}
           </CardActions>
         </Card>
       </form>
@@ -64,32 +85,32 @@ class SigninComponent extends Component {
   handleSubmit(e) {
     e.preventDefault();
 
-    let errors = {};
+    this.setState({ loading: true });
 
-    let email = this.refs.email.getValue();
-    let password = this.refs.password.getValue();
+    const errors = {};
+    const email = this.refs.email.getValue();
+    const password = this.refs.password.getValue();
 
     FirebaseUtils.signin(email, password)
-      .then((user) => {
-        this.context.router.replace('/');
-      })
       .catch((error) => {
         errors.email = error;
-        //this.setState({ errors });
+        this.setState({
+          errors,
+          loading: false,
+        });
       });
-
-    this.setState({ errors });
   }
 }
 
 SigninComponent.displayName = 'UserSigninComponent';
-
-SigninComponent.propTypes = {
-    intl: intlShape.isRequired,
-};
-
 SigninComponent.contextTypes = {
-    router: () => { return PropTypes.func.isRequired; },
+  router: () => { return PropTypes.func.isRequired; },
 };
 
-export default injectIntl(SigninComponent);
+const mapStateToProps = (state) => {
+  return {
+    signedIn: state.user.signedIn,
+  };
+};
+
+export default injectIntl(connect(mapStateToProps)(SigninComponent));

@@ -1,12 +1,13 @@
 'use strict';
 
-import React from 'react';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import {Card, CardActions, CardTitle, CardText} from 'material-ui/Card';
-
-import {injectIntl, intlShape, defineMessages} from 'react-intl';
+import CircularProgress from 'material-ui/CircularProgress';
 
 import FirebaseUtils from '../../utils/firebase-utils';
 
@@ -21,19 +22,35 @@ const messages = defineMessages({
   passwordConfirmationIncorrect: {id: 'user.passwordConfirmationIncorrect'},
 });
 
-class SignupComponent extends React.Component {
+class SignupComponent extends Component {
   constructor(props, context) {
     super(props, context);
 
     this.state = {
       errors: {},
+      loading: false,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentWillUpdate(nextProps, nextState) {
+    const {signedIn} = nextProps;
+
+    if (signedIn) {
+      this.context.router.replace('/');
+    }
+  }
+
   render() {
+    const {loading} = this.state;
     const {formatMessage} = this.props.intl;
+
+    let action = <RaisedButton type="submit" label={formatMessage(messages.signup)} secondary={true} />;
+    
+    if (loading) {
+      action = <CircularProgress size={0.5}/>;
+    }
 
     return (
       <form onSubmit={this.handleSubmit}>
@@ -52,7 +69,6 @@ class SignupComponent extends React.Component {
               type="password"
               floatingLabelText={formatMessage(messages.password)}
               fullWidth={true}
-              errorText={this.state.errors.password}
             />
             <TextField
               ref="passwordConfirmation"
@@ -63,7 +79,7 @@ class SignupComponent extends React.Component {
             />
           </CardText>
           <CardActions>
-            <RaisedButton type="submit" label={formatMessage(messages.signup)} secondary={true} />
+            {action}
           </CardActions>
         </Card>
       </form>
@@ -73,37 +89,41 @@ class SignupComponent extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
 
-    let errors = {};
+    this.setState({ loading: true });
 
-    let email = this.refs.email.getValue();
-    let password = this.refs.password.getValue();
-    let passwordConfirmation = this.refs.passwordConfirmation.getValue();
+    const errors = {};
+    const email = this.refs.email.getValue();
+    const password = this.refs.password.getValue();
+    const passwordConfirmation = this.refs.passwordConfirmation.getValue();
 
     if (password !== passwordConfirmation) {
-      this.state.errors.passwordConfirmation = this.props.formatMessage(messages.passwordConfirmationIncorrect);
+      errors.passwordConfirmation = this.props.formatMessage(messages.passwordConfirmationIncorrect);
+      this.setState({
+        errors,
+        loading: false,
+      });
     } else {
       FirebaseUtils.signup(email, password)
-        .then((user) => {
-          
-        })
         .catch((error) => {
           errors.email = error;
-          this.setState({ errors });
+          this.setState({
+            errors,
+            loading: false,
+          });
         });
     }
-
-    this.setState({ errors });
   }
 }
 
 SignupComponent.displayName = 'UserSignupComponent';
-
-SignupComponent.propTypes = {
-    intl: intlShape.isRequired,
-};
-
 SignupComponent.contextTypes = {
     router: () => { return React.PropTypes.func.isRequired; },
 };
 
-export default injectIntl(SignupComponent);
+const mapStateToProps = (state) => {
+  return {
+    signedIn: state.user.signedIn,
+  };
+};
+
+export default injectIntl(connect(mapStateToProps)(SignupComponent));

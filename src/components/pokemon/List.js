@@ -96,7 +96,7 @@ class ListComponent extends React.Component {
             <MenuItem value="notCollected" primaryText={formatMessage(messages.notCollected)} leftIcon={<Checkbox checked={false}/>}/>
             <Divider/>
             {_.map(Colors.tags, (color, name) => (
-              <MenuItem primaryText={tags[name] && tags[name].title || formatMessage(messages[name])}
+              <MenuItem primaryText={tags && tags[name] && tags[name].title || formatMessage(messages[name])}
                 key={name}
                 value={name}
                 leftIcon={<BookmarkIcon style={{fill: color}}/>}

@@ -1,10 +1,12 @@
 'use strict';
 
-import React from 'react';
+import React, {Component} from 'react';
 import {Provider} from 'react-redux';
 
-import store from './store';
-import actions from './actions';
+import Locale from './Locale';
+
+import store from '../store';
+import actions from '../actions';
 
 class StoreComponent extends Component {
   constructor(props) {
@@ -18,7 +20,7 @@ class StoreComponent extends Component {
   render() {
     return (
       <Provider store={store}>
-        {this.props.children}
+        <Locale/>
       </Provider>
     );
   }

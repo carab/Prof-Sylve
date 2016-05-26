@@ -2,13 +2,12 @@
 
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
+import {injectIntl, intlShape, defineMessages} from 'react-intl';
 import _ from 'lodash';
 
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import {Card, CardActions, CardTitle, CardText} from 'material-ui/Card';
-
-import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
 import Colors from '../../utils/colors';
 import Actions from '../../actions';
@@ -41,7 +40,7 @@ class SettingsComponent extends Component {
   render() {
     const {formatMessage} = this.props.intl;
     const profile = this.state.profile || this.props.profile;
-    const {tags} = profile;
+    const tags = profile.tags || tags;
 
     return (
       <div className="settings-component">
@@ -105,7 +104,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onSubmit: (profile) => {
-      dispatch(Actions.saveUserProfile(profile));
+      dispatch(Actions.setUserProfile(profile));
     },
   };
 }

@@ -38,12 +38,9 @@ class FirebaseUtils {
           email: user.email,
           uid: user.uid,
           profile: {
-            locale: null,
-            friends: [],
+            locale: 'en',
             public: false,
-            tags: {},
           },
-          pokedex: [],
         }).then(() => {
           this.signin(email, password);
         });
@@ -53,11 +50,7 @@ class FirebaseUtils {
   }
 
   signin(email, password) {
-    return firebase.auth().signInWithEmailAndPassword(email, password)
-      .then((user) => {
-      })
-      .catch((error) => {
-      });
+    return firebase.auth().signInWithEmailAndPassword(email, password);
   }
 
   signout() {

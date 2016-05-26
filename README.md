@@ -29,7 +29,9 @@ So please enjoy using this if you need it too, and don't hesitate to ask for fea
 
 ## Technical todos
 
-- After signing in, there is no collected nor tags on Pokémon.
+- Fix locale changing and saving, as guest or auth.
+- Fix first load when signed in.
+
 - Show "cancel" button when marking a Pokémon collected or tagging it.
 - Add current box and filters in URL to keep them in history.
 - Add sort select in list.
