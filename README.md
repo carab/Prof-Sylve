@@ -29,6 +29,7 @@ So please enjoy using this if you need it too, and don't hesitate to ask for fea
 
 ## Technical todos
 
+- Fix language switcher.
 - Fix locale changing and saving, as guest or auth.
 - Refactor user listening.
 - Fix collected/tag in list.
