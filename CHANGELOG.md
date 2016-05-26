@@ -1,6 +1,15 @@
 Changelog
 =========
 
+## v0.12.0 (2016-04-15)
+
+- Massive rewrite for technical reasons : more use of redux, structure of user data changed.
+- Implement a user update hook for future needs.
+- Update Material UI to v15 and other dependencies.
+- Add loaders on signing in/up and page load.
+- Add more tag colors.
+- Add missing translations for filters.
+
 ## v0.11.0 (2016-04-15)
 
 - Upgrade dependencies to React 15 and Material UI 15-beta.1.
