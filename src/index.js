@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import {Provider} from 'react-redux';
 import {IntlProvider} from 'react-intl';
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
@@ -11,6 +10,8 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
 import Routes from './components/Routes';
+import Store from './components/Store';
+import User from './components/User';
 
 import FirebaseUtils from './utils/firebase-utils';
 import Translations from './utils/translations-loader';
@@ -22,6 +23,9 @@ class Root extends Component {
   constructor(props) {
     super(props);
 
+    this.handleLocaleChanged = this.handleLocaleChanged.bind(this);
+    this.handleAuthStateChanged = this.handleAuthStateChanged.bind(this);
+
     this.state = {
       localeLoaded: false,
       locale: Translations.locale,
@@ -32,10 +36,10 @@ class Root extends Component {
   componentWillMount() {
     store.dispatch(actions.startListeningToUser());
 
-    Translations.onLocaleChange(this.handleLocaleChange.bind(this));
+    Translations.onLocaleChange(this.handleLocaleChanged);
 
     if (FirebaseUtils.isLoggedIn()) {
-      FirebaseUtils.getUserRef().child('settings/locale').once('value', (snapshot) => {
+      FirebaseUtils.getUserRef().child('profile/locale').once('value', (snapshot) => {
         Translations.changeLocale(snapshot.val());
         this.setState({ localeLoaded: true });
       });
@@ -48,6 +52,10 @@ class Root extends Component {
     // remove onLocaleChange callback
   }
 
+  componentDidMount() {
+    FirebaseUtils.onAuthStateChanged(this.handleAuth);
+  }
+
   render() {
     if (!this.state.localeLoaded) {
       return <div></div>;
@@ -56,16 +64,51 @@ class Root extends Component {
     let { locale, messages } = this.state;
 
     return (
-      <Provider store={store}>
-        <IntlProvider locale={locale} messages={messages}>
+      <Store>
+        <User>
           <Routes/>
-        </IntlProvider>
-      </Provider>
+        </User>
+      </Store>
     );
   }
 
-  handleLocaleChange(locale, messages) {
+  handleLocaleChanged(locale, messages) {
     this.setState({ locale, messages });
+  }
+
+  handleAuthStateChanged(user) {
+    if (user) {
+      this.setState({
+        loading: true,
+      });
+
+      FirebaseUtils.getRootRef().child('users').child(user.uid).once('value', (snapshot) => {
+        const user = snapshot.val();
+
+        if (!user.profile.locale) {
+          user.profile.locale = Translations.locale;
+        }
+
+        FirebaseUtils.getRootRef().child('pokemons').once('value', (snapshot) => {
+          const pokemons = snapshot.val();
+
+          UserUpdate.perform(user, pokemons).then(() => {
+            console.log(user)
+            FirebaseUtils.getRootRef().child('users').child(user.uid).set(user);
+            this.setState({
+              loading: false,
+              loggedIn: true,
+            });
+          });
+        });
+      });
+    } else {
+      this.setState({
+        loggedIn: false,
+      });
+
+      this.context.router.replace('/sign');
+    }
   }
 }
 

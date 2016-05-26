@@ -84,7 +84,7 @@ class SignupComponent extends React.Component {
     } else {
       FirebaseUtils.signup(email, password)
         .then((user) => {
-          this.context.router.replace('/');
+          
         })
         .catch((error) => {
           errors.email = error;

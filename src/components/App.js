@@ -56,17 +56,12 @@ class AppComponent extends React.Component {
   constructor(props, context) {
     super(props, context);
 
-    this.handleAuth = this.handleAuth.bind(this);
     this.handleToggleNav = this.handleToggleNav.bind(this);
     this.handleToggleNavRequest = this.handleToggleNavRequest.bind(this);
 
     this.state = {
       loggedIn: FirebaseUtils.isLoggedIn(),
     }
-  }
-
-  componentDidMount() {
-    FirebaseUtils.onAuthStateChanged(this.handleAuth);
   }
 
   render() {
@@ -148,36 +143,6 @@ class AppComponent extends React.Component {
 
   handleToggleNav() {
     this.setState({ navOpen: !this.state.navOpen })
-  }
-
-  handleAuth(user) {
-    if (user) {
-      this.setState({
-        loading: true,
-      });
-
-      FirebaseUtils.getRootRef().child('users').child(user.uid).once('value', (snapshot) => {
-        const user = snapshot.val();
-
-        FirebaseUtils.getRootRef().child('pokemons').once('value', (snapshot) => {
-          const pokemons = snapshot.val();
-
-          UserUpdate.perform(user, pokemons).then(() => {
-            FirebaseUtils.getRootRef().child('users').child(user.uid).set(user);
-            this.setState({
-              loading: false,
-              loggedIn: true,
-            });
-          });
-        });
-      });
-    } else {
-      this.setState({
-        loggedIn: false,
-      });
-
-      this.context.router.replace('/sign');
-    }
   }
 }
 

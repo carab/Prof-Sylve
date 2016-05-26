@@ -148,9 +148,7 @@ class ListComponent extends React.Component {
 
 ListComponent.displayName = 'PokemonListComponent';
 
-ListComponent.propTypes = {
-  intl: intlShape.isRequired,
-};
+ListComponent.propTypes = {};
 
 const mapStateToProps = (state) => {
   return {

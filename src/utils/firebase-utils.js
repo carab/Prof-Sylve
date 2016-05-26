@@ -34,12 +34,18 @@ class FirebaseUtils {
   signup(email, password) {
     return firebase.auth().createUserWithEmailAndPassword(email, password)
       .then((user) => {
-        this.signin(email, password).then((user) => {
-          this.getRootRef().child('users').child(user.uid).set({
-            email: user.email,
-            uid: user.uid,
-            token: user.token,
-          });
+        this.getRootRef().child('users').child(user.uid).set({
+          email: user.email,
+          uid: user.uid,
+          profile: {
+            locale: null,
+            friends: [],
+            public: false,
+            tags: {},
+          },
+          pokedex: [],
+        }).then(() => {
+          this.signin(email, password);
         });
       })
       .catch((error) => {

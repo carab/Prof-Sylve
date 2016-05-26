@@ -10,17 +10,20 @@ const updates = {
     return new Promise(function(resolve, reject) {
       // Update tags
       const tags = {};
-      let i = 0;
-      _.forEach(user.settings.colors, (title, color) => {
-        tags[color] = {
-          color,
-          title,
-        };
-      });
+
+      if (user.settings) {
+        let i = 0;
+        _.forEach(user.settings.colors, (title, color) => {
+          tags[color] = {
+            color,
+            title,
+          };
+        });
+      }
 
       // Create profile
       user.profile = {
-        locale: user.settings.locale,
+        locale: user.settings && user.settings.locale || user.profile.locale,
         friends: [],
         public: false,
         tags: tags,
@@ -32,7 +35,7 @@ const updates = {
         user.pokedex.push({
           id: pokemon.id,
           name: pokemon.name,
-          collected: user.collected[pokemon.id] && true || false,
+          collected: user.collected && user.collected[pokemon.id] && true || false,
           tag: false,
         });
       });
