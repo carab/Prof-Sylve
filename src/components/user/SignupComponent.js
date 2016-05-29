@@ -1,6 +1,6 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
@@ -9,7 +9,7 @@ import TextField from 'material-ui/TextField';
 import {Card, CardActions, CardTitle, CardText} from 'material-ui/Card';
 import CircularProgress from 'material-ui/CircularProgress';
 
-import FirebaseUtils from '../../utils/firebase-utils';
+import actions from '../../actions';
 
 import 'styles/user/Signup.css';
 
@@ -32,7 +32,6 @@ class SignupComponent extends Component {
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
-    //this.context.router.replace('/');
   }
 
   render() {
@@ -96,14 +95,7 @@ class SignupComponent extends Component {
         loading: false,
       });
     } else {
-      FirebaseUtils.signup(email, password)
-        .catch((error) => {
-          errors.email = error;
-          this.setState({
-            errors,
-            loading: false,
-          });
-        });
+      this.props.signup(email, password, this.props.locale);
     }
   }
 }
@@ -113,10 +105,23 @@ SignupComponent.contextTypes = {
     router: () => { return React.PropTypes.func.isRequired; },
 };
 
+SignupComponent.propTypes = {
+  locale: PropTypes.string.isRequired,
+  intl: intlShape.isRequired,
+};
+
 const mapStateToProps = (state) => {
   return {
-    signedIn: state.user.signedIn,
+    locale: state.profile.locale,
   };
 };
 
-export default injectIntl(connect(mapStateToProps)(SignupComponent));
+const mapDispatchToProps = (dispatch) => {
+  return {
+    signup: (email, password, locale) => {
+      dispatch(actions.auth.signup(email, password, locale));
+    },
+  };
+}
+
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(SignupComponent));

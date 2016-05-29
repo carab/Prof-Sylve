@@ -7,12 +7,11 @@ const updates = {
     // Create Pokédex from old collected and tags array
     // And create profile and tags
 
-    return new Promise(function(resolve, reject) {
+    return new Promise(function(resolve) {
       // Update tags
       const tags = {};
 
       if (user.settings) {
-        let i = 0;
         _.forEach(user.settings.colors, (title, color) => {
           tags[color] = {
             color,
@@ -22,16 +21,14 @@ const updates = {
       }
 
       // Create profile
-      user.profile = {
-        locale: user.settings && user.settings.locale || user.profile.locale,
-        friends: [],
+      user.profile = Object.assign({}, user.profile || {}, {
         public: false,
         tags: tags,
-      };
+      });
 
       // Create Pokédex
       user.pokedex = [];
-      _.forEach(pokemons, (pokemon, index) => {
+      _.forEach(pokemons, (pokemon) => {
         user.pokedex.push({
           id: pokemon.id,
           name: pokemon.name,
@@ -66,7 +63,7 @@ class UserUpdate {
     const performUpdate = function(currentVersionIndex) {
       const currentVersion = versions[currentVersionIndex];
 
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         if (_.isString(currentVersion)) {
           const currentUpdate = updates[currentVersion];
           currentUpdate(user, pokemons).then(() => {

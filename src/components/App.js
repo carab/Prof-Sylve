@@ -1,77 +1,50 @@
 'use strict';
 
-import React, {Component} from 'react';
-import {Link} from 'react-router';
+import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
+import {Router, Route, IndexRoute, browserHistory} from 'react-router';
+import {IntlProvider, addLocaleData} from 'react-intl';
+import frLocaleData from 'react-intl/locale-data/fr';
+import _ from 'lodash';
 
-import DocumentTitle from 'react-document-title';
-
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import AppBar from 'material-ui/AppBar';
-import Drawer from 'material-ui/Drawer';
-import Divider from 'material-ui/Divider';
-import IconMenu from 'material-ui/IconMenu';
-import Menu from 'material-ui/Menu';
-import MenuItem from 'material-ui/MenuItem';
-import IconButton from 'material-ui/IconButton';
 import CircularProgress from 'material-ui/CircularProgress';
-import MoreVertIconIcon from 'material-ui/svg-icons/navigation/more-vert';
-import PowerSettingsNewIcon from 'material-ui/svg-icons/action/power-settings-new';
-import SettingsIcon from 'material-ui/svg-icons/action/settings';
-import ListIcon from 'material-ui/svg-icons/action/list';
-import ViewModuleIcon from 'material-ui/svg-icons/action/view-module';
-import BugReportIcon from 'material-ui/svg-icons/action/bug-report';
-import LanguageIcon from 'material-ui/svg-icons/action/language';
 
-import {injectIntl, intlShape, defineMessages} from 'react-intl';
+import Main from './Main';
+import PokemonList from './pokemon/List';
+import PokemonPc from 'components/pokemon/Pc';
+import SignComponent from 'components/user/SignComponent';
+import SignoutComponent from 'components/user/SignoutComponent';
+import SettingsComponent from 'components/user/SettingsComponent';
 
 import actions from '../actions';
 
-import 'flexboxgrid/dist/flexboxgrid.css';
-import 'styles/App.css';
+addLocaleData(frLocaleData);
 
-const messages = defineMessages({
-  app: {id: 'app'},
-  byBox: {id: 'nav.byBox'},
-  byList: {id: 'nav.byList'},
-  bugs: {id: 'nav.bugs'},
-  settings: {id: 'user.settings'},
-  signout: {id: 'user.signout'},
-});
+class App extends Component {
+  constructor(props) {
+    super(props);
 
-const styles = {
-  appbar: {
-    position: 'fixed',
-    zIndex: 1301,
-  },
-  nav: {
-    paddingTop: '64px',
-  },
-};
+    this.handleAuthRequired = this.handleAuthRequired.bind(this);
 
-const muiTheme = getMuiTheme();
+    props.auth();
+  }
 
-class AppComponent extends Component {
-  constructor(props, context) {
-    super(props, context);
+  componentWillMount() {
+    const {locale, setLocale} = this.props;
 
-    this.handleToggleNav = this.handleToggleNav.bind(this);
-    this.handleToggleNavRequest = this.handleToggleNavRequest.bind(this);
-
-    this.state = {};
+    if (!locale) {
+      setLocale(this.getDefaultLocale());
+    }
   }
 
   render() {
-    const {isLoaded} = this.props;
+    const {locale, isReady} = this.props;
 
-    return (
-      <MuiThemeProvider muiTheme={muiTheme}>
-        <DocumentTitle title="Prof. Sylve">
-          {isLoaded ? this.renderLayout() : this.renderSplash()}
-        </DocumentTitle>
-      </MuiThemeProvider>
-    );
+    if (isReady && locale) {
+      return this.renderApp();
+    }
+
+    return this.renderSplash();
   }
 
   renderSplash() {
@@ -82,103 +55,104 @@ class AppComponent extends Component {
     );
   }
 
-  renderLayout() {
-    const {locale, signedIn} = this.props;
-    const {formatMessage} = this.props.intl;
-
-    let menu;
-    let navItems;
-
-    if (signedIn) {
-      const currentRoute = this.props.location.pathname;
-
-      navItems = (
-        <Menu value={currentRoute}>
-          <MenuItem value="/" onTouchTap={this.handleToggleNav} leftIcon={<ViewModuleIcon/>} containerElement={<Link to="/" />}>{formatMessage(messages.byBox)}</MenuItem>
-          <MenuItem value="/list" onTouchTap={this.handleToggleNav} leftIcon={<ListIcon/>} containerElement={<Link to="/list" />}>{formatMessage(messages.byList)}</MenuItem>
-          <Divider/>
-        </Menu>
-      );
-
-      menu = (
-        <IconMenu
-          iconButtonElement={
-            <IconButton><MoreVertIconIcon/></IconButton>
-          }
-          targetOrigin={{horizontal: 'right', vertical: 'top'}}
-          anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-        >
-          <MenuItem primaryText={formatMessage(messages.settings)} leftIcon={<SettingsIcon/>} containerElement={<Link to="/settings" />}/>
-          <Divider/>
-          <MenuItem primaryText={formatMessage(messages.signout)} leftIcon={<PowerSettingsNewIcon/>} containerElement={<Link to="/signout" />}/>
-        </IconMenu>
-      );
-    }
+  renderApp() {
+    const {locale} = this.props;
 
     return (
-      <div className="prof-sylve">
-        <AppBar
-          title={formatMessage(messages.app)}
-          onLeftIconButtonTouchTap={this.handleToggleNav}
-          iconElementRight={menu}
-          style={styles.appbar}
-        />
-        <Drawer
-          docked={false}
-          open={this.state.navOpen}
-          onRequestChange={this.handleToggleNavRequest}
-        >
-          <div style={styles.nav}></div>
-          {navItems}
-          <Menu value={locale}>
-            <MenuItem value="en" leftIcon={<LanguageIcon/>} onTouchTap={this.handleChangeLocale.bind(this, 'en')}>English</MenuItem>
-            <MenuItem value="fr" leftIcon={<LanguageIcon/>} onTouchTap={this.handleChangeLocale.bind(this, 'fr')}>Français</MenuItem>
-            <Divider/>
-            <MenuItem leftIcon={<BugReportIcon/>} href="https://github.com/carab/Prof-Sylve" target="blank">{formatMessage(messages.bugs)}</MenuItem>
-          </Menu>
-        </Drawer>
-        <div className="prof-sylve__content">
-          {this.props.children}
-        </div>
-      </div>
+      <IntlProvider locale={locale} messages={this.getMessages(locale)}>
+        <Router history={browserHistory}>
+          <Route path="/" component={Main}>
+            <IndexRoute name="pc" component={PokemonPc} onEnter={this.handleAuthRequired}/>
+            <Route name="list" path="list" component={PokemonList} onEnter={this.handleAuthRequired}/>
+            <Route name="settings" path="settings" component={SettingsComponent} onEnter={this.handleAuthRequired}/>
+            <Route name="sign" path="sign" component={SignComponent}/>
+            <Route name="signout" path="signout" component={SignoutComponent} onEnter={this.handleAuthRequired}/>
+          </Route>
+        </Router>
+      </IntlProvider>
     );
   }
 
-  handleChangeLocale(locale) {
-    this.props.onLocaleChanged(locale);
+  handleAuthRequired(nextState, replace) {
+    const {isSignedIn} = this.props;
+
+    if (!isSignedIn) {
+      replace({
+        pathname: '/sign',
+        state: { nextPathname: nextState.location.pathname },
+      });
+    }
   }
 
-  handleToggleNavRequest(open) {
-    this.setState({ navOpen: open });
+  getLocaleFiles() {
+    const req = require.context('../translations', true, /\.json.*$/);
+    const localeFiles = {};
+
+    req.keys().forEach((file) => {
+      const locale = file.replace('./', '').replace('.json', '');
+      localeFiles[locale] = () => req(file);
+    });
+
+    return localeFiles;
   }
 
-  handleToggleNav() {
-    this.setState({ navOpen: !this.state.navOpen })
+  getDefaultLocale() {
+    const locale = navigator.language.split('-')[0];
+
+    if (_.includes(['en', 'fr'], locale)) {
+      return locale;
+    }
+
+    return 'en';
+  }
+
+  getMessages(locale) {
+    const localeFiles = this.getLocaleFiles();
+    const file = localeFiles[locale] ? localeFiles[locale] : localeFiles['en'];
+
+    return this.flattenMessages(file());
+  }
+
+  flattenMessages(nestedMessages, prefix = '') {
+    return Object.keys(nestedMessages).reduce((messages, key) => {
+      const value = nestedMessages[key];
+      const prefixedKey = prefix ? `${prefix}.${key}` : key;
+
+      if (typeof value === 'string') {
+          messages[prefixedKey] = value;
+      } else {
+          Object.assign(messages, this.flattenMessages(value, prefixedKey));
+      }
+
+      return messages;
+    }, {});
   }
 }
 
-AppComponent.displayName = 'AppComponent';
-AppComponent.contextTypes = {
-  router: () => { return React.PropTypes.func.isRequired; },
+App.displayName = 'App';
+App.propTypes = {
+  isReady: PropTypes.bool.isRequired,
+  isSignedIn: PropTypes.bool.isRequired,
+  locale: PropTypes.string,
 };
 
 const mapStateToProps = (state) => {
   return {
-    isLoaded: state.user.isLoaded,
-    signedIn: state.user.signedIn,
-    locale: state.user.data.profile.locale,
+    isReady: state.auth.isReady,
+    isSignedIn: state.auth.isSignedIn,
+    locale: state.profile.locale,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onLocaleChanged: (locale) => {
-      dispatch(actions.setUserLocale(locale));
+    setLocale: (locale) => {
+      dispatch(actions.profile.setLocale(locale));
+    },
+    auth: (locale) => {
+      dispatch(actions.auth.listens(locale));
     },
   };
 }
 
-export default injectIntl(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AppComponent));
+export default connect(mapStateToProps, mapDispatchToProps)(App);

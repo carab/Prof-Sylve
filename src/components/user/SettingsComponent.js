@@ -10,7 +10,7 @@ import TextField from 'material-ui/TextField';
 import {Card, CardActions, CardTitle, CardText} from 'material-ui/Card';
 
 import Colors from '../../utils/colors';
-import Actions from '../../actions';
+import actions from '../../actions';
 
 import 'styles/user/Settings.css';
 
@@ -30,7 +30,7 @@ const messages = defineMessages({
   brown: {id: 'pokemon.tag.color.brown'},
 });
 
-class SettingsComponent extends Component {
+class Settings extends Component {
   constructor(props, context) {
     super(props, context);
 
@@ -89,27 +89,28 @@ class SettingsComponent extends Component {
   }
 }
 
-SettingsComponent.displayName = 'UserSettingsComponent';
-
-SettingsComponent.contextTypes = {
+Settings.displayName = 'UserSettings';
+Settings.contextTypes = {
   router: () => { return PropTypes.func.isRequired; },
+};
+
+Settings.propTypes = {
+  locale: PropTypes.object.isRequired,
+  intl: intlShape.isRequired,
 };
 
 const mapStateToProps = (state) => {
   return {
-    profile: state.user.data.profile,
+    profile: state.profile,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     onSubmit: (profile) => {
-      dispatch(Actions.setUserProfile(profile));
+      dispatch(actions.profile.setProfile(profile));
     },
   };
 }
 
-export default injectIntl(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SettingsComponent));
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Settings));

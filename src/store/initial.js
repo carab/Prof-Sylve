@@ -1,17 +1,16 @@
 export default {
   feedback: [],
-  user: {
+  auth: {
     currently: 'AUTH_GUEST',
-    signedIn: false,
-    isLoaded: false,
-    data: {
-      profile: {
-        locale: 'en',
-        friends: [],
-        public: false,
-        tags: {},
-      },
-      pokedex: [],
-    },
+    isReady: false,
+    isSignedIn: false,
+    data: {},
   },
+  profile: {
+    locale: null,
+    friends: [],
+    public: false,
+    tags: {},
+  },
+  pokedex: [],
 };

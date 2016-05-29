@@ -2,15 +2,14 @@
 
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
+import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import {Card, CardActions, CardTitle, CardText} from 'material-ui/Card';
 import CircularProgress from 'material-ui/CircularProgress';
 
-import {injectIntl, intlShape, defineMessages} from 'react-intl';
-
-import FirebaseUtils from '../../utils/firebase-utils';
+import actions from '../../actions';
 
 import 'styles/user/Signin.css';
 
@@ -75,18 +74,10 @@ class SigninComponent extends Component {
 
     this.setState({ loading: true });
 
-    const errors = {};
     const email = this.refs.email.getValue();
     const password = this.refs.password.getValue();
 
-    FirebaseUtils.signin(email, password)
-      .catch((error) => {
-        errors.email = error;
-        this.setState({
-          errors,
-          loading: false,
-        });
-      });
+    this.props.signin(email, password);
   }
 }
 
@@ -95,10 +86,20 @@ SigninComponent.contextTypes = {
   router: () => { return PropTypes.func.isRequired; },
 };
 
-const mapStateToProps = (state) => {
-  return {
-    signedIn: state.user.signedIn,
-  };
+SigninComponent.propTypes = {
+  intl: intlShape.isRequired,
 };
 
-export default injectIntl(connect(mapStateToProps)(SigninComponent));
+const mapStateToProps = () => {
+  return {};
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    signin: (email, password) => {
+      dispatch(actions.auth.signin(email, password));
+    },
+  };
+}
+
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(SigninComponent));

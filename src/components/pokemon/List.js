@@ -1,6 +1,6 @@
 'use strict';
 
-import React from 'react';
+import React, {Component, PropTypes} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 
@@ -44,7 +44,7 @@ const messages = defineMessages({
   brown: {id: 'pokemon.tag.color.brown'},
 });
 
-class ListComponent extends React.Component {
+class ListComponent extends Component {
   constructor(props) {
     super(props);
 
@@ -147,13 +147,15 @@ class ListComponent extends React.Component {
 }
 
 ListComponent.displayName = 'PokemonListComponent';
-
-ListComponent.propTypes = {};
+ListComponent.propTypes = {
+  pokemons: PropTypes.array.isRequired,
+  intl: intlShape.isRequired,
+};
 
 const mapStateToProps = (state) => {
   return {
-    pokemons: state.user.data.pokedex,
-    tags: state.user.data.profile.tags
+    pokemons: state.pokedex,
+    tags: state.profile.tags,
   };
 };
 

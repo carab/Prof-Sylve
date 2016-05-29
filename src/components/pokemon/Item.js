@@ -18,7 +18,7 @@ import BookmarkIcon from 'material-ui/svg-icons/action/bookmark';
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
 import Colors from '../../utils/colors';
-import Actions from '../../actions';
+import actions from '../../actions';
 
 import 'styles/pokemon/Pokemon.css';
 
@@ -55,17 +55,18 @@ class PokemonComponent extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
+    const {locale} = this.props;
     const {collected, tag} = this.props.pokemon;
 
     return (
       collected !== nextProps.pokemon.collected ||
-      tag !== nextProps.pokemon.tag
+      tag !== nextProps.pokemon.tag ||
+      locale !== nextProps.locale
     );
   }
 
   render() {
     const {pokemon, tags, type} = this.props;
-    const {onCollected, onTagRemove, onTag} = this.props;
     const {formatMessage} = this.props.intl;
 
     const name = formatMessage({ id: 'pokemon.name.' + pokemon.id });
@@ -152,13 +153,11 @@ class PokemonComponent extends Component {
   }
 
   handleCollected() {
-    const {pokemon, onCollected} = this.props;
-    onCollected();
+    this.props.onCollected();
   }
 
   handleTag(tag) {
-    const {pokemon, onTag} = this.props;
-    onTag(tag);
+    this.props.onTag(tag);
   }
 
   handleStopPropagation(e) {
@@ -171,13 +170,13 @@ PokemonComponent.displayName = 'PokemonItemComponent';
 PokemonComponent.propTypes = {
   type: PropTypes.string.isRequired,
   pokemon: PropTypes.object.isRequired,
+  intl: intlShape.isRequired,
 };
 
-const mapStateToProps = (state, props) => {
-  const {pokemon} = props;
-
+const mapStateToProps = (state) => {
   return {
-    tags: state.user.data.profile.tags
+    tags: state.profile.tags,
+    locale: state.profile.locale,
   };
 };
 
@@ -186,10 +185,10 @@ const mapDispatchToProps = (dispatch, props) => {
 
   return {
     onCollected: () => {
-      dispatch(Actions.setPokemonCollected(pokemon));
+      dispatch(actions.pokedex.setCollected(pokemon));
     },
     onTag: (color) => {
-      dispatch(Actions.setPokemonTag(pokemon, color));
+      dispatch(actions.pokedex.setTag(pokemon, color));
     },
   };
 }

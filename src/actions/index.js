@@ -1,97 +1,168 @@
 import { browserHistory } from 'react-router';
+import firebase from 'firebase';
 
-import FirebaseUtils from '../utils/firebase-utils';
 import UserUpdate from '../utils/user-update';
 
+const config = {
+  apiKey: 'AIzaSyAa2dt9-n6blULUhfZ1WEm7AC9L_V8f0QM',
+  authDomain: 'prof-sylve.firebaseapp.com',
+  databaseURL: 'https://prof-sylve.firebaseio.com',
+  storageBucket: 'prof-sylve.appspot.com',
+};
+
+firebase.initializeApp(config);
+
+function isSignedIn() {
+  const authData = firebase.auth().currentUser;
+
+  return authData && true;
+}
+
+function getUserRef() {
+  if (isSignedIn()) {
+    const authData = firebase.auth().currentUser;
+
+    return firebase.database().ref()
+      .child('users')
+      .child(authData.uid);
+  }
+}
+
 const actions = {
-  startListeningToUser() {
-    return (dispatch) => {
-      let userRef;
+  auth: {
+    listens() {
+      return (dispatch) => {
+        firebase.auth().onAuthStateChanged((authData) => {
+          if (authData) {
+            function listens() {
+              getUserRef().on('value', (snapshot) => {
+                const user = snapshot.val();
 
-      FirebaseUtils.onAuthStateChanged((user) => {
-        if (user) {
-          // If the user signed in, check if its data needs update and perform it
-          // Eitherway, listen on the user data.
+                dispatch({
+                  type: 'SET_PROFILE',
+                  profile: user.profile,
+                });
 
-          userRef = FirebaseUtils.getRootRef().child('users').child(user.uid);
+                dispatch({
+                  type: 'SET_POKEDEX',
+                  pokedex: user.pokedex,
+                });
 
-          const listenToUser = () => {
-            let first = true;
-            userRef.on('value', (snapshot) => {
-              dispatch({ type: 'RECEIVE_USER_DATA', data: snapshot.val() });
-              if (first) {
+                dispatch({
+                  type: 'SET_AUTH',
+                  auth: {
+                    currently: 'AUTH_AUTHENTICATED',
+                    isReady: true,
+                    isSignedIn: true,
+                    data: authData,
+                  },
+                });
+
                 browserHistory.push('/');
-                first = false;
+              });
+            }
+
+            getUserRef().once('value', (snapshot) => {
+              const user = snapshot.val();
+
+              if (UserUpdate.needs(user)) {
+                firebase.database().ref().child('pokemons').once('value', (snapshot) => {
+                  const pokemons = snapshot.val();
+
+                  UserUpdate.perform(user, pokemons).then(() => {
+                    getUserRef().set(user).then(listens);
+                  });
+                });
+              } else {
+                listens();
               }
             });
-          };
+          } else {
+            dispatch({
+              type: 'SET_AUTH',
+              auth: {
+                currently: 'AUTH_GUEST',
+                isReady: true,
+                isSignedIn: false,
+                data: {},
+              },
+            });
 
-          userRef.once('value', (snapshot) => {
-            const user = snapshot.val();
-
-            if (UserUpdate.needs(user)) {
-              FirebaseUtils.getRootRef().child('pokemons').once('value', (snapshot) => {
-                const pokemons = snapshot.val();
-
-                UserUpdate.perform(user, pokemons).then(() => {
-                  userRef.set(user).then(listenToUser);
-                });
-              });
-            } else {
-              listenToUser();
-            }
-          });
-        } else {
-          // If the user signed out, cancel the listening and reset user data.
-          if (userRef) {
-            userRef.off('value');
+            browserHistory.push('/sign');
           }
+        });
+      };
+    },
+    signup(email, password, locale) {
+      return () => {
+        return firebase.auth().createUserWithEmailAndPassword(email, password)
+          .then((user) => {
+            firebase.database().ref().child('users').child(user.uid).set({
+              profile: {
+                email: user.email,
+                uid: user.uid,
+                locale,
+              },
+            }).then(() => {
+              firebase.auth().signInWithEmailAndPassword(email, password);
+            });
+          })
+      };
+    },
+    signin(email, password) {
+      return () => {
+        return firebase.auth().signInWithEmailAndPassword(email, password);
+      };
+    },
+    signout() {
+      return () => {
+        return firebase.auth().signOut();
+      };
+    },
+  },
+  profile: {
+    setLocale(locale) {
+      return (dispatch) => {
+        dispatch({ type: 'SET_LOCALE', locale });
 
-          dispatch({ type: 'RESET_USER_DATA' });
-          browserHistory.push('/sign');
+        if (isSignedIn()) {
+          getUserRef()
+            .child('profile/locale')
+            .set(locale);
         }
-      });
-    };
-  },
+      };
+    },
 
-  setUserLocale(locale) {
-    return (dispatch) => {
-      if (FirebaseUtils.isLoggedIn()) {
-        FirebaseUtils.getUserRef()
-          .child('profile/locale')
-          .set(locale);
-      } else {
-        dispatch({ type: 'SET_USER_LOCALE', locale });
-      }
-    };
-  },
+    setProfile(profile) {
+      return (dispatch) => {
+        dispatch({ type: 'SET_PROFILE', profile });
 
-  setUserProfile(profile) {
-    return () => {
-      FirebaseUtils.getUserRef()
-        .child('profile')
-        .set(profile);
-    };
+        getUserRef()
+          .child('profile')
+          .set(profile);
+      };
+    },
   },
+  pokedex: {
+    setCollected(pokemon) {
+      return () => {
+        getUserRef()
+          .child('pokedex')
+          .child(pokemon.id-1)
+          .child('collected')
+          .set(!pokemon.collected);
+      };
+    },
 
-  setPokemonCollected(pokemon) {
-    return () => {
-      FirebaseUtils.getUserRef()
-        .child('pokedex')
-        .child(pokemon.id-1)
-        .child('collected')
-        .set(!pokemon.collected);
-    };
-  },
-
-  setPokemonTag(pokemon, tag) {
-    return () => {
-      FirebaseUtils.getUserRef()
-        .child('pokedex')
-        .child(pokemon.id-1)
-        .child('tag')
-        .set(tag);
-    };
+    setTag(pokemon, tag) {
+      return () => {
+        getUserRef()
+          .child('pokedex')
+          .child(pokemon.id-1)
+          .child('tag')
+          .set(tag);
+      };
+    },
   },
 };
 

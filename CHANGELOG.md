@@ -1,7 +1,13 @@
 Changelog
 =========
 
-## v0.12.0 (2016-04-15)
+## v0.13.0 (2016-05-29)
+
+- Fix language switcher.
+- Fix user signing in/up/out.
+- Full use of Redux and refactoring.
+
+## v0.12.0 (2016-05-25)
 
 - Massive rewrite for technical reasons : more use of redux, structure of user data changed.
 - Implement a user update hook for future needs.

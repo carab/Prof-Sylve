@@ -3,12 +3,9 @@
 import React, {Component, PropTypes} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
-
-import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar';
-
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
-import FirebaseUtils from '../../utils/firebase-utils';
+import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar';
 
 import 'styles/pokemon/Toolbar.css';
 
@@ -69,7 +66,8 @@ PokemonToolbar.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    pokemons: state.user.data.pokedex,
+    pokemons: state.pokedex,
+    locale: state.profile.locale,
   };
 };
 

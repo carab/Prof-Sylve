@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
 import injectTapEventPlugin from 'react-tap-event-plugin';
 // Needed for onTouchTap
 // Can go away when react 1.0 release
@@ -13,7 +16,9 @@ import Store from './components/Store';
 class Root extends Component {
   render() {
     return (
-      <Store/>
+      <MuiThemeProvider muiTheme={getMuiTheme()}>
+        <Store/>
+      </MuiThemeProvider>
     );
   }
 }

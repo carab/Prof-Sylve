@@ -29,9 +29,6 @@ So please enjoy using this if you need it too, and don't hesitate to ask for fea
 
 ## Technical todos
 
-- Fix language switcher.
-- Fix locale changing and saving, as guest or auth.
-- Refactor user listening.
 - Fix collected/tag in list.
 - Show "cancel" button when marking a Pokémon collected or tagging it.
 - Add current box and filters in URL to keep them in history.
@@ -39,10 +36,8 @@ So please enjoy using this if you need it too, and don't hesitate to ask for fea
 - Review box navigation and layout on mobile.
 - Review list layout in desktop.
 - Review settings layout and add account settings.
-- Improve transitions when signing in, loading Pokémons, etc.
 - Improve error messages.
 - Allow filters in grid, removing boxes when applied.
-- Use Redux instead of playing stupidly with Firebase (IN PROGRESS).
 - Add unit-tests.
 
 ## Contributing

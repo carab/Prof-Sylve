@@ -1,6 +1,6 @@
 'use strict';
 
-import React from 'react';
+import React, {Component, PropTypes} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 
@@ -27,7 +27,7 @@ const BOX_COLS = 6;
 const BOX_ROWS = 5;
 const BOX_SIZE = BOX_COLS * BOX_ROWS;
 
-class PokemonPc extends React.Component {
+class PokemonPc extends Component {
   constructor(props) {
     super(props);
 
@@ -137,11 +137,14 @@ class PokemonPc extends React.Component {
 
 PokemonPc.displayName = 'PokemonPcComponent';
 
-PokemonPc.propTypes = {};
+PokemonPc.propTypes = {
+  pokemons: PropTypes.array.isRequired,
+  intl: intlShape.isRequired,
+};
 
 const mapStateToProps = (state) => {
   return {
-    pokemons: state.user.data.pokedex,
+    pokemons: state.pokedex,
   };
 };
 
