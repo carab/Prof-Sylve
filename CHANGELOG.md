@@ -1,6 +1,14 @@
 Changelog
 =========
 
+## v0.14.0 (2016-05-31)
+
+- Make the drawer dynamic.
+- Improve various layouts (PC, List, Settings).
+- Improve languages select.
+- Fix sign/out redirects.
+- Add basic friends and dashboard pages.
+
 ## v0.13.0 (2016-05-29)
 
 - Fix language switcher.
