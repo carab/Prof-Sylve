@@ -5,11 +5,15 @@ html, body {
   margin: 0;
 }
 
-.prof-sylve {
-
+.container {
+  padding: 0;
 }
 
-.prof-sylve__content {
+.Drawer {
+  padding-top: 64px;
+}
+
+.Content {
   padding-top: 64px;
   box-sizing: border-box;
   height: 100vh;
@@ -20,4 +24,18 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+@media (min-width: 48em) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 2rem;
+  }
+}
+
+@media (min-width: 62em) {
+  .Content {
+    padding-left: 256px;
+  }
 }

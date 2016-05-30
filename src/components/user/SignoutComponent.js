@@ -10,6 +10,15 @@ import 'styles/user/Signout.css';
 class Signout extends Component {
   componentWillMount() {
     this.props.signout();
+    this.componentWillUpdate(this.props);
+  }
+
+  componentWillUpdate(nextProps) {
+    const {isSignedIn} = nextProps;
+
+    if (!isSignedIn) {
+      this.context.router.replace('/sign');
+    }
   }
 
   render() {

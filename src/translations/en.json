@@ -4,8 +4,11 @@
     "save": "Save"
   },
   "nav": {
-    "byBox": "By Box",
-    "byList": "By List",
+    "dashboard": "Dashboard",
+    "byBox": "PC",
+    "byList": "List",
+    "friends": "My Friends",
+    "language": "Language",
     "bugs": "Github/Bugs"
   },
   "user": {
@@ -18,7 +21,11 @@
     "email": "Email",
     "password": "Password",
     "passwordConfirmation": "Password Confirmation",
-    "passwordConfirmationIncorrect": "Password confirmation is not correct."
+    "passwordConfirmationIncorrect": "Password confirmation is not correct.",
+    "friends": {
+      "friends": "My Friends ({friends})",
+      "none": "None yet"
+    }
   },
   "pokemon": {
     "toolbar": {

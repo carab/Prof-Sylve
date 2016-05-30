@@ -48,7 +48,7 @@ class UserUpdate {
   }
 
   needs(user) {
-    const version = user.version;
+    const version = user.profile && user.profile.version;
     const versions = Object.keys(updates);
     const versionIndex = versions.indexOf(version);
 
@@ -56,7 +56,7 @@ class UserUpdate {
   }
 
   perform(user, pokemons) {
-    const version = user.version;
+    const version = user.profile && user.profile.version;
     const versions = Object.keys(updates);
     const nextVersionIndex = versions.indexOf(version) + 1;
 

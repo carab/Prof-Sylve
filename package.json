@@ -70,6 +70,7 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
+    "bootstrap": "^4.0.0-alpha.2",
     "core-js": "^2.0.0",
     "firebase": "^3.0.3",
     "flexboxgrid": "^6.3.0",
@@ -80,6 +81,7 @@
     "react-addons-test-utils": "^15.0.1",
     "react-document-title": "^2.0.1",
     "react-dom": "^15.0.1",
+    "react-event-listener": "^0.2.1",
     "react-intl": "^2.1.2",
     "react-redux": "^4.4.5",
     "react-router": "^2.4.1",

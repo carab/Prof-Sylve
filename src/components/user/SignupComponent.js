@@ -70,7 +70,7 @@ class SignupComponent extends Component {
               errorText={this.state.errors.passwordConfirmation}
             />
           </CardText>
-          <CardActions>
+          <CardActions className="text-xs-center">
             {action}
           </CardActions>
         </Card>

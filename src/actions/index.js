@@ -35,47 +35,60 @@ const actions = {
         firebase.auth().onAuthStateChanged((authData) => {
           if (authData) {
             function listens() {
-              getUserRef().on('value', (snapshot) => {
-                const user = snapshot.val();
+              let counter = 2;
 
+              function setup() {
+                if (--counter === 0) {
+                  dispatch({
+                    type: 'SET_AUTH',
+                    auth: {
+                      currently: 'AUTH_AUTHENTICATED',
+                      isReady: true,
+                      isSignedIn: true,
+                      data: authData,
+                    },
+                  });
+
+                  //browserHistory.push('/');
+                }
+              }
+
+              getUserRef().child('profile').on('value', (snapshot) => {
                 dispatch({
                   type: 'SET_PROFILE',
-                  profile: user.profile,
+                  profile: snapshot.val(),
                 });
+                setup();
+              });
 
+              getUserRef().child('pokedex').on('value', (snapshot) => {
                 dispatch({
                   type: 'SET_POKEDEX',
-                  pokedex: user.pokedex,
+                  pokedex: snapshot.val(),
                 });
-
-                dispatch({
-                  type: 'SET_AUTH',
-                  auth: {
-                    currently: 'AUTH_AUTHENTICATED',
-                    isReady: true,
-                    isSignedIn: true,
-                    data: authData,
-                  },
-                });
-
-                browserHistory.push('/');
+                setup();
               });
             }
 
-            getUserRef().once('value', (snapshot) => {
-              const user = snapshot.val();
+            getUserRef().child('profile').once('value', (snapshot) => {
+              const profile = snapshot.val();
 
-              if (UserUpdate.needs(user)) {
-                firebase.database().ref().child('pokemons').once('value', (snapshot) => {
-                  const pokemons = snapshot.val();
+              getUserRef().child('pokedex').once('value', (snapshot) => {
+                const pokedex = snapshot.val();
+                const user = { profile, pokedex };
 
-                  UserUpdate.perform(user, pokemons).then(() => {
-                    getUserRef().set(user).then(listens);
+                if (UserUpdate.needs(user)) {
+                  firebase.database().ref().child('pokemons').once('value', (snapshot) => {
+                    const pokemons = snapshot.val();
+
+                    UserUpdate.perform(user, pokemons).then(() => {
+                      getUserRef().set(user).then(listens);
+                    });
                   });
-                });
-              } else {
-                listens();
-              }
+                } else {
+                  listens();
+                }
+              });
             });
           } else {
             dispatch({
@@ -87,8 +100,6 @@ const actions = {
                 data: {},
               },
             });
-
-            browserHistory.push('/sign');
           }
         });
       };

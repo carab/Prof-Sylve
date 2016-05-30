@@ -4,6 +4,7 @@ import React, {Component, PropTypes} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 
+import Paper from 'material-ui/Paper';
 import {List, ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import IconMenu from 'material-ui/IconMenu';
@@ -84,41 +85,43 @@ class ListComponent extends Component {
     this.filteredPokemons = filteredPokemons;
 
     return (
-      <div className="pokemon-list">
-        <Toolbar pokemons={pokemons} filteredPokemons={filteredPokemons} right={
-          <IconMenu
-            iconButtonElement={<IconButton><FilterIcon/></IconButton>}
-            value={filter}
-            onChange={this.handleFilterChange}
-          >
-            <MenuItem value="all" primaryText={formatMessage(messages.all)} leftIcon={<AllInclusiveIcon/>}/>
-            <MenuItem value="collected" primaryText={formatMessage(messages.collected)} leftIcon={<Checkbox checked={true}/>}/>
-            <MenuItem value="notCollected" primaryText={formatMessage(messages.notCollected)} leftIcon={<Checkbox checked={false}/>}/>
-            <Divider/>
-            {_.map(Colors.tags, (color, name) => (
-              <MenuItem primaryText={tags && tags[name] && tags[name].title || formatMessage(messages[name])}
-                key={name}
-                value={name}
-                leftIcon={<BookmarkIcon style={{fill: color}}/>}
-              />
-            ))}
-          </IconMenu>
-        }/>
-        <List className="pokemon-list__list">
-          <AutoSizer>
-            {({ height, width }) => (
-              <VirtualScroll
-                height={height}
-                width={width}
-                overscanRowsCount={5}
-                noRowsRenderer={this.noItemRenderer}
-                rowsCount={filteredPokemons.length}
-                rowHeight={48}
-                rowRenderer={this.itemRenderer}
-              />
-            )}
-          </AutoSizer>
-        </List>
+      <div className="PokemonList container">
+        <Paper zDepth={1} className="PokemonList__paper">
+          <Toolbar pokemons={pokemons} filteredPokemons={filteredPokemons} right={
+            <IconMenu
+              iconButtonElement={<IconButton><FilterIcon/></IconButton>}
+              value={filter}
+              onChange={this.handleFilterChange}
+            >
+              <MenuItem value="all" primaryText={formatMessage(messages.all)} leftIcon={<AllInclusiveIcon/>}/>
+              <MenuItem value="collected" primaryText={formatMessage(messages.collected)} leftIcon={<Checkbox checked={true}/>}/>
+              <MenuItem value="notCollected" primaryText={formatMessage(messages.notCollected)} leftIcon={<Checkbox checked={false}/>}/>
+              <Divider/>
+              {_.map(Colors.tags, (color, name) => (
+                <MenuItem primaryText={tags && tags[name] && tags[name].title || formatMessage(messages[name])}
+                  key={name}
+                  value={name}
+                  leftIcon={<BookmarkIcon style={{fill: color}}/>}
+                />
+              ))}
+            </IconMenu>
+          }/>
+          <List className="PokemonList__list">
+            <AutoSizer>
+              {({ height, width }) => (
+                <VirtualScroll
+                  height={height}
+                  width={width}
+                  overscanRowsCount={5}
+                  noRowsRenderer={this.noItemRenderer}
+                  rowsCount={filteredPokemons.length}
+                  rowHeight={48}
+                  rowRenderer={this.itemRenderer}
+                />
+              )}
+            </AutoSizer>
+          </List>
+        </Paper>
       </div>
     );
   }

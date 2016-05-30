@@ -14,7 +14,9 @@ import PokemonList from './pokemon/List';
 import PokemonPc from 'components/pokemon/Pc';
 import SignComponent from 'components/user/SignComponent';
 import SignoutComponent from 'components/user/SignoutComponent';
-import SettingsComponent from 'components/user/SettingsComponent';
+import UserSettings from 'components/user/SettingsComponent';
+import UserDashboard from 'components/user/Dashboard';
+import UserFriends from 'components/user/Friends';
 
 import actions from '../actions';
 
@@ -39,7 +41,7 @@ class App extends Component {
 
   render() {
     const {locale, isReady} = this.props;
-
+    
     if (isReady && locale) {
       return this.renderApp();
     }
@@ -62,9 +64,11 @@ class App extends Component {
       <IntlProvider locale={locale} messages={this.getMessages(locale)}>
         <Router history={browserHistory}>
           <Route path="/" component={Main}>
-            <IndexRoute name="pc" component={PokemonPc} onEnter={this.handleAuthRequired}/>
+            <IndexRoute name="dashboard" component={UserDashboard} onEnter={this.handleAuthRequired}/>
+            <Route name="pc" path="pc" component={PokemonPc} onEnter={this.handleAuthRequired}/>
             <Route name="list" path="list" component={PokemonList} onEnter={this.handleAuthRequired}/>
-            <Route name="settings" path="settings" component={SettingsComponent} onEnter={this.handleAuthRequired}/>
+            <Route name="friends" path="friends" component={UserFriends} onEnter={this.handleAuthRequired}/>
+            <Route name="settings" path="settings" component={UserSettings} onEnter={this.handleAuthRequired}/>
             <Route name="sign" path="sign" component={SignComponent}/>
             <Route name="signout" path="signout" component={SignoutComponent} onEnter={this.handleAuthRequired}/>
           </Route>

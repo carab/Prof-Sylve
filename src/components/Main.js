@@ -3,6 +3,7 @@
 import React, {Component, PropTypes} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
+import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
 import DocumentTitle from 'react-document-title';
 
@@ -12,26 +13,35 @@ import Divider from 'material-ui/Divider';
 import IconMenu from 'material-ui/IconMenu';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
+import {List, ListItem, MakeSelectable} from 'material-ui/List';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIconIcon from 'material-ui/svg-icons/navigation/more-vert';
 import PowerSettingsNewIcon from 'material-ui/svg-icons/action/power-settings-new';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import ListIcon from 'material-ui/svg-icons/action/list';
+import DashboardIcon from 'material-ui/svg-icons/action/dashboard';
 import ViewModuleIcon from 'material-ui/svg-icons/action/view-module';
 import BugReportIcon from 'material-ui/svg-icons/action/bug-report';
 import LanguageIcon from 'material-ui/svg-icons/action/language';
+import RadioCheckedIcon from 'material-ui/svg-icons/toggle/radio-button-checked';
+import RadioUncheckedIcon from 'material-ui/svg-icons/toggle/radio-button-unchecked';
+import PeopleIcon from 'material-ui/svg-icons/social/people';
 
-import {injectIntl, intlShape, defineMessages} from 'react-intl';
-
+import withWidth, {XS, SM, MD} from '../utils/with-width';
 import actions from '../actions';
 
-import 'flexboxgrid/dist/flexboxgrid.css';
+import 'bootstrap/dist/css/bootstrap.css';
 import 'styles/App.css';
+
+const SelectableList = MakeSelectable(List);
 
 const messages = defineMessages({
   app: {id: 'app'},
+  dashboard: {id: 'nav.dashboard'},
   byBox: {id: 'nav.byBox'},
   byList: {id: 'nav.byList'},
+  friends: {id: 'nav.friends'},
+  language: {id: 'nav.language'},
   bugs: {id: 'nav.bugs'},
   settings: {id: 'user.settings'},
   signout: {id: 'user.signout'},
@@ -42,9 +52,6 @@ const styles = {
     position: 'fixed',
     zIndex: 1301,
   },
-  nav: {
-    paddingTop: '64px',
-  },
 };
 
 class Main extends Component {
@@ -53,6 +60,7 @@ class Main extends Component {
 
     this.handleToggleNav = this.handleToggleNav.bind(this);
     this.handleToggleNavRequest = this.handleToggleNavRequest.bind(this);
+    this.setLocale = this.setLocale.bind(this);
 
     this.state = {};
   }
@@ -66,7 +74,7 @@ class Main extends Component {
   }
 
   renderLayout() {
-    const {locale, isSignedIn, setLocale} = this.props;
+    const {locale, setLocale, isSignedIn, width} = this.props;
     const {formatMessage} = this.props.intl;
 
     let menu;
@@ -76,11 +84,13 @@ class Main extends Component {
       const currentRoute = this.props.location.pathname;
 
       navItems = (
-        <Menu value={currentRoute}>
-          <MenuItem value="/" onTouchTap={this.handleToggleNav} leftIcon={<ViewModuleIcon/>} containerElement={<Link to="/" />}>{formatMessage(messages.byBox)}</MenuItem>
-          <MenuItem value="/list" onTouchTap={this.handleToggleNav} leftIcon={<ListIcon/>} containerElement={<Link to="/list" />}>{formatMessage(messages.byList)}</MenuItem>
+        <SelectableList value={currentRoute} onChange={() => true}>
+          <ListItem value="/" onTouchTap={this.handleToggleNav} leftIcon={<DashboardIcon/>} containerElement={<Link to="/" />}>{formatMessage(messages.dashboard)}</ListItem>
+          <ListItem value="/pc" onTouchTap={this.handleToggleNav} leftIcon={<ViewModuleIcon/>} containerElement={<Link to="/pc" />}>{formatMessage(messages.byBox)}</ListItem>
+          <ListItem value="/list" onTouchTap={this.handleToggleNav} leftIcon={<ListIcon/>} containerElement={<Link to="/list" />}>{formatMessage(messages.byList)}</ListItem>
+          <ListItem value="/friends" onTouchTap={this.handleToggleNav} leftIcon={<PeopleIcon/>} containerElement={<Link to="/friends" />}>{formatMessage(messages.friends)}</ListItem>
           <Divider/>
-        </Menu>
+        </SelectableList>
       );
 
       menu = (
@@ -98,29 +108,49 @@ class Main extends Component {
       );
     }
 
+    const drawerDocked = !(width === XS || width === SM || width === MD);
+    let showMenuIconButton = true;
+    let drawerOpen = this.state.navOpen;
+
+    if (drawerDocked) {
+      showMenuIconButton = false;
+      drawerOpen = true;
+    }
+
     return (
       <div className="prof-sylve">
         <AppBar
           title={formatMessage(messages.app)}
           onLeftIconButtonTouchTap={this.handleToggleNav}
           iconElementRight={menu}
+          showMenuIconButton={showMenuIconButton}
           style={styles.appbar}
         />
         <Drawer
-          docked={false}
-          open={this.state.navOpen}
+          docked={drawerDocked}
+          open={drawerOpen}
           onRequestChange={this.handleToggleNavRequest}
         >
-          <div style={styles.nav}></div>
-          {navItems}
-          <Menu value={locale}>
-            <MenuItem value="en" leftIcon={<LanguageIcon/>} onTouchTap={() => setLocale('en')}>English</MenuItem>
-            <MenuItem value="fr" leftIcon={<LanguageIcon/>} onTouchTap={() => setLocale('fr')}>Français</MenuItem>
-            <Divider/>
-            <MenuItem leftIcon={<BugReportIcon/>} href="https://github.com/carab/Prof-Sylve" target="blank">{formatMessage(messages.bugs)}</MenuItem>
-          </Menu>
+          <div className="Drawer">
+            {navItems}
+            <SelectableList value={locale} onChange={this.setLocale}>
+              <ListItem
+                primaryText={formatMessage(messages.language)}
+                leftIcon={<LanguageIcon />}
+                primaryTogglesNestedList={true}
+                nestedItems={[
+                  <ListItem value="en" primaryText="English" insetChildren={true}/>,
+                  <ListItem value="fr" primaryText="Français" insetChildren={true}/>,
+                ]}
+              />
+            </SelectableList>
+            <List>
+              <Divider/>
+              <ListItem leftIcon={<BugReportIcon/>} href="https://github.com/carab/Prof-Sylve" target="blank">{formatMessage(messages.bugs)}</ListItem>
+            </List>
+          </div>
         </Drawer>
-        <div className="prof-sylve__content">
+        <div className="Content">
           {this.props.children}
         </div>
       </div>
@@ -133,6 +163,10 @@ class Main extends Component {
 
   handleToggleNav() {
     this.setState({ navOpen: !this.state.navOpen })
+  }
+
+  setLocale(event, locale) {
+    this.props.setLocale(locale);
   }
 }
 
@@ -162,7 +196,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 }
 
-export default injectIntl(connect(
+export default withWidth()(injectIntl(connect(
   mapStateToProps,
   mapDispatchToProps
-)(Main));
+)(Main)));

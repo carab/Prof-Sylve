@@ -5,9 +5,12 @@ import {connect} from 'react-redux';
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
 import _ from 'lodash';
 
-import RaisedButton from 'material-ui/RaisedButton';
+import Paper from 'material-ui/Paper';
+import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
-import {Card, CardActions, CardTitle, CardText} from 'material-ui/Card';
+import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar';
+import DoneIcon from 'material-ui/svg-icons/action/done';
+import Subheader from 'material-ui/Subheader';
 
 import Colors from '../../utils/colors';
 import actions from '../../actions';
@@ -43,27 +46,35 @@ class Settings extends Component {
     const tags = profile.tags || tags;
 
     return (
-      <div className="settings-component">
-        <form onSubmit={(e) => this.handleSubmit(e)}>
-          <Card>
-            <CardTitle title={formatMessage(messages.settings)}/>
-            <CardText>
-              {_.map(Colors.tags, (color, name) => (
-                <TextField
-                  key={name}
-                  ref={'color-' + name}
-                  floatingLabelText={formatMessage(messages[name])}
-                  fullWidth={true}
-                  value={tags[name] && tags[name].title || ''}
-                  onChange={(event) => this.handleTagTitle(name, event.target.value)}
-                />
-              ))}
-            </CardText>
-            <CardActions>
-              <RaisedButton type="submit" label={formatMessage(messages.save)} primary={true} />
-            </CardActions>
-          </Card>
-        </form>
+      <div className="Settings container">
+        <Paper zDepth={1}>
+          <form onSubmit={(e) => this.handleSubmit(e)}>
+            <Toolbar>
+              <ToolbarGroup float="left">
+                <ToolbarTitle text={formatMessage(messages.settings)}/>
+              </ToolbarGroup>
+              <ToolbarGroup float="right">
+                <IconButton type="submit" aria-label={formatMessage(messages.save)}><DoneIcon/></IconButton>
+              </ToolbarGroup>
+            </Toolbar>
+            <Subheader>Tags</Subheader>
+            <div className="Settings__fields">
+              <div className="row">
+                {_.map(Colors.tags, (color, name) => (
+                  <div key={name} className="col-sm-4 col-md-3 col-lg-2">
+                    <TextField
+                      ref={'color-' + name}
+                      floatingLabelText={formatMessage(messages[name])}
+                      fullWidth={true}
+                      value={tags[name] && tags[name].title || ''}
+                      onChange={(event) => this.handleTagTitle(name, event.target.value)}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </form>
+        </Paper>
       </div>
     );
   }
@@ -95,7 +106,6 @@ Settings.contextTypes = {
 };
 
 Settings.propTypes = {
-  locale: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
 };
 

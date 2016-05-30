@@ -1,11 +1,20 @@
-.pokemon-list {
+.PokemonList {
+  height: 100%;
+}
+
+.PokemonList__paper {
   height: 100%;
   display: flex;
   flex-direction: column;
 }
 
-.pokemon-list__list {
-  box-sizing: border-box;
-  height: 100%;
-  padding-top: 0 !important;
+.PokemonList__list {
+  flex: 1 1 0;
+  padding: 0 !important;
+}
+
+@media (min-width: 48em) {
+  .PokemonList {
+    height: calc(100% - 4rem);
+  }
 }

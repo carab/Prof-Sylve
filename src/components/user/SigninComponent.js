@@ -32,6 +32,18 @@ class SigninComponent extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentWillMount() {
+    this.componentWillUpdate(this.props);
+  }
+
+  componentWillUpdate(nextProps) {
+    const {isSignedIn} = nextProps;
+
+    if (isSignedIn) {
+      this.context.router.replace('/');
+    }
+  }
+
   render() {
     const {loading} = this.state;
     const {formatMessage} = this.props.intl;
@@ -61,7 +73,7 @@ class SigninComponent extends Component {
               fullWidth={true}
             />
           </CardText>
-          <CardActions>
+          <CardActions className="text-xs-center">
             {action}
           </CardActions>
         </Card>
@@ -90,8 +102,10 @@ SigninComponent.propTypes = {
   intl: intlShape.isRequired,
 };
 
-const mapStateToProps = () => {
-  return {};
+const mapStateToProps = (state) => {
+  return {
+    isSignedIn: state.auth.isSignedIn,
+  };
 };
 
 const mapDispatchToProps = (dispatch) => {

@@ -7,6 +7,7 @@ import {connect} from 'react-redux';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
+import Paper from 'material-ui/Paper';
 import ImageNavigateBefore from 'material-ui/svg-icons/image/navigate-before';
 import ImageNavigateNext from 'material-ui/svg-icons/image/navigate-next';
 
@@ -90,9 +91,11 @@ class PokemonPc extends Component {
     }
 
     return (
-      <div className="pokemon-pc">
-        {toolbar}
-        {this.renderBox()}
+      <div className="PokemonPc container">
+        <Paper zDepth={1}>
+          {toolbar}
+          {this.renderBox()}
+        </Paper>
       </div>
     );
   }

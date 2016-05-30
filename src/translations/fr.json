@@ -4,8 +4,11 @@
     "save": "Sauvegarder"
   },
   "nav": {
-    "byBox": "Par Boîte",
-    "byList": "Par Liste",
+    "dashboard": "Résumé",
+    "byBox": "PC",
+    "byList": "Liste",
+    "friends": "Mes Amis",
+    "language": "Langue",
     "bugs": "Github/Bugs"
   },
   "user": {
@@ -18,7 +21,11 @@
     "email": "Adresse email",
     "password": "Mot de passe",
     "passwordConfirmation": "Confirmation du mot de passe",
-    "passwordConfirmationIncorrect": "La confirmation ne correspond pas."
+    "passwordConfirmationIncorrect": "La confirmation ne correspond pas.",
+    "friends": {
+      "friends": "Mes Amis ({friends})",
+      "none": "Aucun pour l'instant"
+    }
   },
   "pokemon": {
     "toolbar": {
