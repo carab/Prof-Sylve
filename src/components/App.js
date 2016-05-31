@@ -41,7 +41,7 @@ class App extends Component {
 
   render() {
     const {locale, isReady} = this.props;
-    
+
     if (isReady && locale) {
       return this.renderApp();
     }
@@ -65,7 +65,7 @@ class App extends Component {
         <Router history={browserHistory}>
           <Route path="/" component={Main}>
             <IndexRoute name="dashboard" component={UserDashboard} onEnter={this.handleAuthRequired}/>
-            <Route name="pc" path="pc" component={PokemonPc} onEnter={this.handleAuthRequired}/>
+            <Route name="pc" path="pc(/:currentBox)" component={PokemonPc} onEnter={this.handleAuthRequired}/>
             <Route name="list" path="list" component={PokemonList} onEnter={this.handleAuthRequired}/>
             <Route name="friends" path="friends" component={UserFriends} onEnter={this.handleAuthRequired}/>
             <Route name="settings" path="settings" component={UserSettings} onEnter={this.handleAuthRequired}/>

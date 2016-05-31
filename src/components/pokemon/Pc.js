@@ -1,8 +1,9 @@
 'use strict';
 
 import React, {Component, PropTypes} from 'react';
-import _ from 'lodash';
 import {connect} from 'react-redux';
+import ReactSwipe from 'react-swipe';
+import _ from 'lodash';
 
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
@@ -35,18 +36,28 @@ class PokemonPc extends Component {
     this.handleSelectBox = this.handleSelectBox.bind(this);
     this.handlePreviousBox = this.handlePreviousBox.bind(this);
     this.handleNextBox = this.handleNextBox.bind(this);
+    this.handleSwipe = this.handleSwipe.bind(this);
 
     this.state = {
       boxes: [],
-      currentBox: 0,
     };
   }
 
-  render() {
-    const {pokemons} = this.props;
-    const {formatMessage} = this.props.intl;
-    const {boxes, currentBox} = this.state;
+  componentWillMount() {
+    this.componentWillReceiveProps(this.props);
+  }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      currentBox: parseInt(this.props.params.currentBox) || 0,
+    })
+  }
+
+  render() {
+    const {pokemons, intl} = this.props;
+    const {formatMessage} = intl;
+    const {boxes, currentBox} = this.state;
+    
     boxes.length = 0;
     let box = null;
 
@@ -54,6 +65,7 @@ class PokemonPc extends Component {
       if (null === box) {
         box = this.getEmptyBox();
         box.start = pokemon.id;
+        box.index = boxes.length;
         boxes.push(box);
       }
 
@@ -66,66 +78,67 @@ class PokemonPc extends Component {
       }
     });
 
-    let toolbar;
 
-    if (boxes[currentBox]) {
-      toolbar = (
-        <Toolbar
-          right={
-            <div>
-              <IconButton tooltip={formatMessage(messages.previousBox)} onClick={this.handlePreviousBox}>
-                <ImageNavigateBefore/>
-              </IconButton>
-              <DropDownMenu value={currentBox} onChange={this.handleSelectBox}>
-                {_.map(boxes, (box, i) => (
-                  <MenuItem value={i} primaryText={formatMessage(messages.box, { start: box.start, end: box.end })} key={i}/>
-                ))}
-              </DropDownMenu>
-              <IconButton tooltip={formatMessage(messages.nextBox)} onClick={this.handleNextBox}>
-                <ImageNavigateNext/>
-              </IconButton>
-            </div>
-          }
-        />
-      );
-    }
+    const toolbar = (
+      <Toolbar
+        right={
+          <div>
+            <IconButton tooltip={formatMessage(messages.previousBox)} onClick={this.handlePreviousBox}>
+              <ImageNavigateBefore/>
+            </IconButton>
+            <DropDownMenu value={currentBox} onChange={this.handleSelectBox}>
+              {_.map(boxes, (box, i) => (
+                <MenuItem value={i} primaryText={formatMessage(messages.box, { start: box.start, end: box.end })} key={i}/>
+              ))}
+            </DropDownMenu>
+            <IconButton tooltip={formatMessage(messages.nextBox)} onClick={this.handleNextBox}>
+              <ImageNavigateNext/>
+            </IconButton>
+          </div>
+        }
+      />
+    );
 
     return (
       <div className="PokemonPc container">
         <Paper zDepth={1}>
           {toolbar}
-          {this.renderBox()}
+          <ReactSwipe ref="swipe" swipeOptions={{continuous: false, startSlide: currentBox, callback: this.handleSwipe}}>
+            {_.map(boxes, (box, i) => (
+              <div key={i}>
+                {this.renderBox(box)}
+              </div>
+            ))}
+          </ReactSwipe>
         </Paper>
       </div>
     );
   }
 
-  renderBox() {
-    const {boxes, currentBox} = this.state;
+  renderBox(box) {
+    const {currentBox} = this.state;
 
-    if (boxes[currentBox]) {
-      return <Box box={boxes[currentBox]} cols={BOX_COLS}/>;
+    if (box.index >= currentBox-1 && box.index <= currentBox+1) {
+      return <Box box={box} cols={BOX_COLS}/>;
     }
+
+    return 'loading';
+  }
+
+  handleSwipe(index) {
+    this.context.router.push('/pc/' + index);
   }
 
   handleSelectBox(event, index, currentBox) {
-    this.setState({ currentBox });
+    this.refs.swipe.slide(index, 300);
   }
 
   handlePreviousBox() {
-    let currentBox = this.state.currentBox - 1;
-
-    if (this.state.currentBox >= 0) {
-      this.setState({ currentBox });
-    }
+    this.refs.swipe.prev();
   }
 
   handleNextBox() {
-    let currentBox = this.state.currentBox + 1;
-
-    if (currentBox < this.state.boxes.length) {
-      this.setState({ currentBox });
-    }
+    this.refs.swipe.next();
   }
 
   getEmptyBox() {
@@ -139,6 +152,9 @@ class PokemonPc extends Component {
 }
 
 PokemonPc.displayName = 'PokemonPcComponent';
+PokemonPc.contextTypes = {
+  router: () => { return PropTypes.func.isRequired; },
+};
 
 PokemonPc.propTypes = {
   pokemons: PropTypes.array.isRequired,

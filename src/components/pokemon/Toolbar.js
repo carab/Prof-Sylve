@@ -42,7 +42,7 @@ class PokemonToolbar extends Component {
     }
 
     return (
-      <div className="pokemon-toolbar">
+      <div className="PokemonToolbar">
         <Toolbar>
           <ToolbarGroup float="left">
             <ToolbarTitle text={title}/>
