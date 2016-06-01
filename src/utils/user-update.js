@@ -67,7 +67,7 @@ class UserUpdate {
         if (_.isString(currentVersion)) {
           const currentUpdate = updates[currentVersion];
           currentUpdate(user, pokemons).then(() => {
-            user.version = currentVersion;
+            user.profile.version = currentVersion;
             performUpdate(++currentVersionIndex).then(() => {
               resolve(user, pokemons);
             });
