@@ -1,6 +1,15 @@
 Changelog
 =========
 
+## v0.15.1 (2016-06-01)
+
+- Fix navigation issue in PC boxes.
+- Fix pokédex being overidden after login.
+
+## v0.15.0 (2016-05-31)
+
+- Use a slider to navigate between boxes in PC.
+
 ## v0.14.0 (2016-05-31)
 
 - Make the drawer dynamic.

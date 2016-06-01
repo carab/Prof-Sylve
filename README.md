@@ -22,22 +22,22 @@ So please enjoy using this if you need it too, and don't hesitate to ask for fea
 - [x] Mobile-friendly.
 - [x] User accounts.
 - [ ] Add more filters (by generation/region, by location, ...).
-- [ ] Implement a search.
+- [ ] Easy search.
 - [ ] Location data.
 - [ ] Share user progress with graphics.
 - [ ] Exchange market place ?
 
 ## Technical todos
 
+- Optimize PC slider.
+- Add live search.
 - Fix collected/tag in list.
 - Show "cancel" button when marking a Pokémon collected or tagging it.
-- Add current box and filters in URL to keep them in history.
 - Add sort select in list.
-- Review box navigation and layout on mobile.
-- Review list layout in desktop.
-- Review settings layout and add account settings.
+- On mobile: remove dropdowns on Pokémons and show the menu on primary action.
+- On mobile: in PC, replace collected Pokémons by an icon.
 - Improve error messages.
-- Allow filters in grid, removing boxes when applied.
+- Add filters in grid, removing boxes when applied.
 - Add unit-tests.
 
 ## Contributing
