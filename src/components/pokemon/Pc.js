@@ -49,7 +49,7 @@ class PokemonPc extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      currentBox: parseInt(this.props.params.currentBox) || 0,
+      currentBox: parseInt(nextProps.params.currentBox) || 0,
     })
   }
 
@@ -57,7 +57,7 @@ class PokemonPc extends Component {
     const {pokemons, intl} = this.props;
     const {formatMessage} = intl;
     const {boxes, currentBox} = this.state;
-    
+
     boxes.length = 0;
     let box = null;
 
