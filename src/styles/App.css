@@ -26,7 +26,7 @@ html, body {
   justify-content: center;
 }
 
-@media (min-width: 48em) {
+@media (min-width: 34em) {
   .container {
     padding-left: 1rem;
     padding-right: 1rem;
@@ -34,7 +34,7 @@ html, body {
   }
 }
 
-@media (min-width: 62em) {
+@media (min-width: 75em) {
   .Content {
     padding-left: 256px;
   }

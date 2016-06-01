@@ -13,4 +13,7 @@ export default {
     tags: {},
   },
   pokedex: [],
+  ui: {
+    currentBox: 0,
+  }
 };

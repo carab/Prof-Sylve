@@ -11,7 +11,6 @@ import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import Divider from 'material-ui/Divider';
 import IconMenu from 'material-ui/IconMenu';
-import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import {List, ListItem, MakeSelectable} from 'material-ui/List';
 import IconButton from 'material-ui/IconButton';
@@ -23,11 +22,9 @@ import DashboardIcon from 'material-ui/svg-icons/action/dashboard';
 import ViewModuleIcon from 'material-ui/svg-icons/action/view-module';
 import BugReportIcon from 'material-ui/svg-icons/action/bug-report';
 import LanguageIcon from 'material-ui/svg-icons/action/language';
-import RadioCheckedIcon from 'material-ui/svg-icons/toggle/radio-button-checked';
-import RadioUncheckedIcon from 'material-ui/svg-icons/toggle/radio-button-unchecked';
 import PeopleIcon from 'material-ui/svg-icons/social/people';
 
-import withWidth, {XS, SM, MD} from '../utils/with-width';
+import withWidth, {XS, SM, MD, LG} from '../utils/with-width';
 import actions from '../actions';
 
 import 'bootstrap/dist/css/bootstrap.css';
@@ -108,7 +105,7 @@ class Main extends Component {
       );
     }
 
-    const drawerDocked = !(width === XS || width === SM || width === MD);
+    const drawerDocked = !(width === XS || width === SM || width === MD || width === LG);
     let showMenuIconButton = true;
     let drawerOpen = this.state.navOpen;
 

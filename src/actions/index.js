@@ -155,26 +155,33 @@ const actions = {
     },
   },
   pokedex: {
-    setCollected(pokemon) {
+    setCollected(index, collected) {
       return () => {
         getUserRef()
           .child('pokedex')
-          .child(pokemon.id-1)
+          .child(index)
           .child('collected')
-          .set(!pokemon.collected);
+          .set(collected);
       };
     },
 
-    setTag(pokemon, tag) {
+    setTag(index, tag) {
       return () => {
         getUserRef()
           .child('pokedex')
-          .child(pokemon.id-1)
+          .child(index)
           .child('tag')
           .set(tag);
       };
     },
   },
+  ui: {
+    setCurrentBox(currentBox) {
+      return (dispatch) => {
+        dispatch({ type: 'SET_CURRENT_BOX', currentBox });
+      };
+    }
+  }
 };
 
 export default actions;

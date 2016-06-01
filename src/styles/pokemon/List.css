@@ -13,8 +13,8 @@
   padding: 0 !important;
 }
 
-@media (min-width: 48em) {
+@media (min-width: 34em) {
   .PokemonList {
-    height: calc(100% - 4rem);
+    height: calc(100% - 2rem);
   }
 }

@@ -144,7 +144,7 @@ class ListComponent extends Component {
     const pokemon = this.filteredPokemons[index];
 
     return (
-      <PokemonItem key={pokemon.id} pokemon={pokemon} type="row"/>
+      <PokemonItem key={pokemon.id} id={pokemon.id} type="row"/>
     )
   }
 }

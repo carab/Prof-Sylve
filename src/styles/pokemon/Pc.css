@@ -1,2 +1,41 @@
 .PokemonPc {
+  height: 100%;
+}
+
+.PokemonPc__paper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.PokemonPc__boxing {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0 0 1rem;
+}
+
+.PokemonPc__boxes > div {
+  display: flex;
+}
+
+.PokemonPc__previousBox,
+.PokemonPc__nextBox {
+  padding: 0 1rem;
+  display: none;
+}
+
+@media (min-width: 34em) {
+  .PokemonPc {
+    height: calc(100% - 2rem);
+  }
+}
+
+@media (min-width: 62em) {
+  .PokemonPc__previousBox,
+  .PokemonPc__nextBox {
+    display: block;
+    padding: 0 1rem;
+  }
 }

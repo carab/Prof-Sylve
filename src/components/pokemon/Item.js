@@ -153,7 +153,7 @@ class PokemonComponent extends Component {
   }
 
   handleCollected() {
-    this.props.onCollected();
+    this.props.onCollected(!this.props.pokemon.collected);
   }
 
   handleTag(tag) {
@@ -169,26 +169,26 @@ PokemonComponent.displayName = 'PokemonItemComponent';
 
 PokemonComponent.propTypes = {
   type: PropTypes.string.isRequired,
+  locale: PropTypes.string.isRequired,
   pokemon: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   return {
+    pokemon: state.pokedex[ownProps.id-1],
     tags: state.profile.tags,
     locale: state.profile.locale,
   };
 };
 
-const mapDispatchToProps = (dispatch, props) => {
-  const {pokemon} = props;
-
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onCollected: () => {
-      dispatch(actions.pokedex.setCollected(pokemon));
+    onCollected: (collected) => {
+      dispatch(actions.pokedex.setCollected(ownProps.id-1, collected));
     },
     onTag: (color) => {
-      dispatch(actions.pokedex.setTag(pokemon, color));
+      dispatch(actions.pokedex.setTag(ownProps.id-1, color));
     },
   };
 }

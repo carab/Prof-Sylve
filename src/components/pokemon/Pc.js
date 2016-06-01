@@ -3,24 +3,21 @@
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import ReactSwipe from 'react-swipe';
+import {injectIntl, intlShape, defineMessages} from 'react-intl';
 import _ from 'lodash';
 
-import DropDownMenu from 'material-ui/DropDownMenu';
-import MenuItem from 'material-ui/MenuItem';
-import IconButton from 'material-ui/IconButton';
 import Paper from 'material-ui/Paper';
-import ImageNavigateBefore from 'material-ui/svg-icons/image/navigate-before';
-import ImageNavigateNext from 'material-ui/svg-icons/image/navigate-next';
-
-import {injectIntl, intlShape, defineMessages} from 'react-intl';
+import IconButton from 'material-ui/IconButton';
+import NavigateBeforeIcon from 'material-ui/svg-icons/image/navigate-before';
+import NavigateNextIcon from 'material-ui/svg-icons/image/navigate-next';
 
 import Box from './Box';
 import Toolbar from './Toolbar';
+import actions from '../../actions';
 
 import 'styles/pokemon/Pc.css';
 
 const messages = defineMessages({
-  box: {id: 'pokemon.toolbar.box'},
   previousBox: {id: 'pokemon.toolbar.previousBox'},
   nextBox: {id: 'pokemon.toolbar.nextBox'},
 });
@@ -44,92 +41,85 @@ class PokemonPc extends Component {
   }
 
   componentWillMount() {
-    this.componentWillReceiveProps(this.props);
-  }
+    const {pokemons, params, setCurrentBox} = this.props;
+    const currentBox = parseInt(params.currentBox) || this.props.currentBox;
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      currentBox: parseInt(nextProps.params.currentBox) || 0,
-    })
-  }
+      if (currentBox !== this.props.currentBox) {
+      setCurrentBox(currentBox);
+    }
 
-  render() {
-    const {pokemons, intl} = this.props;
-    const {formatMessage} = intl;
-    const {boxes, currentBox} = this.state;
-
-    boxes.length = 0;
+    const boxes = [];
     let box = null;
 
     _.each(pokemons, (pokemon) => {
       if (null === box) {
-        box = this.getEmptyBox();
-        box.start = pokemon.id;
-        box.index = boxes.length;
+        box = {
+          index: boxes.length,
+          ids: [],
+          count: 0,
+          start: pokemon.id,
+        };
+
         boxes.push(box);
       }
 
-      box.pokemons.push(pokemon);
-      box.end = pokemon.id;
+      box.ids.push(pokemon.id);
       box.count++;
 
       if (box.count === BOX_SIZE) {
+        box.end = pokemon.id;
         box = null;
       }
     });
 
+    this.setState({
+      boxes,
+      currentBox,
+    });
+  }
 
-    const toolbar = (
-      <Toolbar
-        right={
-          <div>
-            <IconButton tooltip={formatMessage(messages.previousBox)} onClick={this.handlePreviousBox}>
-              <ImageNavigateBefore/>
-            </IconButton>
-            <DropDownMenu value={currentBox} onChange={this.handleSelectBox}>
-              {_.map(boxes, (box, i) => (
-                <MenuItem value={i} primaryText={formatMessage(messages.box, { start: box.start, end: box.end })} key={i}/>
-              ))}
-            </DropDownMenu>
-            <IconButton tooltip={formatMessage(messages.nextBox)} onClick={this.handleNextBox}>
-              <ImageNavigateNext/>
-            </IconButton>
-          </div>
-        }
-      />
-    );
+  shouldComponentUpdate() {
+    return false;
+  }
+
+  render() {
+    const {formatMessage} = this.props.intl;
+    const {boxes, currentBox} = this.state;
 
     return (
       <div className="PokemonPc container">
-        <Paper zDepth={1}>
-          {toolbar}
-          <ReactSwipe ref="swipe" swipeOptions={{continuous: false, startSlide: currentBox, callback: this.handleSwipe}}>
-            {_.map(boxes, (box, i) => (
-              <div key={i}>
-                {this.renderBox(box)}
-              </div>
-            ))}
-          </ReactSwipe>
+        <Paper zDepth={1} className="PokemonPc__paper">
+          <Toolbar boxes={boxes} onPreviousBox={this.handlePreviousBox} onNextBox={this.handleNextBox} onSelectBox={this.handleSelectBox}/>
+          <div className="PokemonPc__boxing">
+            <div className="PokemonPc__previousBox">
+              <IconButton onClick={this.handlePreviousBox} tooltip={formatMessage(messages.previousBox)}>
+                <NavigateBeforeIcon/>
+              </IconButton>
+            </div>
+            <ReactSwipe className="PokemonPc__boxes" ref="swipe" swipeOptions={{continuous: false, startSlide: currentBox, transitionEnd: this.handleSwipe}}>
+              {_.map(boxes, (box, i) => (
+                <div key={i}>
+                  <Box box={box} cols={BOX_COLS}/>
+                </div>
+              ))}
+            </ReactSwipe>
+            <div className="PokemonPc__nextBox">
+              <IconButton onClick={this.handleNextBox} tooltip={formatMessage(messages.nextBox)}>
+                <NavigateNextIcon/>
+              </IconButton>
+            </div>
+          </div>
         </Paper>
       </div>
     );
   }
 
-  renderBox(box) {
-    const {currentBox} = this.state;
-
-    if (box.index >= currentBox-1 && box.index <= currentBox+1) {
-      return <Box box={box} cols={BOX_COLS}/>;
-    }
-
-    return 'loading';
+  handleSwipe(currentBox) {
+    this.context.router.push('/pc/' + currentBox);
+    this.props.setCurrentBox(currentBox);
   }
 
-  handleSwipe(index) {
-    this.context.router.push('/pc/' + index);
-  }
-
-  handleSelectBox(event, index, currentBox) {
+  handleSelectBox(event, index) {
     this.refs.swipe.slide(index, 300);
   }
 
@@ -139,15 +129,6 @@ class PokemonPc extends Component {
 
   handleNextBox() {
     this.refs.swipe.next();
-  }
-
-  getEmptyBox() {
-    return {
-      pokemons: [],
-      count: 0,
-      start: 0,
-      end: 0,
-    };
   }
 }
 
@@ -163,12 +144,17 @@ PokemonPc.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
+    currentBox: state.ui.currentBox,
     pokemons: state.pokedex,
   };
 };
 
-const mapDispatchToProps = () => {
-  return {};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setCurrentBox(currentBox) {
+      dispatch(actions.ui.setCurrentBox(currentBox));
+    }
+  };
 }
 
 export default injectIntl(connect(
