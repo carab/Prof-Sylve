@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## v0.15.2 (2016-06-02)
+
+- Improve navigation in grid.
+- Sync container behavior in list and grid.
+
 ## v0.15.1 (2016-06-01)
 
 - Fix navigation issue in PC boxes.

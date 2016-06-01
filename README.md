@@ -29,9 +29,7 @@ So please enjoy using this if you need it too, and don't hesitate to ask for fea
 
 ## Technical todos
 
-- Optimize PC slider.
 - Add live search.
-- Fix collected/tag in list.
 - Show "cancel" button when marking a Pokémon collected or tagging it.
 - Add sort select in list.
 - On mobile: remove dropdowns on Pokémons and show the menu on primary action.
