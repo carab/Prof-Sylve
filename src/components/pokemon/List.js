@@ -77,7 +77,7 @@ class ListComponent extends Component {
 
     _.each(Colors.tags, (color, name) => {
       filters[name] = (pokemon) => {
-        return (pokemon.tag == name && !pokemon.collected);
+        return (pokemon.tag == name);
       };
     });
 
