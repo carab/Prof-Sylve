@@ -66,7 +66,7 @@ class PokemonComponent extends Component {
   }
 
   render() {
-    const {pokemon, tags, type} = this.props;
+    const {pokemon, tags, type, mode} = this.props;
     const {formatMessage} = this.props.intl;
 
     const name = formatMessage({ id: 'pokemon.name.' + pokemon.id });
@@ -88,6 +88,7 @@ class PokemonComponent extends Component {
 
     const menu = (
       <IconMenu
+        className="PokemonItem__menu"
         iconButtonElement={menuButton}
         targetOrigin={targetOrigin}
         anchorOrigin={anchorOrigin}
@@ -115,24 +116,54 @@ class PokemonComponent extends Component {
     if (type === 'tile') {
       const image = 'https://raw.githubusercontent.com/carab/Prof-Sylve-Sprites/master/sprites/' + pokemon.name + '.gif';
 
-      return (
-        <GridTile
-          className="pokemon-component pokemon-component--tile"
-          style={style}
-          title={pokemon.id + ' - ' + name}
-          titleBackground={color}
-          onTouchTap={this.handleCollected}
-          actionIcon={menu}
-        >
-          <img alt={pokemon.name} src={image}/>
-        </GridTile>
-      );
+      switch (mode) {
+        case 'small':
+          return (
+            <GridTile
+              className="PokemonItem PokemonItem--tile"
+              style={style}
+              onTouchTap={this.handleCollected}
+            >
+              {this.renderImage(name, image)}
+              {this.renderId(color, pokemon.id)}
+            </GridTile>
+          );
+
+        case 'medium':
+          return (
+            <GridTile
+              className="PokemonItem PokemonItem--tile"
+              style={style}
+              title={name}
+              titleBackground={color}
+              onTouchTap={this.handleCollected}
+            >
+              {this.renderImage(name, image)}
+              {this.renderId(color, pokemon.id)}
+            </GridTile>
+          );
+
+        case 'large':
+          return (
+            <GridTile
+              className="PokemonItem PokemonItem--tile"
+              style={style}
+              title={name}
+              titleBackground={color}
+              onTouchTap={this.handleCollected}
+              actionIcon={menu}
+            >
+              {this.renderImage(name, image)}
+              {this.renderId(color, pokemon.id)}
+            </GridTile>
+          );
+      }
     }
 
     if (type === 'row') {
       return (
         <ListItem
-          className="pokemon-component pokemon-component--item"
+          className="PokemonItem PokemonItem--row"
           primaryText={pokemon.id + ' - ' + name}
           rightIconButton={menu}
           leftIcon={<BookmarkIcon style={{fill: color}} onTouchTap={this.handleCollected}/>}
@@ -142,6 +173,14 @@ class PokemonComponent extends Component {
     }
 
     return <div></div>;
+  }
+
+  renderImage(name, image) {
+    return <img alt={name} src={image}/>;
+  }
+
+  renderId(color, id) {
+    return <div className="PokemonItem__id" style={{ backgroundColor: color }}>{id}</div>;
   }
 
   renderMenuButton(type) {
@@ -168,9 +207,10 @@ class PokemonComponent extends Component {
 PokemonComponent.displayName = 'PokemonItemComponent';
 
 PokemonComponent.propTypes = {
+  pokemon: PropTypes.object.isRequired,
   type: PropTypes.string.isRequired,
   locale: PropTypes.string.isRequired,
-  pokemon: PropTypes.object.isRequired,
+  mode: PropTypes.string,
   intl: intlShape.isRequired,
 };
 

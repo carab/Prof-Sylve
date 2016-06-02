@@ -2,6 +2,7 @@
 
 import React from 'react';
 import {connect} from 'react-redux';
+import MediaQuery from 'react-responsive';
 import _ from 'lodash';
 
 import {GridList} from 'material-ui/GridList';
@@ -15,22 +16,30 @@ class Box extends React.Component {
   render() {
     return (
       <div className="PokemonBox">
-        {this.renderGrid()}
+          <MediaQuery maxWidth={767}>
+            {this.renderGrid('small', 100)}
+          </MediaQuery>
+          <MediaQuery minWidth={768} maxWidth={991}>
+            {this.renderGrid('medium', 150)}
+          </MediaQuery>
+          <MediaQuery minWidth={992}>
+            {this.renderGrid('large', 150)}
+          </MediaQuery>
       </div>
     );
   }
 
-  renderGrid() {
+  renderGrid(mode, cellHeight) {
     const {box, cols, currentBox} = this.props;
 
     if (box.index === currentBox) {
       return (
         <GridList
           cols={cols}
-          cellHeight={150}
+          cellHeight={cellHeight}
         >
           {_.map(box.ids, (id) => (
-            <PokemonItem key={id} id={id} type="tile"/>
+            <PokemonItem key={id} id={id} type="tile" mode={mode}/>
           ))}
         </GridList>
       );

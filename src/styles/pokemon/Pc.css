@@ -11,14 +11,12 @@
 .PokemonPc__boxing {
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  flex: 1 1 0;
+  flex: 1 0 0;
 }
 
 .PokemonPc__boxes {
   overflow-y: auto;
-  height: 100%
+  height: 100%;
 }
 
 .PokemonPc__boxes > div > div {
@@ -42,5 +40,10 @@
   .PokemonPc__nextBox {
     display: block;
     padding: 0 1rem;
+  }
+
+  .PokemonPc__boxing {
+    justify-content: center;
+    align-items: center;
   }
 }
