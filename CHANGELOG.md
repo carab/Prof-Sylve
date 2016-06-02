@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## v0.15.3 (2016-06-02)
+
+- Fix box overflow on small height devices.
+
 ## v0.15.2 (2016-06-02)
 
 - Improve navigation in grid.

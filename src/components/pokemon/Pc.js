@@ -96,13 +96,15 @@ class PokemonPc extends Component {
                 <NavigateBeforeIcon/>
               </IconButton>
             </div>
-            <ReactSwipe className="PokemonPc__boxes" ref="swipe" swipeOptions={{continuous: false, startSlide: currentBox, transitionEnd: this.handleSwipe}}>
-              {_.map(boxes, (box, i) => (
-                <div key={i}>
-                  <Box box={box} cols={BOX_COLS}/>
-                </div>
-              ))}
-            </ReactSwipe>
+            <div className="PokemonPc__boxes">
+              <ReactSwipe ref="swipe" swipeOptions={{continuous: false, startSlide: currentBox, transitionEnd: this.handleSwipe}}>
+                {_.map(boxes, (box, i) => (
+                  <div key={i}>
+                    <Box box={box} cols={BOX_COLS}/>
+                  </div>
+                ))}
+              </ReactSwipe>
+            </div>
             <div className="PokemonPc__nextBox">
               <IconButton onClick={this.handleNextBox} tooltip={formatMessage(messages.nextBox)}>
                 <NavigateNextIcon/>
