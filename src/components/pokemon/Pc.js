@@ -44,7 +44,7 @@ class PokemonPc extends Component {
     const {pokemons, params, setCurrentBox} = this.props;
     const currentBox = parseInt(params.currentBox) || this.props.currentBox;
 
-      if (currentBox !== this.props.currentBox) {
+    if (currentBox !== this.props.currentBox) {
       setCurrentBox(currentBox);
     }
 
@@ -78,7 +78,11 @@ class PokemonPc extends Component {
     });
   }
 
-  shouldComponentUpdate() {
+  shouldComponentUpdate(nextProps) {
+    if (nextProps.params.currentBox !== this.props.currentBox) {
+      this.handleSelectBox(undefined, nextProps.params.currentBox);
+    }
+
     return false;
   }
 
@@ -89,7 +93,7 @@ class PokemonPc extends Component {
     return (
       <div className="PokemonPc container">
         <Paper zDepth={1} className="PokemonPc__paper">
-          <Toolbar boxes={boxes} onPreviousBox={this.handlePreviousBox} onNextBox={this.handleNextBox} onSelectBox={this.handleSelectBox}/>
+          <Toolbar boxes={boxes} onSelectBox={this.handleSelectBox}/>
           <div className="PokemonPc__view">
             <div className="PokemonPc__previousBox">
               <IconButton onClick={this.handlePreviousBox} tooltip={formatMessage(messages.previousBox)}>

@@ -33,8 +33,21 @@ const updates = {
           id: pokemon.id,
           name: pokemon.name,
           collected: user.collected && user.collected[pokemon.id] && true || false,
-          tag: false,
+          tag: 'none',
         });
+      });
+
+      resolve();
+    });
+  },
+  'v0.16.0': function(user) {
+    // Replace false value on tag by 'none'
+    return new Promise(function(resolve) {
+      // Create Pokédex
+      _.forEach(user.pokedex, (pokemon) => {
+        if (pokemon.tag === false) {
+          pokemon.tag = 'none';
+        }
       });
 
       resolve();

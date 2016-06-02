@@ -74,7 +74,7 @@ class PokemonComponent extends Component {
     const style = {};
     let color = Colors.default;
 
-    if (pokemon.tag) {
+    if (pokemon.tag !== 'none') {
       color = Colors.tags[pokemon.tag];
     }
 
@@ -99,8 +99,8 @@ class PokemonComponent extends Component {
         <Divider/>
         <MenuItem primaryText={formatMessage(messages.none)}
           leftIcon={<BookmarkIcon style={{ fill: Colors.default }}/>}
-          onTouchTap={this.handleTag.bind(this, false)}
-          value={false}
+          onTouchTap={this.handleTag.bind(this, 'none')}
+          value="none"
         />
         {_.map(Colors.tags, (color, name) => (
           <MenuItem primaryText={tags && tags[name] && tags[name].title || formatMessage(messages[name])}
