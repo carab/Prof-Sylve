@@ -17,7 +17,7 @@
 }
 
 .PokemonPc__boxes {
-  overflow: scroll;
+  overflow-y: auto;
   height: 100%
 }
 
