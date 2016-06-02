@@ -6,7 +6,7 @@
   "nav": {
     "dashboard": "Dashboard",
     "byBox": "PC",
-    "byList": "List",
+    "byList": "Pokédex",
     "friends": "My Friends",
     "language": "Language",
     "bugs": "Github/Bugs"
@@ -27,6 +27,13 @@
       "none": "None yet"
     }
   },
+  "dashboard": {
+    "progress": "Progress",
+    "openPc": "Open PC",
+    "openPokedex": "Open Pokédex",
+    "byRegion": "By Region",
+    "byTag": "By Tag"
+  },
   "pokemon": {
     "toolbar": {
       "counter": "{collected} on {pokemons}",
@@ -45,9 +52,19 @@
     "notCollected": "Not Collected",
     "externalService": "See on Bulbapedia",
     "externalUrl": "http://bulbapedia.bulbagarden.net/wiki/{name}",
+    "region": {
+      "region": "Region",
+      "regions": "Regions",
+      "kanto": "Kanto (Gen. I)",
+      "johto": "Johto (Gen. II)",
+      "hoenn": "Hoenn (Gen. III)",
+      "sinnoh": "Sinnoh (Gen. IV)",
+      "ulys": "Ulys (Gen. V)",
+      "kalos": "Kalos (Gen. VI)"
+    },
     "tag": {
       "tag": "Tag",
-      "force": "Force the color",
+      "tags": "Tags",
       "none": "None",
       "color": {
         "red": "Red",

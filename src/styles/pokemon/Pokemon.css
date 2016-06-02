@@ -32,3 +32,10 @@
     line-height: 16px;
   }
 }
+
+@media (min-width: 992px) {
+  .PokemonItem--tile .PokemonItem__id {
+    left: 0;
+    transform: none;
+  }
+}

@@ -84,7 +84,7 @@ class Main extends Component {
         <SelectableList value={currentRoute} onChange={() => true}>
           <ListItem value="/" onTouchTap={this.handleToggleNav} leftIcon={<DashboardIcon/>} containerElement={<Link to="/" />}>{formatMessage(messages.dashboard)}</ListItem>
           <ListItem value="/pc" onTouchTap={this.handleToggleNav} leftIcon={<ViewModuleIcon/>} containerElement={<Link to="/pc" />}>{formatMessage(messages.byBox)}</ListItem>
-          <ListItem value="/list" onTouchTap={this.handleToggleNav} leftIcon={<ListIcon/>} containerElement={<Link to="/list" />}>{formatMessage(messages.byList)}</ListItem>
+          <ListItem value="/pokedex" onTouchTap={this.handleToggleNav} leftIcon={<ListIcon/>} containerElement={<Link to="/pokedex" />}>{formatMessage(messages.byList)}</ListItem>
           <ListItem value="/friends" onTouchTap={this.handleToggleNav} leftIcon={<PeopleIcon/>} containerElement={<Link to="/friends" />}>{formatMessage(messages.friends)}</ListItem>
           <Divider/>
         </SelectableList>

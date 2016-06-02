@@ -6,7 +6,7 @@
   "nav": {
     "dashboard": "Résumé",
     "byBox": "PC",
-    "byList": "Liste",
+    "byList": "Pokédex",
     "friends": "Mes Amis",
     "language": "Langue",
     "bugs": "Github/Bugs"
@@ -27,6 +27,13 @@
       "none": "Aucun pour l'instant"
     }
   },
+  "dashboard": {
+    "progress": "Avancement",
+    "openPc": "Ouvrir le PC",
+    "openPokedex": "Ouvrir le Pokédex",
+    "byRegion": "Par Région",
+    "byTag": "Par Tag"
+  },
   "pokemon": {
     "toolbar": {
       "counter": "{collected} sur {pokemons}",
@@ -45,9 +52,19 @@
     "notCollected": "Non Collecté",
     "externalService": "Voir sur Poképedia",
     "externalUrl": "http://www.pokepedia.fr/{name}",
+    "region": {
+      "region": "Région",
+      "regions": "Régions",
+      "kanto": "Kanto (Gen. I)",
+      "johto": "Johto (Gen. II)",
+      "hoenn": "Hoenn (Gen. III)",
+      "sinnoh": "Sinnoh (Gen. IV)",
+      "ulys": "Ulys (Gen. V)",
+      "kalos": "Kalos (Gen. VI)"
+    },
     "tag": {
-      "tag": "Marquage",
-      "force": "Forcer la couleur",
+      "tag": "Tag",
+      "tags": "Tags",
       "none": "Aucun",
       "color": {
         "red": "Rouge",

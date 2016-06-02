@@ -1,3 +1,24 @@
-.Dashboard__progress {
-  padding: 1rem;
+.Dashboard__card {
+  margin-bottom: 30px;
+}
+
+.Dashboard__item {
+  margin-bottom: 20px;
+}
+
+.Dashboard__subtitle {
+  font-size: 1.2rem;
+}
+
+.Progress {
+  font-size: 1.4rem;
+}
+
+.Progress__legend {
+  display: flex;
+  justify-content: space-between;
+}
+
+.Progress--main {
+  font-size: 3rem;
 }
