@@ -1,49 +1,55 @@
 .PokemonPc {
-  height: 100%;
-}
-
-.PokemonPc__paper {
+  max-height: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
 }
 
-.PokemonPc__boxing {
+.PokemonPc__paper {
   display: flex;
-  flex-direction: row;
-  flex: 1 0 0;
-}
-
-.PokemonPc__boxes {
-  overflow-y: auto;
+  flex-direction: column;
   height: 100%;
 }
 
-.PokemonPc__boxes > div > div {
+.PokemonPc__view {
+  flex: 1 1 auto;
   display: flex;
+  flex-direction: column;
+}
+
+.PokemonPc__boxes {
+  overflow: auto;
 }
 
 .PokemonPc__previousBox,
 .PokemonPc__nextBox {
-  padding: 0 1rem;
   display: none;
 }
 
 @media (min-width: 34em) {
   .PokemonPc {
-    height: calc(100% - 2rem);
+    height: auto;
+    max-height: calc(100% - 2rem);
   }
 }
 
 @media (min-width: 62em) {
+  .PokemonPc__view {
+    position: relative;
+    padding: 0 60px;
+  }
+
   .PokemonPc__previousBox,
   .PokemonPc__nextBox {
     display: block;
-    padding: 0 1rem;
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    left: 5px;
   }
 
-  .PokemonPc__boxing {
-    justify-content: center;
-    align-items: center;
+  .PokemonPc__nextBox {
+    left: inherit;
+    right: 5px;
   }
 }

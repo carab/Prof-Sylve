@@ -37,6 +37,7 @@ class Box extends React.Component {
         <GridList
           cols={cols}
           cellHeight={cellHeight}
+          style={{margin: 0}}
         >
           {_.map(box.ids, (id) => (
             <PokemonItem key={id} id={id} type="tile" mode={mode}/>

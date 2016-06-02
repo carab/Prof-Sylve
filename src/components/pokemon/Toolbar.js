@@ -57,7 +57,7 @@ class PokemonToolbar extends Component {
 
   renderBoxes() {
     const {formatMessage} = this.props.intl;
-    const {boxes, currentBox, onPreviousBox, onNextBox, onSelectBox} = this.props;
+    const {boxes, currentBox, onSelectBox} = this.props;
 
     if (!boxes) {
       return;

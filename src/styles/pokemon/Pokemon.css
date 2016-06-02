@@ -14,7 +14,7 @@
 
 .PokemonItem--tile .PokemonItem__id {
   position: absolute;
-  bottom: 0;
+  bottom: 15px;
   left: 50%;
   transform: translate(-50%, 0);
   border-radius: 9px;

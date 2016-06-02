@@ -90,7 +90,7 @@ class PokemonPc extends Component {
       <div className="PokemonPc container">
         <Paper zDepth={1} className="PokemonPc__paper">
           <Toolbar boxes={boxes} onPreviousBox={this.handlePreviousBox} onNextBox={this.handleNextBox} onSelectBox={this.handleSelectBox}/>
-          <div className="PokemonPc__boxing">
+          <div className="PokemonPc__view">
             <div className="PokemonPc__previousBox">
               <IconButton onClick={this.handlePreviousBox} tooltip={formatMessage(messages.previousBox)}>
                 <NavigateBeforeIcon/>
