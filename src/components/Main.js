@@ -143,7 +143,7 @@ class Main extends Component {
             </SelectableList>
             <List>
               <Divider/>
-              <ListItem leftIcon={<BugReportIcon/>} href="https://github.com/carab/Prof-Sylve" target="blank">{formatMessage(messages.bugs)}</ListItem>
+              <ListItem leftIcon={<BugReportIcon/>} href="https://github.com/carab/Prof-Sylve/issues" target="blank">{formatMessage(messages.bugs)}</ListItem>
             </List>
           </div>
         </Drawer>

@@ -1,7 +1,7 @@
 Prof. Sylve's Living Dex
 ========================
 
-This webapp allows you to keep track of the Pokémon you already collected for your Living Dex.
+This webapp allows you to keep track of the Pokémon you collected for your Living Dex.
 If you don't know what is a Living Dex, here is the explanation : http://bulbapedia.bulbagarden.net/wiki/Living_Pokédex
 
 This project was born because none of the existing tools fit my expectations :
@@ -21,22 +21,10 @@ So please enjoy using this if you need it too, and don't hesitate to ask for fea
 - [x] Link to language-specific wiki to find location data or other information.
 - [x] Mobile-friendly.
 - [x] User accounts.
-- [ ] Add more filters (by generation/region, by location, ...).
 - [ ] Easy search.
 - [ ] Location data.
 - [ ] Share user progress with graphics.
 - [ ] Exchange market place ?
-
-## Technical todos
-
-- Add live search.
-- Show "cancel" button when marking a Pokémon collected or tagging it.
-- Add sort select in list.
-- On mobile: remove dropdowns on Pokémons and show the menu on primary action.
-- On mobile and talet: replace Pokémon images by JPG.
-- Improve error messages.
-- Add filters in grid, removing boxes when applied.
-- Add unit-tests.
 
 ## Contributing
 
