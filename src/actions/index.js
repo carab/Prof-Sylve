@@ -156,22 +156,6 @@ const actions = {
           .set(profile);
       };
     },
-    matchUsernameToUid(username) {
-      return () => {
-        getRootRef()
-          .child('usernames')
-          .child(username)
-          .set(firebase.auth().currentUser.uid);
-      };
-    },
-    unmatchUsernameToUid(username, uid) {
-      return () => {
-        getRootRef()
-          .child('usernames')
-          .child(username)
-          .set(null);
-      };
-    },
   },
   pokedex: {
     setCollected(index, collected) {
@@ -202,6 +186,7 @@ const actions = {
     setSettingsUsername(username) {
       return () => {
         getUserRef().child('pokedex/settings/username').set(username);
+        getRootRef().child('usernames').child(firebase.auth().currentUser.uid).set(username);
       };
     },
     setSettingsTagTitle(tag, title) {
@@ -219,8 +204,8 @@ const actions = {
     loadPublicPokedex(username) {
       return (dispatch) => {
         if (username) {
-          getRootRef().child('usernames').child(username).once('value', (snapshot) => {
-            const uid = snapshot.val();
+          getRootRef().child('usernames').orderByValue().equalTo(username).once('child_added', (snapshot) => {
+            const uid = snapshot.key;
 
             getRootRef().child('users').child(uid).child('pokedex').once('value', (snapshot) => {
               const publicPokedex = snapshot.val();

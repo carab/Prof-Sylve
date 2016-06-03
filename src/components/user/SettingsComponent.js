@@ -49,7 +49,7 @@ class Settings extends Component {
     const {settings} = this.props;
     const tags = settings.tags || {};
     const errors = {};
-    console.log(settings)
+
     if (settings.public && !settings.username) {
       errors.username = 'A public Pokédex needs a username';
     }
@@ -119,16 +119,7 @@ class Settings extends Component {
   }
 
   handleUsernameChange(event, username) {
-    const {settings, setUsername, matchUsernameToUid, unmatchUsernameToUid} = this.props;
-
-    if (settings.username) {
-      unmatchUsernameToUid(settings.username);
-    }
-
-    if (username) {
-      matchUsernameToUid(username);
-    }
-
+    const {settings, setUsername} = this.props;
     setUsername(username);
   }
 
@@ -160,12 +151,6 @@ const mapDispatchToProps = (dispatch) => {
     },
     setTagTitle: (tag, title) => {
       dispatch(actions.pokedex.setSettingsTagTitle(tag, title));
-    },
-    matchUsernameToUid: (username) => {
-      dispatch(actions.profile.matchUsernameToUid(username));
-    },
-    unmatchUsernameToUid: (username) => {
-      dispatch(actions.profile.unmatchUsernameToUid(username));
     },
   };
 }

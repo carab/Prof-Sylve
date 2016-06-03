@@ -122,11 +122,11 @@ class Dashboard extends Component {
   }
 
   renderShareMenu() {
-    const {profile} = this.props;
+    const {settings} = this.props;
 
-    const dashboardUrl = 'https://profsylve.com/user/' + profile.username;
+    const dashboardUrl = 'https://profsylve.com/user/' + settings.username;
 
-    if (profile.public && profile.username) {
+    if (settings.public && settings.username) {
       return (
         <IconMenu iconButtonElement={<IconButton><ShareIcon/></IconButton>}>
           <MenuItem primaryText="URL" leftIcon={<OpenIcon/>} href={dashboardUrl} target="_blank"/>
@@ -169,7 +169,7 @@ Dashboard.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    profile: state.profile,
+    settings: state.pokedex.settings,
     tags: state.pokedex.settings.tags,
     pokemons: state.pokedex.pokemons,
   };
