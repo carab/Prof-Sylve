@@ -4,36 +4,27 @@ import _ from 'lodash';
 
 const updates = {
   'v0.12.0': function(user, pokemons) {
-    // Create Pokédex from old collected and tags array
+    // Fill Pokédex and init profile
     // And create profile and tags
 
     return new Promise(function(resolve) {
-      // Update tags
-      const tags = {};
-
-      if (user.settings) {
-        _.forEach(user.settings.colors, (title, color) => {
-          tags[color] = {
-            color,
-            title,
-          };
-        });
-      }
-
       // Create profile
       user.profile = Object.assign({}, user.profile || {}, {
-        public: false,
-        tags: tags,
+        // ?
       });
 
       // Create Pokédex
-      user.pokedex = [];
+      user.pokedex = {
+        public: false,
+        pokemons: [],
+      };
+
       _.forEach(pokemons, (pokemon) => {
-        user.pokedex.push({
+        user.pokedex.pokemons.push({
           id: pokemon.id,
           name: pokemon.name,
           collected: user.collected && user.collected[pokemon.id] && true || false,
-          tag: 'none',
+          tag: false,
         });
       });
 
@@ -44,7 +35,7 @@ const updates = {
     // Replace false value on tag by 'none'
     return new Promise(function(resolve) {
       // Create Pokédex
-      _.forEach(user.pokedex, (pokemon) => {
+      _.forEach(user.pokedex.pokemons, (pokemon) => {
         if (pokemon.tag === false) {
           pokemon.tag = 'none';
         }

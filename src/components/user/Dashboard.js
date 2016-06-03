@@ -7,8 +7,14 @@ import {injectIntl, intlShape, defineMessages} from 'react-intl';
 import _ from 'lodash';
 
 import LinearProgress from 'material-ui/LinearProgress';
-import {Card, CardActions, CardTitle, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
+import Paper from 'material-ui/Paper';
+import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar';
+import OpenIcon from 'material-ui/svg-icons/action/open-in-new';
+import ShareIcon from 'material-ui/svg-icons/social/share';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import IconButton from 'material-ui/IconButton';
 
 import Colors from '../../utils/colors';
 
@@ -58,46 +64,77 @@ class Dashboard extends Component {
 
     return (
       <div className="Dashboard container">
-        <Card className="Dashboard__card">
-          <CardTitle className="Dashboard__title" title={formatMessage(messages.progress)}/>
-          <CardText>
+        <Paper zDepth={1} className="Dashboard__card">
+          <Toolbar>
+            <ToolbarGroup>
+              <ToolbarTitle text={formatMessage(messages.progress)}/>
+            </ToolbarGroup>
+            <ToolbarGroup float="right">
+              {this.renderShareMenu()}
+            </ToolbarGroup>
+          </Toolbar>
+          <div className="Dashboard_content">
             {this.renderProgress(pokemons, true)}
-          </CardText>
-          <CardActions>
-            <FlatButton label={formatMessage(messages.openPc)} containerElement={<Link to="/pc"/>}/>
-            <FlatButton label={formatMessage(messages.openPokedex)} containerElement={<Link to="/pokedex"/>}/>
-          </CardActions>
-        </Card>
+          </div>
+          <div className="Dashboard__actions">
+            <FlatButton secondary={true} label={formatMessage(messages.openPc)} containerElement={<Link to="/pc"/>}/>
+            <FlatButton secondary={true} label={formatMessage(messages.openPokedex)} containerElement={<Link to="/pokedex"/>}/>
+          </div>
+        </Paper>
         <div className="row">
           <div className="col-sm-6">
-            <Card className="Dashboard__card">
-              <CardTitle className="Dashboard__title"  title={formatMessage(messages.byRegion)}/>
-              <CardText>
+            <Paper zDepth={1} className="Dashboard__card">
+              <Toolbar>
+                <ToolbarGroup>
+                  <ToolbarTitle text={formatMessage(messages.byRegion)}/>
+                </ToolbarGroup>
+              </Toolbar>
+              <div className="Dashboard_content">
                 {_.map(regions, (region) => (
                   <div className="Dashboard__item" key={region.index}>
                     <div className="Dashboard__subtitle">{formatMessage(messages[region.name])}</div>
                     {this.renderProgress(_.slice(pokemons, region.from-1, region.to))}
                   </div>
                 ))}
-              </CardText>
-            </Card>
+              </div>
+            </Paper>
           </div>
           <div className="col-sm-6">
-            <Card className="Dashboard__card">
-              <CardTitle className="Dashboard__title" title={formatMessage(messages.byTag)}/>
-              <CardText>
+            <Paper zDepth={1} className="Dashboard__card">
+              <Toolbar>
+                <ToolbarGroup>
+                  <ToolbarTitle text={formatMessage(messages.byTag)}/>
+                </ToolbarGroup>
+              </Toolbar>
+              <div className="Dashboard_content">
                 {_.map(_.groupBy(pokemons, 'tag'), (pokemons, tag) => (
                   <div className="Dashboard__item" key={tag}>
                     <div className="Dashboard__subtitle">{tags && tags[tag] && tags[tag].title || formatMessage(messages[tag])}</div>
                     {this.renderProgress(pokemons, false, Colors.tags[tag])}
                   </div>
                 ))}
-              </CardText>
-            </Card>
+              </div>
+            </Paper>
           </div>
         </div>
       </div>
     );
+  }
+
+  renderShareMenu() {
+    const {profile} = this.props;
+
+    const dashboardUrl = 'https://profsylve.com/user/' + profile.username;
+
+    if (profile.public && profile.username) {
+      return (
+        <IconMenu iconButtonElement={<IconButton><ShareIcon/></IconButton>}>
+          <MenuItem primaryText="URL" leftIcon={<OpenIcon/>} href={dashboardUrl} target="_blank"/>
+          <MenuItem primaryText="Facebook" href="http://google.fr" onTouchTap={this.handleCollected} target="_blank"/>
+          <MenuItem primaryText="Twitter" href="http://google.fr" target="_blank"/>
+        </IconMenu>
+      );
+    }
   }
 
   renderProgress(pokemons, main, color) {
@@ -106,7 +143,7 @@ class Dashboard extends Component {
     }, 0);
 
     const progress = Math.ceil(10 * collected / pokemons.length * 100)/10;
-    
+
     return (
       <div className={'Progress '+ (main ? 'Progress--main' : '')}>
         <div className="Progress__legend">
@@ -132,8 +169,9 @@ Dashboard.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    tags: state.profile.tags,
-    pokemons: state.pokedex,
+    profile: state.profile,
+    tags: state.pokedex.settings.tags,
+    pokemons: state.pokedex.pokemons,
   };
 };
 

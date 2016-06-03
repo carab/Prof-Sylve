@@ -8,6 +8,11 @@ export default (state = initial.ui, action) => {
         currentBox: action.currentBox,
       });
 
+    case 'SET_PUBLIC_POKEDEX':
+      return Object.assign({}, state, {
+        publicPokedex: action.publicPokedex,
+      });
+
     default: return state;
   }
 };

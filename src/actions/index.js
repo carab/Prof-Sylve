@@ -18,11 +18,15 @@ function isSignedIn() {
   return authData && true;
 }
 
+function getRootRef() {
+  return firebase.database().ref();
+}
+
 function getUserRef() {
   if (isSignedIn()) {
     const authData = firebase.auth().currentUser;
 
-    return firebase.database().ref()
+    return getRootRef()
       .child('users')
       .child(authData.uid);
   }
@@ -143,7 +147,6 @@ const actions = {
         }
       };
     },
-
     setProfile(profile) {
       return (dispatch) => {
         dispatch({ type: 'SET_PROFILE', profile });
@@ -153,25 +156,57 @@ const actions = {
           .set(profile);
       };
     },
+    matchUsernameToUid(username) {
+      return () => {
+        getRootRef()
+          .child('usernames')
+          .child(username)
+          .set(firebase.auth().currentUser.uid);
+      };
+    },
+    unmatchUsernameToUid(username, uid) {
+      return () => {
+        getRootRef()
+          .child('usernames')
+          .child(username)
+          .set(null);
+      };
+    },
   },
   pokedex: {
     setCollected(index, collected) {
       return () => {
         getUserRef()
           .child('pokedex')
+          .child('pokemons')
           .child(index)
           .child('collected')
           .set(collected);
       };
     },
-
     setTag(index, tag) {
       return () => {
         getUserRef()
           .child('pokedex')
+          .child('pokemons')
           .child(index)
           .child('tag')
           .set(tag);
+      };
+    },
+    setSettingsPublic(isPublic) {
+      return () => {
+        getUserRef().child('pokedex/settings/public').set(isPublic);
+      };
+    },
+    setSettingsUsername(username) {
+      return () => {
+        getUserRef().child('pokedex/settings/username').set(username);
+      };
+    },
+    setSettingsTagTitle(tag, title) {
+      return () => {
+        getUserRef().child('pokedex/settings/tags/' + tag + '/title').set(title);
       };
     },
   },
@@ -180,7 +215,24 @@ const actions = {
       return (dispatch) => {
         dispatch({ type: 'SET_CURRENT_BOX', currentBox });
       };
-    }
+    },
+    loadPublicPokedex(username) {
+      return (dispatch) => {
+        if (username) {
+          getRootRef().child('usernames').child(username).once('value', (snapshot) => {
+            const uid = snapshot.val();
+
+            getRootRef().child('users').child(uid).child('pokedex').once('value', (snapshot) => {
+              const publicPokedex = snapshot.val();
+
+              dispatch({ type: 'SET_PUBLIC_POKEDEX', publicPokedex });
+            });
+          });
+        } else {
+          dispatch({ type: 'SET_PUBLIC_POKEDEX', publicPokedex: null });
+        }
+      };
+    },
   }
 };
 

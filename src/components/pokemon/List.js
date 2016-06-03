@@ -157,8 +157,8 @@ ListComponent.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    pokemons: state.pokedex,
-    tags: state.profile.tags,
+    pokemons: state.pokedex.pokemons,
+    tags: state.pokedex.settings.tags,
   };
 };
 

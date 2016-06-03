@@ -4,7 +4,7 @@ export default (state = initial.pokedex, action) => {
   switch (action.type) {
 
     case 'SET_POKEDEX':
-      return action.pokedex || state;
+      return Object.assign({}, state, action.pokedex);
 
     default: return state;
   }

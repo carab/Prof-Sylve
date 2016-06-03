@@ -17,6 +17,7 @@ import SignoutComponent from 'components/user/SignoutComponent';
 import UserSettings from 'components/user/SettingsComponent';
 import UserDashboard from 'components/user/Dashboard';
 import UserFriends from 'components/user/Friends';
+import UserPublic from 'components/user/Public';
 
 import actions from '../actions';
 
@@ -69,6 +70,7 @@ class App extends Component {
             <Route name="pokedex" path="pokedex" component={PokemonList} onEnter={this.handleAuthRequired}/>
             <Route name="friends" path="friends" component={UserFriends} onEnter={this.handleAuthRequired}/>
             <Route name="settings" path="settings" component={UserSettings} onEnter={this.handleAuthRequired}/>
+            <Route name="user" path="user/:username" component={UserPublic}/>
             <Route name="sign" path="sign" component={SignComponent}/>
             <Route name="signout" path="signout" component={SignoutComponent} onEnter={this.handleAuthRequired}/>
           </Route>

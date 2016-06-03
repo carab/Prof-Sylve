@@ -216,8 +216,8 @@ PokemonComponent.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    pokemon: state.pokedex[ownProps.id-1],
-    tags: state.profile.tags,
+    pokemon: state.pokedex.pokemons[ownProps.id-1],
+    tags: state.pokedex.settings.tags,
     locale: state.profile.locale,
   };
 };

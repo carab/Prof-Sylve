@@ -9,11 +9,14 @@ export default {
   profile: {
     locale: null,
     friends: [],
+  },
+  pokedex: {
     public: false,
     tags: {},
+    pokemons: [],
   },
-  pokedex: [],
   ui: {
     currentBox: 0,
+    publicPokedex: null,
   }
 };

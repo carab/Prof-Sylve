@@ -151,7 +151,7 @@ PokemonPc.propTypes = {
 const mapStateToProps = (state) => {
   return {
     currentBox: state.ui.currentBox,
-    pokemons: state.pokedex,
+    pokemons: state.pokedex.pokemons,
   };
 };
 

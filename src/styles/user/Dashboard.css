@@ -6,6 +6,15 @@
   margin-bottom: 20px;
 }
 
+.Dashboard_content {
+  padding: 1rem;
+}
+
+.Dashboard__actions {
+  text-align: right;
+  padding: 0 1rem;
+}
+
 .Dashboard__subtitle {
   font-size: 1.2rem;
 }

@@ -11,6 +11,8 @@ import TextField from 'material-ui/TextField';
 import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar';
 import DoneIcon from 'material-ui/svg-icons/action/done';
 import Subheader from 'material-ui/Subheader';
+import Toggle from 'material-ui/Toggle';
+import OpenIcon from 'material-ui/svg-icons/action/open-in-new';
 
 import Colors from '../../utils/colors';
 import actions from '../../actions';
@@ -19,6 +21,7 @@ import 'styles/user/Settings.css';
 
 const messages = defineMessages({
   settings: {id: 'user.settings'},
+  tags: {id: 'pokemon.tag.tags'},
   save: {id: 'label.save'},
   red: {id: 'pokemon.tag.color.red'},
   yellow: {id: 'pokemon.tag.color.yellow'},
@@ -37,73 +40,105 @@ class Settings extends Component {
   constructor(props, context) {
     super(props, context);
 
-    this.state = {};
+    this.handlePublicChange = this.handlePublicChange.bind(this);
+    this.handleUsernameChange = this.handleUsernameChange.bind(this);
   }
 
   render() {
     const {formatMessage} = this.props.intl;
-    const profile = this.state.profile || this.props.profile;
-    const tags = profile.tags || tags;
+    const {settings} = this.props;
+    const tags = settings.tags || {};
+    const errors = {};
+    console.log(settings)
+    if (settings.public && !settings.username) {
+      errors.username = 'A public Pokédex needs a username';
+    }
 
     return (
       <div className="Settings container">
-        <Paper zDepth={1}>
-          <form onSubmit={(e) => this.handleSubmit(e)}>
-            <Toolbar>
-              <ToolbarGroup float="left">
-                <ToolbarTitle text={formatMessage(messages.settings)}/>
-              </ToolbarGroup>
-              <ToolbarGroup float="right">
-                <IconButton type="submit" aria-label={formatMessage(messages.save)}><DoneIcon/></IconButton>
-              </ToolbarGroup>
-            </Toolbar>
-            <Subheader>Tags</Subheader>
-            <div className="Settings__fields">
-              <div className="row">
-                {_.map(Colors.tags, (color, name) => (
-                  <div key={name} className="col-sm-4 col-md-3 col-lg-2">
-                    <TextField
-                      ref={'color-' + name}
-                      floatingLabelText={formatMessage(messages[name])}
-                      fullWidth={true}
-                      value={tags[name] && tags[name].title || ''}
-                      onChange={(event) => this.handleTagTitle(name, event.target.value)}
-                    />
-                  </div>
-                ))}
+        <div className="row">
+          <div className="col-md-6">
+            <Paper zDepth={1}>
+              <Toolbar>
+                <ToolbarGroup float="left">
+                  <ToolbarTitle text="Pokédex visibility"/>
+                </ToolbarGroup>
+                <ToolbarGroup float="right">
+                  {this.renderShareMenu()}
+                </ToolbarGroup>
+              </Toolbar>
+              <div className="Settings__fields">
+                <Toggle ref="public" label="Public" defaultToggled={settings.public} onToggle={this.handlePublicChange}/>
+                <TextField ref="username" floatingLabelText="User name" fullWidth={true} defaultValue={settings.username} errorText={errors.username} onChange={this.handleUsernameChange}/>
               </div>
-            </div>
-          </form>
-        </Paper>
+            </Paper>
+          </div>
+          <div className="col-md-6">
+            <Paper zDepth={1}>
+              <Toolbar>
+                <ToolbarGroup>
+                  <ToolbarTitle text={formatMessage(messages.tags)}/>
+                </ToolbarGroup>
+              </Toolbar>
+              <div className="Settings__fields">
+                <div className="row">
+                  {_.map(Colors.tags, (color, name) => (
+                    <div key={name} className="col-xs-6 col-sm-4 col-md-6">
+                      <TextField
+                        ref={'color-' + name}
+                        floatingLabelText={formatMessage(messages[name])}
+                        fullWidth={true}
+                        defaultValue={tags[name] && tags[name].title || ''}
+                        onChange={(event) => this.handleTagChange(name, event.target.value)}
+                        floatingLabelStyle={{color: color}}
+                        underlineFocusStyle={{borderColor: color}}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </Paper>
+          </div>
+        </div>
       </div>
     );
   }
 
-  handleTagTitle(tag, title) {
-    const profile = this.state.profile || this.props.profile;
+  renderShareMenu() {
+    const {settings} = this.props;
 
-    if (!profile.tags[tag]) {
-      profile.tags[tag] = { title }
-    } else {
-      profile.tags[tag].title = title;
+    if (settings.public && settings.username) {
+      const dashboardUrl = 'https://profsylve.com/user/' + settings.username;
+      return <IconButton containerElement={<a href={dashboardUrl} target="_blank"/>}><OpenIcon/></IconButton>;
     }
-
-    this.setState({ profile });
   }
 
-  handleSubmit(e) {
-    e.preventDefault();
+  handlePublicChange(event, isPublic) {
+    const {settings, setPublic} = this.props;
+    setPublic(isPublic);
+  }
 
-    const {profile, onSubmit} = this.props;
-    onSubmit(profile);
-    this.context.router.replace('/');
+  handleUsernameChange(event, username) {
+    const {settings, setUsername, matchUsernameToUid, unmatchUsernameToUid} = this.props;
+
+    if (settings.username) {
+      unmatchUsernameToUid(settings.username);
+    }
+
+    if (username) {
+      matchUsernameToUid(username);
+    }
+
+    setUsername(username);
+  }
+
+  handleTagChange(tag, title) {
+    const {settings, setTagTitle} = this.props;
+    setTagTitle(tag, title);
   }
 }
 
 Settings.displayName = 'UserSettings';
-Settings.contextTypes = {
-  router: () => { return PropTypes.func.isRequired; },
-};
 
 Settings.propTypes = {
   intl: intlShape.isRequired,
@@ -111,14 +146,26 @@ Settings.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    profile: state.profile,
+    settings: state.pokedex.settings,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onSubmit: (profile) => {
-      dispatch(actions.profile.setProfile(profile));
+    setPublic: (isPublic) => {
+      dispatch(actions.pokedex.setSettingsPublic(isPublic));
+    },
+    setUsername: (username) => {
+      dispatch(actions.pokedex.setSettingsUsername(username));
+    },
+    setTagTitle: (tag, title) => {
+      dispatch(actions.pokedex.setSettingsTagTitle(tag, title));
+    },
+    matchUsernameToUid: (username) => {
+      dispatch(actions.profile.matchUsernameToUid(username));
+    },
+    unmatchUsernameToUid: (username) => {
+      dispatch(actions.profile.unmatchUsernameToUid(username));
     },
   };
 }
