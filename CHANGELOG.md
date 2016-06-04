@@ -1,12 +1,18 @@
 Changelog
 =========
 
+## v0.17.0 (2016-06-04)
+
+- Rework settings layout.
+- Complete dashboard layout.
+- Add shareable dashboard.
+
 ## v0.16.0 (2016-06-03)
 
 - Rename List to Pokédex.
 - Improve Dashboard layout and add By Region and By Tag progress.
 - Mobiles and tablets have simpler tiles in PC to improve readability.
-- Improve PC layout and previous/next page trigger the slider. 
+- Improve PC layout and previous/next page trigger the slider.
 
 ## v0.15.3 (2016-06-02)
 
