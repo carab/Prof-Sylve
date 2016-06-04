@@ -74,24 +74,28 @@ const actions = {
               });
             }
 
-            getUserRef().child('profile').once('value', (snapshot) => {
-              const profile = snapshot.val();
+            getRootRef().child('config/version').once('value', (snapshot) => {
+              const version = snapshot.val();
 
-              getUserRef().child('pokedex').once('value', (snapshot) => {
-                const pokedex = snapshot.val();
-                const user = { profile, pokedex };
+              getUserRef().child('profile').once('value', (snapshot) => {
+                const profile = snapshot.val();
 
-                if (UserUpdate.needs(user)) {
-                  firebase.database().ref().child('pokemons').once('value', (snapshot) => {
-                    const pokemons = snapshot.val();
+                getUserRef().child('pokedex').once('value', (snapshot) => {
+                  const pokedex = snapshot.val();
+                  const user = { profile, pokedex };
 
-                    UserUpdate.perform(user, pokemons).then(() => {
-                      getUserRef().set(user).then(listens);
+                  if (UserUpdate.check(user, version)) {
+                    getRootRef().child('pokemons').once('value', (snapshot) => {
+                      const pokemons = snapshot.val();
+
+                      UserUpdate.perform(user, pokemons).then(() => {
+                        getUserRef().set(user).then(listens);
+                      });
                     });
-                  });
-                } else {
-                  listens();
-                }
+                  } else {
+                    listens();
+                  }
+                });
               });
             });
           } else {

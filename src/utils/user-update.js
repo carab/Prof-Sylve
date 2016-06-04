@@ -3,7 +3,7 @@
 import _ from 'lodash';
 
 const updates = {
-  'v0.12.0': function(user, pokemons) {
+  '0.12.0': function(user, pokemons) {
     // Fill Pokédex and init profile
     // And create profile and tags
 
@@ -31,7 +31,7 @@ const updates = {
       resolve();
     });
   },
-  'v0.16.0': function(user) {
+  '0.16.0': function(user) {
     // Replace false value on tag by 'none'
     return new Promise(function(resolve) {
       // Create Pokédex
@@ -51,9 +51,18 @@ class UserUpdate {
 
   }
 
-  needs(user) {
+  check(user, appVersion) {
     const version = user.profile && user.profile.version;
     const versions = Object.keys(updates);
+    const lastVersion = versions[versions.length-1];
+
+    // Check that the last version in the file is the same than the the config
+    // stored in firebase. If not, the page is reloaded to empty the cache and
+    // load the updated file with the proper versions.
+    if (appVersion !== lastVersion) {
+      window.location.reload(true);
+    }
+
     const versionIndex = versions.indexOf(version);
 
     return (versionIndex < versions.length-1);
