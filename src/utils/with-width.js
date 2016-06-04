@@ -63,8 +63,6 @@ export default function withWidth(options = {}) {
       }
 
       render() {
-        const {width} = this.props;
-
         return (
           <EventListener target={window} onResize={this.handleResize}>
             <MyComponent

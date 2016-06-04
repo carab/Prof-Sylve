@@ -159,7 +159,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setCurrentBox(currentBox) {
       dispatch(actions.ui.setCurrentBox(currentBox));
-    }
+    },
   };
 }
 

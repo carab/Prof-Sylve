@@ -1,4 +1,3 @@
-import { browserHistory } from 'react-router';
 import firebase from 'firebase';
 
 import UserUpdate from '../utils/user-update';
@@ -52,8 +51,6 @@ const actions = {
                       data: authData,
                     },
                   });
-
-                  //browserHistory.push('/');
                 }
               }
 
@@ -214,15 +211,23 @@ const actions = {
             getRootRef().child('users').child(uid).child('pokedex').once('value', (snapshot) => {
               const publicPokedex = snapshot.val();
 
-              dispatch({ type: 'SET_PUBLIC_POKEDEX', publicPokedex });
+              if (publicPokedex.settings.public) {
+                dispatch({ type: 'SET_PUBLIC_POKEDEX', publicPokedex });
+              } else {
+                dispatch({ type: 'SET_PUBLIC_POKEDEX', publicPokedex: false });
+              }
+            }, () => {
+              dispatch({ type: 'SET_PUBLIC_POKEDEX', publicPokedex: false });
             });
+          }, () => {
+            dispatch({ type: 'SET_PUBLIC_POKEDEX', publicPokedex: false });
           });
         } else {
           dispatch({ type: 'SET_PUBLIC_POKEDEX', publicPokedex: null });
         }
       };
     },
-  }
+  },
 };
 
 export default actions;

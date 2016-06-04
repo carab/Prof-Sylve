@@ -23,6 +23,7 @@ import ViewModuleIcon from 'material-ui/svg-icons/action/view-module';
 import BugReportIcon from 'material-ui/svg-icons/action/bug-report';
 import LanguageIcon from 'material-ui/svg-icons/action/language';
 import PeopleIcon from 'material-ui/svg-icons/social/people';
+import PersonIcon from 'material-ui/svg-icons/social/person';
 
 import withWidth, {XS, SM, MD, LG} from '../utils/with-width';
 import actions from '../actions';
@@ -35,6 +36,7 @@ const SelectableList = MakeSelectable(List);
 const messages = defineMessages({
   app: {id: 'app'},
   dashboard: {id: 'nav.dashboard'},
+  sign: {id: 'nav.sign'},
   byBox: {id: 'nav.byBox'},
   byList: {id: 'nav.byList'},
   friends: {id: 'nav.friends'},
@@ -71,14 +73,15 @@ class Main extends Component {
   }
 
   renderLayout() {
-    const {locale, setLocale, isSignedIn, width} = this.props;
+    const {locale, isSignedIn, width} = this.props;
     const {formatMessage} = this.props.intl;
+
+    const currentRoute = this.props.location.pathname;
 
     let menu;
     let navItems;
 
     if (isSignedIn) {
-      const currentRoute = this.props.location.pathname;
 
       navItems = (
         <SelectableList value={currentRoute} onChange={() => true}>
@@ -102,6 +105,13 @@ class Main extends Component {
           <Divider/>
           <MenuItem primaryText={formatMessage(messages.signout)} leftIcon={<PowerSettingsNewIcon/>} containerElement={<Link to="/signout" />}/>
         </IconMenu>
+      );
+    } else {
+      navItems = (
+        <SelectableList value={currentRoute} onChange={() => true}>
+          <ListItem value="/sign" onTouchTap={this.handleToggleNav} leftIcon={<PersonIcon/>} containerElement={<Link to="/sign" />}>{formatMessage(messages.sign)}</ListItem>
+          <Divider/>
+        </SelectableList>
       );
     }
 

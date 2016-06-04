@@ -1,33 +1,33 @@
-.Dashboard__card {
+.Progress__card {
   margin-bottom: 30px;
 }
 
-.Dashboard__item {
+.Progress__item {
   margin-bottom: 20px;
 }
 
-.Dashboard_content {
+.Progress_content {
   padding: 1rem;
 }
 
-.Dashboard__actions {
+.Progress__actions {
   text-align: right;
   padding: 0 1rem;
 }
 
-.Dashboard__subtitle {
+.Progress__subtitle {
   font-size: 1.2rem;
 }
 
-.Progress {
+.ProgressBar {
   font-size: 1.4rem;
 }
 
-.Progress__legend {
+.ProgressBar__legend {
   display: flex;
   justify-content: space-between;
 }
 
-.Progress--main {
+.ProgressBar--main {
   font-size: 3rem;
 }

@@ -8,6 +8,7 @@
     "byBox": "PC",
     "byList": "Pokédex",
     "friends": "Mes Amis",
+    "sign": "S'inscrire ou se connecter",
     "language": "Langue",
     "bugs": "Bugs & Propositions"
   },
@@ -27,8 +28,16 @@
       "none": "Aucun pour l'instant"
     }
   },
+  "settings": {
+    "visibility": "Visibilité du Pokédex",
+    "public": "Public",
+    "username": "Nom",
+    "missingUsername": "A Pokédex public doit avoir un nom."
+  },
   "dashboard": {
+    "notVisible": "Ce Pokédex n'existe pas ou n'est pas visible.",
     "progress": "Avancement",
+    "progressOf": "Avancement de {username}",
     "openPc": "Ouvrir le PC",
     "openPokedex": "Ouvrir le Pokédex",
     "byRegion": "Par Région",

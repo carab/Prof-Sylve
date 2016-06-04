@@ -51,7 +51,7 @@ class Box extends React.Component {
 
 Box.displayName = 'PokemonBoxComponent';
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   return {
     currentBox: state.ui.currentBox,
   };

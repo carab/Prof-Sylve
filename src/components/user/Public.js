@@ -2,10 +2,20 @@
 
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {injectIntl, intlShape, defineMessages} from 'react-intl';
-import _ from 'lodash';
+import {injectIntl, defineMessages} from 'react-intl';
+
+import CircularProgress from 'material-ui/CircularProgress';
+import Paper from 'material-ui/Paper';
+
+import Progress from 'components/user/Progress';
 
 import actions from '../../actions';
+
+import 'styles/user/Public.css';
+
+const messages = defineMessages({
+  notVisible: {id: 'dashboard.notVisible'},
+});
 
 class Public extends Component {
   componentWillMount() {
@@ -24,22 +34,32 @@ class Public extends Component {
     const {publicPokedex} = this.props;
 
     if (publicPokedex) {
-      return <div>{publicPokedex.settings.username}</div>;
+      return <Progress pokedex={publicPokedex} isPublic={true}></Progress>;
     }
 
-    return null;
+    if (publicPokedex === false) {
+      return (
+        <div className="Public__error container">
+          <Paper zDepth={1}>
+            <div className="Public__error">{this.props.intl.formatMessage(messages.notVisible)}</div>
+          </Paper>
+        </div>
+      );
+    }
+
+    return (
+      <div style={{textAlign: 'center', padding: '2rem 0'}}>
+        <CircularProgress size={2}/>
+      </div>
+    );
   }
 }
 
 Public.displayName = 'UserPublic';
-Public.contextTypes = {
-  router: () => { return PropTypes.func.isRequired; },
-};
 
 Public.propTypes = {
   params: PropTypes.object.isRequired,
   publicPokedex: PropTypes.object,
-  intl: intlShape.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -52,7 +72,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     loadPublicPokedex(username) {
       dispatch(actions.ui.loadPublicPokedex(username));
-    }
+    },
   };
 }
 

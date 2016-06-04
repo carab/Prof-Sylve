@@ -11,12 +11,15 @@ export default {
     friends: [],
   },
   pokedex: {
-    public: false,
-    tags: {},
+    settings: {
+      username: '',
+      public: false,
+      tags: {},
+    },
     pokemons: [],
   },
   ui: {
     currentBox: 0,
     publicPokedex: null,
-  }
+  },
 };

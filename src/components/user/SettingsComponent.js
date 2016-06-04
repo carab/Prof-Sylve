@@ -1,6 +1,6 @@
 'use strict';
 
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
 import _ from 'lodash';
@@ -9,8 +9,6 @@ import Paper from 'material-ui/Paper';
 import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
 import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar';
-import DoneIcon from 'material-ui/svg-icons/action/done';
-import Subheader from 'material-ui/Subheader';
 import Toggle from 'material-ui/Toggle';
 import OpenIcon from 'material-ui/svg-icons/action/open-in-new';
 
@@ -21,6 +19,10 @@ import 'styles/user/Settings.css';
 
 const messages = defineMessages({
   settings: {id: 'user.settings'},
+  visibility: {id: 'settings.visibility'},
+  isPublic: {id: 'settings.public'},
+  username: {id: 'settings.username'},
+  missingUsername: {id: 'settings.missingUsername'},
   tags: {id: 'pokemon.tag.tags'},
   save: {id: 'label.save'},
   red: {id: 'pokemon.tag.color.red'},
@@ -37,8 +39,8 @@ const messages = defineMessages({
 });
 
 class Settings extends Component {
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
 
     this.handlePublicChange = this.handlePublicChange.bind(this);
     this.handleUsernameChange = this.handleUsernameChange.bind(this);
@@ -51,7 +53,7 @@ class Settings extends Component {
     const errors = {};
 
     if (settings.public && !settings.username) {
-      errors.username = 'A public Pokédex needs a username';
+      errors.username = formatMessage(messages.missingUsername);
     }
 
     return (
@@ -61,15 +63,15 @@ class Settings extends Component {
             <Paper zDepth={1}>
               <Toolbar>
                 <ToolbarGroup float="left">
-                  <ToolbarTitle text="Pokédex visibility"/>
+                  <ToolbarTitle text={formatMessage(messages.visibility)}/>
                 </ToolbarGroup>
                 <ToolbarGroup float="right">
                   {this.renderShareMenu()}
                 </ToolbarGroup>
               </Toolbar>
               <div className="Settings__fields">
-                <Toggle ref="public" label="Public" defaultToggled={settings.public} onToggle={this.handlePublicChange}/>
-                <TextField ref="username" floatingLabelText="User name" fullWidth={true} defaultValue={settings.username} errorText={errors.username} onChange={this.handleUsernameChange}/>
+                <Toggle ref="public" label={formatMessage(messages.isPublic)} defaultToggled={settings.public} onToggle={this.handlePublicChange}/>
+                <TextField ref="username" floatingLabelText={formatMessage(messages.username)} fullWidth={true} defaultValue={settings.username} errorText={errors.username} onChange={this.handleUsernameChange}/>
               </div>
             </Paper>
           </div>
@@ -108,23 +110,28 @@ class Settings extends Component {
     const {settings} = this.props;
 
     if (settings.public && settings.username) {
-      const dashboardUrl = 'https://profsylve.com/user/' + settings.username;
-      return <IconButton containerElement={<a href={dashboardUrl} target="_blank"/>}><OpenIcon/></IconButton>;
+      // Build absolute URL
+      const path = '/user/' + settings.username;
+      const a = document.createElement('a');
+      a.href = path;
+      const url = a.href;
+
+      return <IconButton containerElement={<a href={url} target="_blank"/>}><OpenIcon/></IconButton>;
     }
   }
 
   handlePublicChange(event, isPublic) {
-    const {settings, setPublic} = this.props;
+    const {setPublic} = this.props;
     setPublic(isPublic);
   }
 
   handleUsernameChange(event, username) {
-    const {settings, setUsername} = this.props;
+    const {setUsername} = this.props;
     setUsername(username);
   }
 
   handleTagChange(tag, title) {
-    const {settings, setTagTitle} = this.props;
+    const {setTagTitle} = this.props;
     setTagTitle(tag, title);
   }
 }

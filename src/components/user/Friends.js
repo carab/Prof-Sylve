@@ -7,9 +7,6 @@ import _ from 'lodash';
 
 import Paper from 'material-ui/Paper';
 import {List, ListItem} from 'material-ui/List';
-import Divider from 'material-ui/Divider';
-import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar';
 import PersonAddIcon from 'material-ui/svg-icons/social/person-add';
