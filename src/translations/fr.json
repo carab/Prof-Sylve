@@ -12,6 +12,15 @@
     "language": "Langue",
     "bugs": "Bugs & Propositions"
   },
+  "errors": {
+    "alreadyUsed": "Cette adresse email est déjà utilisée.",
+    "invalidEmail": "Veuillez entrer une adresse email valide.",
+    "invalidPassword": "Veuillez entrer un mot de passe d'au moins 6 caractères.",
+    "invalidConfirmation": "La confirmation est différente de votre mot de passe.",
+    "wrongPassword": "Ce mot de passe n'est pas correct.",
+    "userDisabled": "Ce compte a été désactivé.",
+    "userNotFound": "Ce compte n'existe pas."
+  },
   "user": {
     "settings": "Paramètres",
     "signout": "Déconnexion",
@@ -22,7 +31,6 @@
     "email": "Adresse email",
     "password": "Mot de passe",
     "passwordConfirmation": "Confirmation du mot de passe",
-    "passwordConfirmationIncorrect": "La confirmation ne correspond pas.",
     "friends": {
       "friends": "Mes Amis ({friends})",
       "none": "Aucun pour l'instant"

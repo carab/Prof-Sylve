@@ -5,6 +5,7 @@ export default {
     isReady: false,
     isSignedIn: false,
     data: {},
+    errors: {},
   },
   profile: {
     locale: null,

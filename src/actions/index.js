@@ -110,7 +110,7 @@ const actions = {
       };
     },
     signup(email, password, locale) {
-      return () => {
+      return (dispatch) => {
         return firebase.auth().createUserWithEmailAndPassword(email, password)
           .then((user) => {
             firebase.database().ref().child('users').child(user.uid).set({
@@ -122,12 +122,23 @@ const actions = {
             }).then(() => {
               firebase.auth().signInWithEmailAndPassword(email, password);
             });
-          })
+          }).catch((error) => {
+            dispatch({
+              type: 'SET_AUTH_ERROR',
+              errors: { signup: error },
+            });
+          });
       };
     },
     signin(email, password) {
-      return () => {
-        return firebase.auth().signInWithEmailAndPassword(email, password);
+      return (dispatch) => {
+        return firebase.auth().signInWithEmailAndPassword(email, password)
+          .catch((error) => {
+            dispatch({
+              type: 'SET_AUTH_ERROR',
+              errors: { signin: error },
+            });
+          });
       };
     },
     signout() {

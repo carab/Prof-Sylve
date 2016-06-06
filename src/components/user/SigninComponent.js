@@ -18,6 +18,10 @@ const messages = defineMessages({
   subtitle: {id: 'user.signinSubtitle'},
   email: {id: 'user.email'},
   password: {id: 'user.password'},
+  invalidEmail: {id: 'errors.invalidEmail'},
+  wrongPassword: {id: 'errors.wrongPassword'},
+  userDisabled: {id: 'errors.userDisabled'},
+  userNotFound: {id: 'errors.userNotFound'},
 });
 
 class SigninComponent extends Component {
@@ -44,8 +48,31 @@ class SigninComponent extends Component {
     }
   }
 
+  componentWillReceiveProps(newsProps) {
+    const {error} = newsProps;
+
+    if (error) {
+      switch (error.code) {
+        case 'auth/invalid-email':
+          this.setState({errors: { email: messages.invalidEmail }})
+          break;
+        case 'auth/user-disabled':
+          this.setState({errors: { email: messages.userDisabled }})
+          break;
+        case 'auth/user-not-found':
+          this.setState({errors: { email: messages.userNotFound }})
+          break;
+        case 'auth/wrong-password':
+          this.setState({errors: { password: messages.wrongPassword }})
+          break;
+      }
+
+      this.setState({ loading: false });
+    }
+  }
+
   render() {
-    const {loading} = this.state;
+    const {loading, errors} = this.state;
     const {formatMessage} = this.props.intl;
 
     let action = <RaisedButton type="submit" label={formatMessage(messages.signin)} primary={true} />;
@@ -65,12 +92,14 @@ class SigninComponent extends Component {
               floatingLabelText={formatMessage(messages.email)}
               errorText={this.state.errors.email}
               fullWidth={true}
+              errorText={errors.email && formatMessage(errors.email)}
             />
             <TextField
               ref="password"
               type="password"
               floatingLabelText={formatMessage(messages.password)}
               fullWidth={true}
+              errorText={errors.password && formatMessage(errors.password)}
             />
           </CardText>
           <CardActions className="text-xs-center">
@@ -84,7 +113,10 @@ class SigninComponent extends Component {
   handleSubmit(e) {
     e.preventDefault();
 
-    this.setState({ loading: true });
+    this.setState({
+      loading: true,
+      errors: {},
+    });
 
     const email = this.refs.email.getValue();
     const password = this.refs.password.getValue();
@@ -104,6 +136,7 @@ SigninComponent.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
+    error: state.auth.errors.signin,
     isSignedIn: state.auth.isSignedIn,
   };
 };

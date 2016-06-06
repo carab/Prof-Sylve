@@ -12,6 +12,15 @@
     "language": "Language",
     "bugs": "Bugs & Suggestions"
   },
+  "errors": {
+    "alreadyUsed": "This email is already in use.",
+    "invalidEmail": "Please enter a valid email address.",
+    "invalidPassword": "Please enter a password of at leasth 6 characters.",
+    "invalidConfirmation": "Your confirmation is differennt from your password.",
+    "wrongPassword": "This password is not correct.",
+    "userDisabled": "This account is disabled.",
+    "userNotFound": "This account does not exist."
+  },
   "user": {
     "settings": "Settings",
     "signout": "Sign out",
@@ -22,7 +31,6 @@
     "email": "Email",
     "password": "Password",
     "passwordConfirmation": "Password Confirmation",
-    "passwordConfirmationIncorrect": "Password confirmation is not correct.",
     "friends": {
       "friends": "My Friends ({friends})",
       "none": "None yet"

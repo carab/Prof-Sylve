@@ -6,6 +6,9 @@ export default (state = initial.auth, action) => {
     case 'SET_AUTH':
       return Object.assign({}, state, action.auth);
 
+    case 'SET_AUTH_ERROR':
+      return Object.assign({}, state, { errors: action.errors });
+
     default: return state;
   }
 };
