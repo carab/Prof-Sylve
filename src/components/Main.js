@@ -23,7 +23,7 @@ import ViewModuleIcon from 'material-ui/svg-icons/action/view-module';
 import BugReportIcon from 'material-ui/svg-icons/action/bug-report';
 import LanguageIcon from 'material-ui/svg-icons/action/language';
 import PeopleIcon from 'material-ui/svg-icons/social/people';
-import PersonIcon from 'material-ui/svg-icons/social/person';
+import HomeIcon from 'material-ui/svg-icons/action/home';
 
 import withWidth, {XS, SM, MD, LG} from '../utils/with-width';
 import actions from '../actions';
@@ -36,7 +36,7 @@ const SelectableList = MakeSelectable(List);
 const messages = defineMessages({
   app: {id: 'app'},
   dashboard: {id: 'nav.dashboard'},
-  sign: {id: 'nav.sign'},
+  home: {id: 'nav.home'},
   byBox: {id: 'nav.byBox'},
   byList: {id: 'nav.byList'},
   friends: {id: 'nav.friends'},
@@ -109,7 +109,7 @@ class Main extends Component {
     } else {
       navItems = (
         <SelectableList value={currentRoute} onChange={() => true}>
-          <ListItem value="/sign" onTouchTap={this.handleToggleNav} leftIcon={<PersonIcon/>} containerElement={<Link to="/sign" />}>{formatMessage(messages.sign)}</ListItem>
+          <ListItem value="/sign" onTouchTap={this.handleToggleNav} leftIcon={<HomeIcon/>} containerElement={<Link to="/sign" />}>{formatMessage(messages.home)}</ListItem>
           <Divider/>
         </SelectableList>
       );

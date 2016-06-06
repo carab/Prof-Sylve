@@ -8,7 +8,7 @@
     "byBox": "PC",
     "byList": "Pokédex",
     "friends": "My Friends",
-    "sign": "Sign up or sign in",
+    "home": "Home",
     "language": "Language",
     "bugs": "Bugs & Suggestions"
   },
@@ -25,7 +25,7 @@
     "settings": "Settings",
     "signout": "Sign out",
     "signin": "Sign in",
-    "signinSubtitle": "If you already have an account.",
+    "signinSubtitle": "If you already have started your biggest adventure !",
     "signup": "Sign up",
     "signupSubtitle": "If you want to catch'em all !",
     "email": "Email",
