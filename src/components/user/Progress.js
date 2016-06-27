@@ -19,6 +19,7 @@ import IconButton from 'material-ui/IconButton';
 import PersonAddIcon from 'material-ui/svg-icons/social/person-add';
 
 import Colors from '../../utils/colors';
+import Regions from '../../utils/regions';
 
 import 'styles/user/Progress.css';
 
@@ -51,15 +52,6 @@ const messages = defineMessages({
   brown: {id: 'pokemon.tag.color.brown'},
 });
 
-const regions = [
-  { name: 'kanto', index: '1', from: 1, to: 151 },
-  { name: 'johto', index: '2', from: 152, to: 251 },
-  { name: 'hoenn', index: '3', from: 252, to: 386 },
-  { name: 'sinnoh', index: '4', from: 387, to: 494 },
-  { name: 'ulys', index: '5', from: 495, to: 649 },
-  { name: 'kalos', index: '6', from: 650, to: 721 },
-];
-
 class Progress extends Component {
   render() {
     const {formatMessage} = this.props.intl;
@@ -89,7 +81,7 @@ class Progress extends Component {
                 </ToolbarGroup>
               </Toolbar>
               <div className="Progress_content">
-                {_.map(regions, (region) => (
+                {_.map(Regions, (region) => (
                   <div className="Progress__item" key={region.index}>
                     <div className="Progress__subtitle">{formatMessage(messages[region.name])}</div>
                     {this.renderProgress(_.slice(pokedex.pokemons, region.from-1, region.to))}
@@ -151,7 +143,7 @@ class Progress extends Component {
     }
 
     let addFriend;
-    
+
     if (isPublic && isSignedIn && username !== settings.username) {
       addFriend = <IconButton><PersonAddIcon/></IconButton>;
     }

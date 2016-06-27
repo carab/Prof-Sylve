@@ -12,8 +12,10 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import Checkbox from 'material-ui/Checkbox';
 import FilterIcon from 'material-ui/svg-icons/content/filter-list';
+import PlaceIcon from 'material-ui/svg-icons/maps/place';
 import BookmarkIcon from 'material-ui/svg-icons/action/bookmark';
 import BookmarkBorderIcon from 'material-ui/svg-icons/action/bookmark-border';
+import ArrowDropRightIcon from 'material-ui/svg-icons/navigation-arrow-drop-right';
 import CancelIcon from 'material-ui/svg-icons/navigation/cancel';
 
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
@@ -23,6 +25,7 @@ import 'react-virtualized/styles.css';
 
 import Colors from '../../utils/colors';
 import actions from '../../actions';
+import Regions from '../../utils/regions';
 
 import PokemonItem from 'components/pokemon/Item';
 import Toolbar from './Toolbar';
@@ -30,10 +33,21 @@ import Toolbar from './Toolbar';
 import 'styles/pokemon/List.css';
 
 const messages = defineMessages({
+  noResult: {id: 'pokemon.filter.noResult'},
+
   all: {id: 'pokemon.filter.all'},
   collected: {id: 'pokemon.filter.collected'},
   notCollected: {id: 'pokemon.filter.notCollected'},
-  noResult: {id: 'pokemon.filter.noResult'},
+
+  region: {id: 'pokemon.region.region'},
+  kanto: {id: 'pokemon.region.kanto'},
+  johto: {id: 'pokemon.region.johto'},
+  hoenn: {id: 'pokemon.region.hoenn'},
+  sinnoh: {id: 'pokemon.region.sinnoh'},
+  ulys: {id: 'pokemon.region.ulys'},
+  kalos: {id: 'pokemon.region.kalos'},
+
+  tag: {id: 'pokemon.tag.tag'},
   red: {id: 'pokemon.tag.color.red'},
   yellow: {id: 'pokemon.tag.color.yellow'},
   green: {id: 'pokemon.tag.color.green'},
@@ -76,6 +90,11 @@ class ListComponent extends Component {
           return (pokemon.tag === options.tag);
         };
       },
+      region: (options) => {
+        return (pokemon) => {
+          return (pokemon.id >= options.region.from && pokemon.id <= options.region.to);
+        };
+      },
     };
 
     this.filteredPokemons = pokemons;
@@ -112,20 +131,41 @@ class ListComponent extends Component {
                 onFilterToggle={this.handleFilterToggle}
               />
               <Divider/>
-              {_.map(Colors.tags, (color, name) => (
-                <FilterItem
-                  key={name}
-                  hash={'tag-' + name}
-                  name="tag"
-                  options={{tag: name}}
-                  toggle={hashes.indexOf('tag-' + name) >= 0}
-                  color={color}
-                  text={tags && tags[name] && tags[name].title || formatMessage(messages[name])}
-                  checkedIcon={<BookmarkIcon/>}
-                  uncheckedIcon={<BookmarkBorderIcon/>}
-                  onFilterToggle={this.handleFilterToggle}
-                />
-              ))}
+              <MenuItem
+                primaryText={formatMessage(messages.region)}
+                leftIcon={<PlaceIcon/>}
+                rightIcon={<ArrowDropRightIcon/>}
+                menuItems={_.map(Regions, (region) => (
+                  <FilterItem
+                    key={region.name}
+                    hash={'region-' + region.name}
+                    name="region"
+                    options={{region: region}}
+                    toggle={hashes.indexOf('region-' + region.name) >= 0}
+                    text={formatMessage(messages[region.name])}
+                    onFilterToggle={this.handleFilterToggle}
+                  />
+                ))}
+              />
+              <MenuItem
+                primaryText={formatMessage(messages.tag)}
+                leftIcon={<BookmarkBorderIcon/>}
+                rightIcon={<ArrowDropRightIcon/>}
+                menuItems={_.map(Colors.tags, (color, name) => (
+                  <FilterItem
+                    key={name}
+                    hash={'tag-' + name}
+                    name="tag"
+                    options={{tag: name}}
+                    toggle={hashes.indexOf('tag-' + name) >= 0}
+                    color={color}
+                    text={tags && tags[name] && tags[name].title || formatMessage(messages[name])}
+                    checkedIcon={<BookmarkIcon/>}
+                    uncheckedIcon={<BookmarkBorderIcon/>}
+                    onFilterToggle={this.handleFilterToggle}
+                  />
+                ))}
+              />
             </IconMenu>
           }/>
           <List className="PokemonList__list">
