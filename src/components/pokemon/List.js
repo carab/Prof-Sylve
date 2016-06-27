@@ -10,10 +10,11 @@ import Divider from 'material-ui/Divider';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
+import Checkbox from 'material-ui/Checkbox';
 import FilterIcon from 'material-ui/svg-icons/content/filter-list';
 import BookmarkIcon from 'material-ui/svg-icons/action/bookmark';
-import AllInclusiveIcon from 'material-ui/svg-icons/places/all-inclusive';
-import Checkbox from 'material-ui/Checkbox';
+import BookmarkBorderIcon from 'material-ui/svg-icons/action/bookmark-border';
+import CancelIcon from 'material-ui/svg-icons/navigation/cancel';
 
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
@@ -21,6 +22,7 @@ import {VirtualScroll, AutoSizer} from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
 import Colors from '../../utils/colors';
+import actions from '../../actions';
 
 import PokemonItem from 'components/pokemon/Item';
 import Toolbar from './Toolbar';
@@ -49,7 +51,8 @@ class ListComponent extends Component {
   constructor(props) {
     super(props);
 
-    this.handleFilterChange = this.handleFilterChange.bind(this);
+    this.handleFilterReset = this.handleFilterReset.bind(this);
+    this.handleFilterToggle = this.handleFilterToggle.bind(this);
     this.itemRenderer = this.itemRenderer.bind(this);
     this.noItemRenderer = this.noItemRenderer.bind(this);
 
@@ -60,48 +63,67 @@ class ListComponent extends Component {
 
   render() {
     const {formatMessage} = this.props.intl;
-    const {pokemons, tags} = this.props;
-    const {filter} = this.state;
+    const {pokemons, tags, filters} = this.props;
 
-    const filters = {
-      all: () => {
-        return true;
+    const filterCallbacks = {
+      collected: (options) => {
+        return (pokemon) => {
+          return (pokemon.collected === options.collected);
+        };
       },
-      collected: (pokemon) => {
-        return pokemon.collected;
-      },
-      notCollected: (pokemon) => {
-        return !pokemon.collected;
+      tag: (options) => {
+        return (pokemon) => {
+          return (pokemon.tag === options.tag);
+        };
       },
     };
 
-    _.each(Colors.tags, (color, name) => {
-      filters[name] = (pokemon) => {
-        return (pokemon.tag == name);
-      };
-    });
+    this.filteredPokemons = pokemons;
 
-    const filteredPokemons = _.filter(pokemons, filters[filter]);
-    this.filteredPokemons = filteredPokemons;
+    const hashes = [];
+    filters.forEach((filter) => {
+      hashes.push(filter.hash);
+      this.filteredPokemons = _.filter(this.filteredPokemons, filterCallbacks[filter.name](filter.options));
+    });
 
     return (
       <div className="PokemonList container">
         <Paper zDepth={1} className="PokemonList__paper">
-          <Toolbar pokemons={pokemons} filteredPokemons={filteredPokemons} right={
-            <IconMenu
-              iconButtonElement={<IconButton><FilterIcon/></IconButton>}
-              value={filter}
-              onChange={this.handleFilterChange}
-            >
-              <MenuItem value="all" primaryText={formatMessage(messages.all)} leftIcon={<AllInclusiveIcon/>}/>
-              <MenuItem value="collected" primaryText={formatMessage(messages.collected)} leftIcon={<Checkbox checked={true}/>}/>
-              <MenuItem value="notCollected" primaryText={formatMessage(messages.notCollected)} leftIcon={<Checkbox checked={false}/>}/>
+          <Toolbar pokemons={pokemons} filteredPokemons={this.filteredPokemons} right={
+            <IconMenu iconButtonElement={<IconButton><FilterIcon/></IconButton>}>
+              <MenuItem primaryText={formatMessage(messages.all)} leftIcon={<CancelIcon/>} onTouchTap={this.handleFilterReset}/>
+              <Divider/>
+              <FilterItem
+                hash="collected-true"
+                name="collected"
+                options={{collected: true}}
+                color={Colors.collected}
+                toggle={hashes.indexOf('collected-true') >= 0}
+                text={formatMessage(messages.collected)}
+                onFilterToggle={this.handleFilterToggle}
+              />
+              <FilterItem
+                hash="collected-false"
+                name="collected"
+                options={{collected: false}}
+                color={Colors.default}
+                toggle={hashes.indexOf('collected-false') >= 0}
+                text={formatMessage(messages.notCollected)}
+                onFilterToggle={this.handleFilterToggle}
+              />
               <Divider/>
               {_.map(Colors.tags, (color, name) => (
-                <MenuItem primaryText={tags && tags[name] && tags[name].title || formatMessage(messages[name])}
+                <FilterItem
                   key={name}
-                  value={name}
-                  leftIcon={<BookmarkIcon color={color}/>}
+                  hash={'tag-' + name}
+                  name="tag"
+                  options={{tag: name}}
+                  toggle={hashes.indexOf('tag-' + name) >= 0}
+                  color={color}
+                  text={tags && tags[name] && tags[name].title || formatMessage(messages[name])}
+                  checkedIcon={<BookmarkIcon/>}
+                  uncheckedIcon={<BookmarkBorderIcon/>}
+                  onFilterToggle={this.handleFilterToggle}
                 />
               ))}
             </IconMenu>
@@ -114,7 +136,7 @@ class ListComponent extends Component {
                   width={width}
                   overscanRowsCount={5}
                   noRowsRenderer={this.noItemRenderer}
-                  rowsCount={filteredPokemons.length}
+                  rowsCount={this.filteredPokemons.length}
                   rowHeight={48}
                   rowRenderer={this.itemRenderer}
                 />
@@ -126,10 +148,12 @@ class ListComponent extends Component {
     );
   }
 
-  handleFilterChange(event, value) {
-    this.setState({
-      filter: value,
-    });
+  handleFilterToggle(filter) {
+    this.props.onFilterToggle(filter);
+  }
+
+  handleFilterReset() {
+    this.props.onFilterReset();
   }
 
   noItemRenderer() {
@@ -149,6 +173,27 @@ class ListComponent extends Component {
   }
 }
 
+function FilterItem(props) {
+  const {hash, name, options, toggle, text, color, checkedIcon, uncheckedIcon, onFilterToggle} = props;
+  const style = {}, iconStyle = {};
+
+  if (color) {
+    iconStyle.fill = color;
+
+    if (toggle) {
+      style.color = color;
+    }
+  }
+
+  return (
+    <MenuItem primaryText={text}
+      leftIcon={<Checkbox checked={toggle} iconStyle={iconStyle} checkedIcon={checkedIcon} uncheckedIcon={uncheckedIcon}/>}
+      style={style}
+      onTouchTap={() => onFilterToggle({ name, hash, options })}
+    />
+  );
+}
+
 ListComponent.displayName = 'PokemonListComponent';
 ListComponent.propTypes = {
   pokemons: PropTypes.array.isRequired,
@@ -159,11 +204,19 @@ const mapStateToProps = (state) => {
   return {
     pokemons: state.pokedex.pokemons,
     tags: state.pokedex.settings.tags,
+    filters: state.ui.filters,
   };
 };
 
-const mapDispatchToProps = () => {
-  return {};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onFilterToggle: (filter) => {
+      dispatch(actions.ui.toggleFilter(filter));
+    },
+    onFilterReset: () => {
+      dispatch(actions.ui.resetFilter());
+    },
+  };
 }
 
 export default injectIntl(connect(

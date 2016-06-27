@@ -1,3 +1,5 @@
+import Immutable from 'immutable';
+
 export default {
   feedback: [],
   auth: {
@@ -22,5 +24,6 @@ export default {
   ui: {
     currentBox: 0,
     publicPokedex: null,
+    filters: Immutable.List([]),
   },
 };

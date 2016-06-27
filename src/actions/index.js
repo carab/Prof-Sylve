@@ -238,6 +238,16 @@ const actions = {
         }
       };
     },
+    toggleFilter(filter) {
+      return (dispatch) => {
+        dispatch({ type: 'TOGGLE_FILTER', filter });
+      };
+    },
+    resetFilter() {
+      return (dispatch) => {
+        dispatch({ type: 'RESET_FILTER' });
+      };
+    }
   },
 };
 

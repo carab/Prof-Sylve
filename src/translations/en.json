@@ -60,7 +60,7 @@
       "nextBox": "Next Box"
     },
     "filter": {
-      "all": "All",
+      "all": "Cancel",
       "collected": "Collected",
       "notCollected": "Not Collected",
       "noResult": "No Result"

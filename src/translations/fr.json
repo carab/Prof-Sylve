@@ -60,7 +60,7 @@
       "nextBox": "Boîte Suivante"
     },
     "filter": {
-      "all": "Tous",
+      "all": "Annuler",
       "collected": "Collectés",
       "notCollected": "Non Collectés",
       "noResult": "Aucun Résultat"
