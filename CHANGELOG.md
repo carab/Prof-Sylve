@@ -1,6 +1,12 @@
 Changelog
 =========
 
+## v0.18.0 (2016-06-27)
+
+- Allow for multiple filters and rework filters management.
+- Add region filters.
+- Add link to Pokémon in PC from Pokédex.
+
 ## v0.17.0 (2016-06-04)
 
 - Rework settings layout.
