@@ -2,6 +2,8 @@
 
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
+import {injectIntl, intlShape, defineMessages} from 'react-intl';
+import {Link} from 'react-router';
 import _ from 'lodash';
 
 import {GridTile} from 'material-ui/GridList';
@@ -14,8 +16,9 @@ import Checkbox from 'material-ui/Checkbox';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import LaunchIcon from 'material-ui/svg-icons/action/launch';
 import BookmarkIcon from 'material-ui/svg-icons/action/bookmark';
+import ViewModuleIcon from 'material-ui/svg-icons/action/view-module';
 
-import {injectIntl, intlShape, defineMessages} from 'react-intl';
+import {BOX_SIZE} from './Pc';
 
 import Colors from '../../utils/colors';
 import actions from '../../actions';
@@ -28,6 +31,7 @@ const messages = defineMessages({
   none: {id: 'pokemon.tag.none'},
   externalService: {id: 'pokemon.externalService'},
   externalUrl: {id: 'pokemon.externalUrl'},
+  inPc: {id: 'pokemon.inPc'},
   red: {id: 'pokemon.tag.color.red'},
   yellow: {id: 'pokemon.tag.color.yellow'},
   green: {id: 'pokemon.tag.color.green'},
@@ -86,6 +90,13 @@ class PokemonComponent extends Component {
     const menuButton = this.renderMenuButton(type);
     const externalUrl = formatMessage(messages.externalUrl, { name });
 
+    let pcMenuItem;
+
+    if (type !== 'tile') {
+      const box = parseInt((pokemon.id-1)/BOX_SIZE);
+      pcMenuItem = <MenuItem primaryText={formatMessage(messages.inPc)} leftIcon={<ViewModuleIcon/>} containerElement={<Link to={`/pc/${box}`} />}/>;
+    }
+
     const menu = (
       <IconMenu
         className="PokemonItem__menu"
@@ -95,6 +106,7 @@ class PokemonComponent extends Component {
         value={pokemon.tag}
       >
         <MenuItem primaryText={formatMessage(messages.collected)} leftIcon={<Checkbox checked={pokemon.collected}/>} onTouchTap={this.handleCollected}/>
+        {pcMenuItem}
         <MenuItem primaryText={formatMessage(messages.externalService)} leftIcon={<LaunchIcon/>} href={externalUrl} target="_blank"/>
         <Divider/>
         <MenuItem primaryText={formatMessage(messages.none)}

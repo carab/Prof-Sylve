@@ -22,9 +22,9 @@ const messages = defineMessages({
   nextBox: {id: 'pokemon.toolbar.nextBox'},
 });
 
-const BOX_COLS = 6;
-const BOX_ROWS = 5;
-const BOX_SIZE = BOX_COLS * BOX_ROWS;
+export const BOX_COLS = 6;
+export const BOX_ROWS = 5;
+export const BOX_SIZE = BOX_COLS * BOX_ROWS;
 
 class PokemonPc extends Component {
   constructor(props) {

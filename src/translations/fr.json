@@ -69,6 +69,7 @@
     "notCollected": "Non Collecté",
     "externalService": "Voir sur Poképedia",
     "externalUrl": "http://www.pokepedia.fr/{name}",
+    "inPc": "Voir dans le PC",
     "region": {
       "region": "Région",
       "regions": "Régions",

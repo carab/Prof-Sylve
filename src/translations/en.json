@@ -69,6 +69,7 @@
     "notCollected": "Not Collected",
     "externalService": "See on Bulbapedia",
     "externalUrl": "http://bulbapedia.bulbagarden.net/wiki/{name}",
+    "inPc": "See in PC",
     "region": {
       "region": "Region",
       "regions": "Regions",
