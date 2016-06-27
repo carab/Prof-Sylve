@@ -101,7 +101,7 @@ class ListComponent extends Component {
                 <MenuItem primaryText={tags && tags[name] && tags[name].title || formatMessage(messages[name])}
                   key={name}
                   value={name}
-                  leftIcon={<BookmarkIcon style={{fill: color}}/>}
+                  leftIcon={<BookmarkIcon color={color}/>}
                 />
               ))}
             </IconMenu>

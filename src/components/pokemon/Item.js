@@ -98,14 +98,14 @@ class PokemonComponent extends Component {
         <MenuItem primaryText={formatMessage(messages.externalService)} leftIcon={<LaunchIcon/>} href={externalUrl} target="_blank"/>
         <Divider/>
         <MenuItem primaryText={formatMessage(messages.none)}
-          leftIcon={<BookmarkIcon style={{ fill: Colors.default }}/>}
+          leftIcon={<BookmarkIcon color={Colors.default}/>}
           onTouchTap={this.handleTag.bind(this, 'none')}
           value="none"
         />
         {_.map(Colors.tags, (color, name) => (
           <MenuItem primaryText={tags && tags[name] && tags[name].title || formatMessage(messages[name])}
             key={name}
-            leftIcon={<BookmarkIcon style={{fill: color}}/>}
+            leftIcon={<BookmarkIcon color={color}/>}
             onTouchTap={this.handleTag.bind(this, name)}
             value={name}
           />
@@ -166,7 +166,7 @@ class PokemonComponent extends Component {
           className="PokemonItem PokemonItem--row"
           primaryText={pokemon.id + ' - ' + name}
           rightIconButton={menu}
-          leftIcon={<BookmarkIcon style={{fill: color}} onTouchTap={this.handleCollected}/>}
+          leftIcon={<BookmarkIcon color={color} onTouchTap={this.handleCollected}/>}
           style={style}
         />
       );
