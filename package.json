@@ -78,7 +78,7 @@
     "firebase": "^3.0.3",
     "flexboxgrid": "^6.3.0",
     "font-awesome": "^4.6.3",
-    "material-ui": "^0.15.0",
+    "material-ui": "^0.15.1",
     "normalize.css": "^4.0.0",
     "react": "^15.1.0",
     "react-addons-shallow-compare": "^15.1.0",
