@@ -35,6 +35,7 @@ import 'styles/Page/Pokedex.css';
 const messages = defineMessages({
   noResult: {id: 'pokemon.filter.noResult'},
 
+  search: {id: 'pokemon.filter.search'},
   all: {id: 'pokemon.filter.all'},
   collected: {id: 'pokemon.filter.collected'},
   notCollected: {id: 'pokemon.filter.notCollected'},
@@ -136,7 +137,7 @@ class PagePokedex extends Component {
           <Toolbar pokemons={pokemons} filteredPokemons={this.filteredPokemons} right={
             <div>
               <div className="FilterSearch">
-                <TextField ref="search" hintText="Recherche" onChange={this.handleFilterSearchChange}/>
+                <TextField ref="search" hintText={formatMessage(messages.search)} onChange={this.handleFilterSearchChange}/>
                 <div className="FilterSearch_cancel">
                   {currentFilters.search}
                 </div>

@@ -60,6 +60,7 @@
       "nextBox": "Next Box"
     },
     "filter": {
+      "search": "Search...",
       "all": "Cancel",
       "collected": "Collected",
       "notCollected": "Not Collected",

@@ -60,6 +60,7 @@
       "nextBox": "Boîte Suivante"
     },
     "filter": {
+      "search": "Recherche...",
       "all": "Annuler",
       "collected": "Collectés",
       "notCollected": "Non Collectés",
