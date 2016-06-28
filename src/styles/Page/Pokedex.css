@@ -18,3 +18,14 @@
     height: calc(100% - 2rem);
   }
 }
+
+.FilterSearch {
+  display: inline-block;
+  position: relative;
+}
+
+.FilterSearch_cancel {
+  position: absolute;
+  top: -2px;
+  right: 0;
+}

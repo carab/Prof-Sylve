@@ -10,7 +10,7 @@ import _ from 'lodash';
 import CircularProgress from 'material-ui/CircularProgress';
 
 import Main from './Main';
-import PokemonList from './pokemon/List';
+import PagePokedex from './Page/Pokedex';
 import PokemonPc from 'components/pokemon/Pc';
 import SignComponent from 'components/user/SignComponent';
 import SignoutComponent from 'components/user/SignoutComponent';
@@ -67,7 +67,7 @@ class App extends Component {
           <Route path="/" component={Main}>
             <IndexRoute name="dashboard" component={UserDashboard} onEnter={this.handleAuthRequired}/>
             <Route name="pc" path="pc(/:currentBox)" component={PokemonPc} onEnter={this.handleAuthRequired}/>
-            <Route name="pokedex" path="pokedex" component={PokemonList} onEnter={this.handleAuthRequired}/>
+            <Route name="pokedex" path="pokedex" component={PagePokedex} onEnter={this.handleAuthRequired}/>
             <Route name="friends" path="friends" component={UserFriends} onEnter={this.handleAuthRequired}/>
             <Route name="settings" path="settings" component={UserSettings} onEnter={this.handleAuthRequired}/>
             <Route name="user" path="user/:username" component={UserPublic}/>
