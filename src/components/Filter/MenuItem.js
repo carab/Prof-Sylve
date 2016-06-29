@@ -1,8 +1,9 @@
 'use strict';
 
-import React, {Component} from 'react';
 import _ from 'lodash';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {Link} from 'react-router';
 
 import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
@@ -16,17 +17,17 @@ class FilterMenuItem extends Component {
 
   render() {
     const {text, color, filters} = this.props;
-    const hash = this.getHash();
+    const hash = '';
     const style = {};
     const iconStyle = {};
 
     let toggle = false;
 
-    filters.forEach((filter) => {
+    /*/filters.forEach((filter) => {
       if (filter.hash === hash) {
         toggle = true;
       }
-    });
+    });/*/
 
     if (color) {
       style.color = color;
@@ -38,25 +39,37 @@ class FilterMenuItem extends Component {
 
     return (
       <MenuItem primaryText={text}
-        leftIcon={<Checkbox checked={toggle} iconStyle={iconStyle}/>}
+        leftIcon={<Checkbox checked={this.isFilterActive()} iconStyle={iconStyle}/>}
         style={style}
-        onTouchTap={this.handleFilterToggle}
+        containerElement={<Link to={this.getUrl()} />}
       />
     );
   }
 
-  handleFilterToggle = () => {
-    const {name, options} = this.props;
-    const hash = this.getHash();
+  isFilterActive() {
+    const {name, value, filters} = this.props;
+    const filter = filters.get(name);
 
-    this.props.onFilterToggle({ name, options, hash });
+    return (true && filter && filter.value === value);
   }
 
-  getHash() {
-    const {name, options} = this.props;
-    const hash = name + '-' + _.values(options).join('-');
+  getUrl() {
+    const {name, value, filters} = this.props;
+    const splat = {};
 
-    return hash;
+    filters.forEach((filter) => {
+      splat[filter.name] = filter.value;
+    });
+
+    if (this.isFilterActive()) {
+      delete splat[name];
+    } else {
+      splat[name] = value;
+    }
+
+    return _.reduce(splat, function(path, value, name) {
+      return path + '/' + name + '=' + value;
+    }, '/pokedex');
   }
 }
 

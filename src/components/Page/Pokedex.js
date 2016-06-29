@@ -1,8 +1,9 @@
 'use strict';
 
-import React, {Component, PropTypes} from 'react';
 import _ from 'lodash';
+import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
+import {Link} from 'react-router';
 
 import Paper from 'material-ui/Paper';
 import {List, ListItem} from 'material-ui/List';
@@ -65,10 +66,29 @@ const messages = defineMessages({
 class PagePokedex extends Component {
   constructor(props) {
     super(props);
+  }
 
-    this.state = {
-      filter: 'all',
-    };
+  componentWillMount() {
+    const {splat} = this.props.params;
+    this.parseSplatParam(splat);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const {splat} = nextProps.params;
+
+    if (splat !== this.props.params.splat) {
+      this.parseSplatParam(splat);
+    }
+  }
+
+  parseSplatParam(splat) {
+    this.props.onResetFilters();
+    if (_.isString(splat) && splat.length) {
+      splat.split('/').forEach((hash) => {
+        const [name, value] = hash.split('=');
+        this.props.onAddFilter({ name, value });
+      });
+    }
   }
 
   render() {
@@ -76,10 +96,36 @@ class PagePokedex extends Component {
     const {pokemons, tags, filters} = this.props;
 
     const filtersConfig = {
-      search: {
-        filter: (pokemons, options) => {
-          if (options.query.length) {
-            const query = options.query.toLowerCase();
+      region: {
+        priority: 10, // Very important that's it's first, because the process relies on Pokemon index
+        process: (pokemons, value) => {
+          const region = _.find(Regions, { name: value });
+          return _.slice(pokemons, region.from-1, region.to); // That's why !
+        },
+      },
+      collected: {
+        priority: 20,
+        process: (pokemons, value) => {
+          const collected = (value === '✔');
+
+          return _.filter(pokemons, (pokemon) => {
+            return (pokemon.collected === collected);
+          });
+        },
+      },
+      tag: {
+        priority: 30,
+        process: (pokemons, value) => {
+          return _.filter(pokemons, (pokemon) => {
+            return (pokemon.tag === value);
+          });
+        },
+      },
+      q: {
+        priority: 50,
+        process: (pokemons, value) => {
+          if (value.length) {
+            const query = value.toLowerCase();
             return _.filter(pokemons, (pokemon) => {
               const name = formatMessage({ id: 'pokemon.name.' + pokemon.id }).toLowerCase();
               return (name.indexOf(query) > -1);
@@ -89,47 +135,32 @@ class PagePokedex extends Component {
           }
         },
       },
-      collected: {
-        filter: (pokemons, options) => {
-          return _.filter(pokemons, (pokemon) => {
-            return (pokemon.collected === options.collected);
-          });
-        },
-      },
-      tag: {
-        filter: (pokemons, options) => {
-          return _.filter(pokemons, (pokemon) => {
-            return (pokemon.tag === options.tag);
-          });
-        },
-      },
-      region: {
-        filter: (pokemons, options) => {
-          const region = Regions[options.region];
-          return _.slice(pokemons, region.from-1, region.to);
-        },
-      },
     };
 
-    const currentFilters = {};
-
-    this.filteredPokemons = pokemons;
+    // Build filters to execute from current filters and config
+    const filtersToExecute = [];
 
     filters.forEach((filter) => {
-      this.filteredPokemons = filtersConfig[filter.name].filter(this.filteredPokemons, filter.options);
+      const filterConfig = filtersConfig[filter.name];
 
-      if (filter.name === 'tag') {
-        currentFilters.tags = Colors.tags[filter.options.tag];
-      }
-
-      if (filter.name === 'region') {
-        currentFilters.regions = Colors.default;
-      }
-
-      if (filter.name === 'search' && filter.options.query.length) {
-        currentFilters.search = <IconButton onTouchTap={this.handleFilterSearchCancel}><CancelIcon/></IconButton>;
-      }
+      filtersToExecute.push({
+        priority: filterConfig.priority,
+        process: filterConfig.process,
+        value: filter.value,
+      });
     });
+
+    // Execute filters sorted by priority
+    this.filteredPokemons = _.reduce(_.sortBy(filtersToExecute, 'priority'), (pokemons, filter) => {
+      return filter.process(pokemons, filter.value);
+    }, pokemons);
+
+    let q = '';
+    const qFilter = filters.get('q');
+
+    if (qFilter) {
+      q = qFilter.value;
+    }
 
     return (
       <div className="PokemonList container">
@@ -137,47 +168,47 @@ class PagePokedex extends Component {
           <Toolbar pokemons={pokemons} filteredPokemons={this.filteredPokemons} right={
             <div>
               <div className="FilterSearch">
-                <TextField ref="search" hintText={formatMessage(messages.search)} onChange={this.handleFilterSearchChange}/>
+                <TextField value={q} hintText={formatMessage(messages.search)} onChange={this.handleFilterSearchChange}/>
                 <div className="FilterSearch_cancel">
-                  {currentFilters.search}
+                  {q.length ? <IconButton onTouchTap={this.handleFilterSearchCancel}><CancelIcon/></IconButton> : ''}
                 </div>
               </div>
               <IconMenu iconButtonElement={<IconButton><FilterIcon/></IconButton>}>
-                <MenuItem primaryText={formatMessage(messages.all)} leftIcon={<CancelIcon/>} onTouchTap={this.handleFilterReset}/>
+                <MenuItem primaryText={formatMessage(messages.all)} leftIcon={<CancelIcon/>} containerElement={<Link to="/pokedex" />}/>
                 <Divider/>
                 <FilterMenuItem
                   name="collected"
-                  options={{collected: true}}
+                  value="✔"
                   text={formatMessage(messages.collected)}
                 />
                 <FilterMenuItem
                   name="collected"
-                  options={{collected: false}}
+                  value="❌"
                   text={formatMessage(messages.notCollected)}
                 />
                 <Divider/>
                 <MenuItem
                   primaryText={formatMessage(messages.region)}
-                  leftIcon={<PublicIcon color={currentFilters.regions}/>}
+                  leftIcon={<PublicIcon color={this.isFilterActive('region') ? Colors.default : ''}/>}
                   rightIcon={<ArrowDropRightIcon/>}
                   menuItems={_.map(Regions, (region, index) => (
                     <FilterMenuItem
                       key={region.name}
                       name="region"
-                      options={{region: index}}
+                      value={region.name}
                       text={formatMessage(messages[region.name])}
                     />
                   ))}
                 />
                 <MenuItem
                   primaryText={formatMessage(messages.tag)}
-                  leftIcon={<BookmarkIcon color={currentFilters.tags}/>}
+                  leftIcon={<BookmarkIcon color={this.isFilterActive('tag') ? Colors.default : ''}/>}
                   rightIcon={<ArrowDropRightIcon/>}
                   menuItems={_.map(Colors.tags, (color, name) => (
                     <FilterMenuItem
                       key={name}
                       name="tag"
-                      options={{tag: name}}
+                      value={name}
                       color={color}
                       text={tags && tags[name] && tags[name].title || formatMessage(messages[name])}
                     />
@@ -206,8 +237,11 @@ class PagePokedex extends Component {
     );
   }
 
+  isFilterActive(name) {
+    return (true && this.props.filters.get(name));
+  }
+
   handleFilterSearchCancel = () => {
-    this.refs.search.input.value = '';
     this.handleFilterSearch('');
   }
 
@@ -216,15 +250,28 @@ class PagePokedex extends Component {
   }
 
   handleFilterSearch(query) {
-    const name = 'search';
-    const options = { query };
-    const hash = name + '-' + options.query;
+    const {filters} = this.props;
+    const splat = {};
 
-    this.props.onFilterToggle({ name, options, hash });
+    filters.forEach((filter) => {
+      splat[filter.name] = filter.value;
+    });
+
+    if (query.length) {
+      splat.q = query;
+    } else {
+      delete splat.q;
+    }
+
+    const path = _.reduce(splat, function(path, value, name) {
+      return path + '/' + name + '=' + value;
+    }, '/pokedex');
+
+    this.context.router.push(path);
   }
 
   handleFilterReset = () => {
-    this.props.onFilterReset();
+    this.props.onResetFilters();
   }
 
   noItemRenderer = () => {
@@ -249,6 +296,9 @@ PagePokedex.propTypes = {
   pokemons: PropTypes.array.isRequired,
   intl: intlShape.isRequired,
 };
+PagePokedex.contextTypes = {
+  router: React.PropTypes.object,
+};
 
 const mapStateToProps = (state) => {
   return {
@@ -260,11 +310,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onFilterToggle: (filter) => {
-      dispatch(actions.ui.toggleFilter(filter));
+    onAddFilter: (filter) => {
+      dispatch(actions.ui.addFilter(filter));
     },
-    onFilterReset: () => {
-      dispatch(actions.ui.resetFilter());
+    onResetFilters: () => {
+      dispatch(actions.ui.resetFilters());
     },
   };
 }

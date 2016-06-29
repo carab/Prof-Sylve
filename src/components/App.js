@@ -2,6 +2,7 @@
 
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
+import {Link} from 'react-router';
 import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 import {IntlProvider, addLocaleData} from 'react-intl';
 import frLocaleData from 'react-intl/locale-data/fr';
@@ -67,7 +68,7 @@ class App extends Component {
           <Route path="/" component={Main}>
             <IndexRoute name="dashboard" component={UserDashboard} onEnter={this.handleAuthRequired}/>
             <Route name="pc" path="pc(/:currentBox)" component={PokemonPc} onEnter={this.handleAuthRequired}/>
-            <Route name="pokedex" path="pokedex" component={PagePokedex} onEnter={this.handleAuthRequired}/>
+            <Route name="pokedex" path="pokedex(/**)" component={PagePokedex} onEnter={this.handleAuthRequired}/>
             <Route name="friends" path="friends" component={UserFriends} onEnter={this.handleAuthRequired}/>
             <Route name="settings" path="settings" component={UserSettings} onEnter={this.handleAuthRequired}/>
             <Route name="user" path="user/:username" component={UserPublic}/>

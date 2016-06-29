@@ -17,27 +17,12 @@ export default (state = initial.ui, action) => {
         publicPokedex: action.publicPokedex,
       });
 
-    case 'TOGGLE_FILTER':
-      index = state.filters.findIndex(function(_filter) {
-        return _filter.name === action.filter.name;
-      });
-
-      if (index === -1) {
-        // If the filter is not present, just add it
-        filters = state.filters.push(action.filter);
-      } else if (state.filters.get(index).hash === action.filter.hash) {
-        // If the filter is present and has the same hash, remove it
-        filters = state.filters.splice(index, 1);
-      } else {
-        // If the filter is present and has a different hash, replace it
-        filters = state.filters.set(index, action.filter);
-      }
-
+    case 'ADD_FILTER':
       return Object.assign({}, state, {
-        filters: filters,
+        filters: state.filters.set(action.filter.name, action.filter),
       });
 
-    case 'RESET_FILTER':
+    case 'RESET_FILTERS':
       return Object.assign({}, state, {
         filters: initial.ui.filters,
       });

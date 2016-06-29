@@ -238,14 +238,14 @@ const actions = {
         }
       };
     },
-    toggleFilter(filter) {
+    addFilter(filter) {
       return (dispatch) => {
-        dispatch({ type: 'TOGGLE_FILTER', filter });
+        dispatch({ type: 'ADD_FILTER', filter });
       };
     },
-    resetFilter() {
+    resetFilters() {
       return (dispatch) => {
-        dispatch({ type: 'RESET_FILTER' });
+        dispatch({ type: 'RESET_FILTERS' });
       };
     }
   },

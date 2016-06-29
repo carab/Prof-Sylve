@@ -24,6 +24,6 @@ export default {
   ui: {
     currentBox: 0,
     publicPokedex: null,
-    filters: Immutable.List([]),
+    filters: Immutable.Map(),
   },
 };
