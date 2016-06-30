@@ -82,10 +82,12 @@ class Progress extends Component {
               </Toolbar>
               <div className="Progress_content">
                 {_.map(Regions, (region) => (
-                  <div className="Progress__item" key={region.index}>
-                    <div className="Progress__subtitle">{formatMessage(messages[region.name])}</div>
+                  <Link to={'/pokedex/collected=❌/region=' + region.name} className="Progress__item" key={region.index}>
+                    <div className="Progress__subtitle">
+                      {formatMessage(messages[region.name])}
+                    </div>
                     {this.renderProgress(_.slice(pokedex.pokemons, region.from-1, region.to))}
-                  </div>
+                  </Link>
                 ))}
               </div>
             </Paper>
@@ -99,10 +101,12 @@ class Progress extends Component {
               </Toolbar>
               <div className="Progress_content">
                 {_.map(_.groupBy(pokedex.pokemons, 'tag'), (pokemons, tag) => (
-                  <div className="Progress__item" key={tag}>
-                    <div className="Progress__subtitle">{tags && tags[tag] && tags[tag].title || formatMessage(messages[tag])}</div>
+                  <Link to={'/pokedex/collected=❌/tag=' + tag} className="Progress__item" key={tag}>
+                    <div className="Progress__subtitle">
+                      {tags && tags[tag] && tags[tag].title || formatMessage(messages[tag])}
+                    </div>
                     {this.renderProgress(pokemons, false, Colors.tags[tag])}
-                  </div>
+                  </Link>
                 ))}
               </div>
             </Paper>

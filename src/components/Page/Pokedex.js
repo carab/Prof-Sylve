@@ -14,6 +14,7 @@ import IconButton from 'material-ui/IconButton';
 import FilterIcon from 'material-ui/svg-icons/content/filter-list';
 import PublicIcon from 'material-ui/svg-icons/social/public';
 import BookmarkIcon from 'material-ui/svg-icons/action/bookmark';
+import SearchIcon from 'material-ui/svg-icons/action/search';
 import ArrowDropRightIcon from 'material-ui/svg-icons/navigation-arrow-drop-right';
 import CancelIcon from 'material-ui/svg-icons/navigation/cancel';
 import TextField from 'material-ui/TextField';
@@ -168,6 +169,9 @@ class PagePokedex extends Component {
           <Toolbar pokemons={pokemons} filteredPokemons={this.filteredPokemons} right={
             <div>
               <div className="FilterSearch">
+                <div className="FilterSearch_icon">
+                  <SearchIcon/>
+                </div>
                 <TextField value={q} hintText={formatMessage(messages.search)} onChange={this.handleFilterSearchChange}/>
                 <div className="FilterSearch_cancel">
                   {q.length ? <IconButton onTouchTap={this.handleFilterSearchCancel}><CancelIcon/></IconButton> : ''}

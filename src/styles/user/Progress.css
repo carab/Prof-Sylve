@@ -3,11 +3,19 @@
 }
 
 .Progress__item {
-  margin-bottom: 20px;
+  display: block;
+  color: inherit;
+  padding: 0.5rem 1rem 1rem;
+}
+
+.Progress__item:hover,
+.Progress__item:focus {
+  text-decoration: none;
+  color: inherit;
+  background: #eee;
 }
 
 .Progress_content {
-  padding: 1rem;
 }
 
 .Progress__actions {
@@ -30,4 +38,5 @@
 
 .ProgressBar--main {
   font-size: 3rem;
+  padding: 1rem;
 }

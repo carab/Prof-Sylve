@@ -22,6 +22,13 @@
 .FilterSearch {
   display: inline-block;
   position: relative;
+  padding-left: 28px;
+}
+
+.FilterSearch_icon {
+  position: absolute;
+  left: 0;
+  top: 12px;
 }
 
 .FilterSearch_cancel {
