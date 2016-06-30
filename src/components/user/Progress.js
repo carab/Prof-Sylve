@@ -11,12 +11,16 @@ import LinearProgress from 'material-ui/LinearProgress';
 import FlatButton from 'material-ui/FlatButton';
 import Paper from 'material-ui/Paper';
 import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar';
+import {List, ListItem} from 'material-ui/List';
+import Subheader from 'material-ui/Subheader';
 import OpenIcon from 'material-ui/svg-icons/action/open-in-new';
 import ShareIcon from 'material-ui/svg-icons/social/share';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import PersonAddIcon from 'material-ui/svg-icons/social/person-add';
+import PublicIcon from 'material-ui/svg-icons/social/public';
+import BookmarkIcon from 'material-ui/svg-icons/action/bookmark';
 
 import Colors from '../../utils/colors';
 import Regions from '../../utils/regions';
@@ -75,40 +79,34 @@ class Progress extends Component {
         <div className="row">
           <div className="col-sm-6">
             <Paper zDepth={1} className="Progress__card">
-              <Toolbar>
-                <ToolbarGroup>
-                  <ToolbarTitle text={formatMessage(messages.byRegion)}/>
-                </ToolbarGroup>
-              </Toolbar>
-              <div className="Progress_content">
+              <List>
+                <Subheader>{formatMessage(messages.byRegion)}</Subheader>
                 {_.map(Regions, (region) => (
-                  <Link to={'/pokedex/collected=❌/region=' + region.name} className="Progress__item" key={region.index}>
-                    <div className="Progress__subtitle">
-                      {formatMessage(messages[region.name])}
-                    </div>
-                    {this.renderProgress(_.slice(pokedex.pokemons, region.from-1, region.to))}
-                  </Link>
+                  <ListItem key={region.name}
+                    leftIcon={<PublicIcon color={region.color}/>}
+                    containerElement={<Link to={'pokedex/collected=❌/region=' + region.name}/>}
+                    primaryText={formatMessage(messages[region.name])}
+                    secondaryText={this.renderProgress(_.slice(pokedex.pokemons, region.from-1, region.to), false, region.color)}
+                    secondaryTextLines={2}
+                  />
                 ))}
-              </div>
+              </List>
             </Paper>
           </div>
           <div className="col-sm-6">
             <Paper zDepth={1} className="Progress__card">
-              <Toolbar>
-                <ToolbarGroup>
-                  <ToolbarTitle text={formatMessage(messages.byTag)}/>
-                </ToolbarGroup>
-              </Toolbar>
-              <div className="Progress_content">
-                {_.map(_.groupBy(pokedex.pokemons, 'tag'), (pokemons, tag) => (
-                  <Link to={'/pokedex/collected=❌/tag=' + tag} className="Progress__item" key={tag}>
-                    <div className="Progress__subtitle">
-                      {tags && tags[tag] && tags[tag].title || formatMessage(messages[tag])}
-                    </div>
-                    {this.renderProgress(pokemons, false, Colors.tags[tag])}
-                  </Link>
+              <List>
+                <Subheader>{formatMessage(messages.byTag)}</Subheader>
+                {_.map(_.groupBy(pokedex.pokemons, 'tag'), (pokemons, tag) => (tag === 'none') ? null : (
+                  <ListItem key={tag}
+                    leftIcon={<BookmarkIcon color={Colors.tags[tag]}/>}
+                    containerElement={<Link to={'pokedex/collected=❌/tag=' + tag}/>}
+                    primaryText={tags && tags[tag] && tags[tag].title || formatMessage(messages[tag])}
+                    secondaryText={this.renderProgress(pokemons, false, Colors.tags[tag])}
+                    secondaryTextLines={2}
+                  />
                 ))}
-              </div>
+              </List>
             </Paper>
           </div>
         </div>

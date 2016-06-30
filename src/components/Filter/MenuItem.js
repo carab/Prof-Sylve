@@ -16,30 +16,24 @@ class FilterMenuItem extends Component {
   }
 
   render() {
-    const {text, color, filters} = this.props;
+    const {text, color, checkedIcon, uncheckedIcon} = this.props;
     const hash = '';
     const style = {};
     const iconStyle = {};
 
-    let toggle = false;
-
-    /*/filters.forEach((filter) => {
-      if (filter.hash === hash) {
-        toggle = true;
-      }
-    });/*/
+    const isActive = this.isFilterActive();
 
     if (color) {
-      style.color = color;
+      iconStyle.fill = color;
 
-      if (toggle) {
-        iconStyle.fill = color;
+      if (isActive) {
+        style.color = color;
       }
     }
 
     return (
       <MenuItem primaryText={text}
-        leftIcon={<Checkbox checked={this.isFilterActive()} iconStyle={iconStyle}/>}
+        leftIcon={<Checkbox checked={isActive} iconStyle={iconStyle} checkedIcon={checkedIcon} uncheckedIcon={uncheckedIcon}/>}
         style={style}
         containerElement={<Link to={this.getUrl()} />}
       />

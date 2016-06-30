@@ -10,14 +10,16 @@ import {List, ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
+import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
 import FilterIcon from 'material-ui/svg-icons/content/filter-list';
 import PublicIcon from 'material-ui/svg-icons/social/public';
 import BookmarkIcon from 'material-ui/svg-icons/action/bookmark';
+import BookmarkBorderIcon from 'material-ui/svg-icons/action/bookmark-border';
 import SearchIcon from 'material-ui/svg-icons/action/search';
 import ArrowDropRightIcon from 'material-ui/svg-icons/navigation-arrow-drop-right';
 import CancelIcon from 'material-ui/svg-icons/navigation/cancel';
-import TextField from 'material-ui/TextField';
+import RadioUncheckedIcon from 'material-ui/svg-icons/toggle/radio-button-unchecked';
 
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
@@ -163,6 +165,19 @@ class PagePokedex extends Component {
       q = qFilter.value;
     }
 
+    // Find colors
+    const active = {};
+    const activeRegionFilter = this.getFilterActive('region');
+    const activeTagFilter = this.getFilterActive('tag');
+
+    if (activeRegionFilter) {
+      active.region = _.find(Regions, { name: activeRegionFilter.value });
+    }
+
+    if (activeTagFilter) {
+      active.tag = Colors.tags[activeTagFilter.value];
+    }
+
     return (
       <div className="PokemonList container">
         <Paper zDepth={1} className="PokemonList__paper">
@@ -193,20 +208,23 @@ class PagePokedex extends Component {
                 <Divider/>
                 <MenuItem
                   primaryText={formatMessage(messages.region)}
-                  leftIcon={<PublicIcon color={this.isFilterActive('region') ? Colors.default : ''}/>}
+                  leftIcon={<PublicIcon color={active.region ? active.region.color : ''}/>}
                   rightIcon={<ArrowDropRightIcon/>}
                   menuItems={_.map(Regions, (region, index) => (
                     <FilterMenuItem
                       key={region.name}
                       name="region"
                       value={region.name}
+                      color={region.color}
                       text={formatMessage(messages[region.name])}
+                      checkedIcon={<PublicIcon/>}
+                      uncheckedIcon={<RadioUncheckedIcon/>}
                     />
                   ))}
                 />
                 <MenuItem
                   primaryText={formatMessage(messages.tag)}
-                  leftIcon={<BookmarkIcon color={this.isFilterActive('tag') ? Colors.default : ''}/>}
+                  leftIcon={<BookmarkIcon color={active.tag ? active.tag : ''}/>}
                   rightIcon={<ArrowDropRightIcon/>}
                   menuItems={_.map(Colors.tags, (color, name) => (
                     <FilterMenuItem
@@ -215,6 +233,8 @@ class PagePokedex extends Component {
                       value={name}
                       color={color}
                       text={tags && tags[name] && tags[name].title || formatMessage(messages[name])}
+                      checkedIcon={<BookmarkIcon/>}
+                      uncheckedIcon={<BookmarkBorderIcon/>}
                     />
                   ))}
                 />
@@ -241,8 +261,8 @@ class PagePokedex extends Component {
     );
   }
 
-  isFilterActive(name) {
-    return (true && this.props.filters.get(name));
+  getFilterActive(name) {
+    return this.props.filters.get(name);
   }
 
   handleFilterSearchCancel = () => {
