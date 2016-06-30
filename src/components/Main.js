@@ -46,13 +46,6 @@ const messages = defineMessages({
   signout: {id: 'user.signout'},
 });
 
-const styles = {
-  appbar: {
-    position: 'fixed',
-    zIndex: 1301,
-  },
-};
-
 class Main extends Component {
   constructor(props, context) {
     super(props, context);
@@ -73,7 +66,7 @@ class Main extends Component {
   }
 
   renderLayout() {
-    const {locale, isSignedIn, width} = this.props;
+    const {isSignedIn, width} = this.props;
     const {formatMessage} = this.props.intl;
 
     const currentRoute = this.props.location.pathname;
@@ -82,7 +75,6 @@ class Main extends Component {
     let navItems;
 
     if (isSignedIn) {
-
       navItems = (
         <SelectableList value={currentRoute} onChange={() => true}>
           <ListItem value="/" onTouchTap={this.handleToggleNav} leftIcon={<DashboardIcon/>} containerElement={<Link to="/" />}>{formatMessage(messages.dashboard)}</ListItem>
@@ -115,6 +107,7 @@ class Main extends Component {
       );
     }
 
+    // Handle drawer
     const drawerDocked = !(width === XS || width === SM || width === MD || width === LG);
     let showMenuIconButton = true;
     let drawerOpen = this.state.navOpen;
@@ -123,6 +116,13 @@ class Main extends Component {
       showMenuIconButton = false;
       drawerOpen = true;
     }
+
+    const styles = {
+      appbar: {
+        position: 'fixed',
+        zIndex: this.context.muiTheme.zIndex.drawer + 1,
+      },
+    };
 
     return (
       <div className="prof-sylve">
@@ -140,17 +140,14 @@ class Main extends Component {
         >
           <div className="Drawer">
             {navItems}
-            <SelectableList value={locale} onChange={this.setLocale}>
+            <List>
               <ListItem
                 primaryText={formatMessage(messages.language)}
                 leftIcon={<LanguageIcon />}
                 primaryTogglesNestedList={true}
-                nestedItems={[
-                  <ListItem value="en" primaryText="English" insetChildren={true}/>,
-                  <ListItem value="fr" primaryText="Français" insetChildren={true}/>,
-                ]}
+                nestedItems={_.map({ en: 'English', fr: 'Français' }, this.renderLocaleMenuItem)}
               />
-            </SelectableList>
+            </List>
             <List>
               <Divider/>
               <ListItem leftIcon={<BugReportIcon/>} href="https://github.com/carab/Prof-Sylve/issues" target="blank">{formatMessage(messages.bugs)}</ListItem>
@@ -164,6 +161,17 @@ class Main extends Component {
     );
   }
 
+  renderLocaleMenuItem = (text, locale) => {
+    const isActive = this.isActiveLocale(locale);
+    const style = {};
+
+    if (isActive) {
+      style.color = this.context.muiTheme.palette.accent1Color;
+    }
+
+    return <ListItem key={locale} onTouchTap={() => this.setLocale(locale)} primaryText={text} insetChildren={true} style={style}/>
+  }
+
   handleToggleNavRequest(open) {
     this.setState({ navOpen: open });
   }
@@ -172,14 +180,19 @@ class Main extends Component {
     this.setState({ navOpen: !this.state.navOpen })
   }
 
-  setLocale(event, locale) {
+  isActiveLocale(locale) {
+    return (locale === this.props.locale);
+  }
+
+  setLocale(locale) {
     this.props.setLocale(locale);
   }
 }
 
 Main.displayName = 'Main';
 Main.contextTypes = {
-  router: () => { return React.PropTypes.func.isRequired; },
+  router: PropTypes.object.isRequired,
+  muiTheme: PropTypes.object.isRequired,
 };
 
 Main.propTypes = {
