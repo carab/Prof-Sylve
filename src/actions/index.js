@@ -1,7 +1,6 @@
 import firebase from 'firebase';
 
-import UserUpdate from '../utils/user-update';
-
+// Initialize firebase
 const config = {
   apiKey: 'AIzaSyAa2dt9-n6blULUhfZ1WEm7AC9L_V8f0QM',
   authDomain: 'prof-sylve.firebaseapp.com',
@@ -37,62 +36,20 @@ const actions = {
       return (dispatch) => {
         firebase.auth().onAuthStateChanged((authData) => {
           if (authData) {
-            function listens() {
-              let counter = 2;
-
-              function setup() {
-                if (--counter === 0) {
-                  dispatch({
-                    type: 'SET_AUTH',
-                    auth: {
-                      currently: 'AUTH_AUTHENTICATED',
-                      isReady: true,
-                      isSignedIn: true,
-                      data: authData,
-                    },
-                  });
-                }
-              }
-
-              getUserRef().child('profile').on('value', (snapshot) => {
-                dispatch({
-                  type: 'SET_PROFILE',
-                  profile: snapshot.val(),
-                });
-                setup();
+            getUserRef().child('profile').on('value', (snapshot) => {
+              dispatch({
+                type: 'SET_PROFILE',
+                profile: snapshot.val(),
               });
 
-              getUserRef().child('pokedex').on('value', (snapshot) => {
-                dispatch({
-                  type: 'SET_POKEDEX',
-                  pokedex: snapshot.val(),
-                });
-                setup();
-              });
-            }
-
-            getRootRef().child('config/version').once('value', (snapshot) => {
-              const version = snapshot.val();
-
-              getUserRef().child('profile').once('value', (snapshot) => {
-                const profile = snapshot.val();
-
-                getUserRef().child('pokedex').once('value', (snapshot) => {
-                  const pokedex = snapshot.val();
-                  const user = { profile, pokedex };
-
-                  if (UserUpdate.check(user, version)) {
-                    getRootRef().child('pokemons').once('value', (snapshot) => {
-                      const pokemons = snapshot.val();
-
-                      UserUpdate.perform(user, pokemons).then(() => {
-                        getUserRef().set(user).then(listens);
-                      });
-                    });
-                  } else {
-                    listens();
-                  }
-                });
+              dispatch({
+                type: 'SET_AUTH',
+                auth: {
+                  currently: 'AUTH_AUTHENTICATED',
+                  isReady: true,
+                  isSignedIn: true,
+                  data: authData,
+                },
               });
             });
           } else {

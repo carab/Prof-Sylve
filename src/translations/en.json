@@ -6,7 +6,7 @@
   "nav": {
     "dashboard": "Dashboard",
     "byBox": "PC",
-    "byList": "Pokédex",
+    "byList": "List",
     "friends": "My Friends",
     "home": "Home",
     "language": "Language",
@@ -22,7 +22,7 @@
     "userNotFound": "This account does not exist."
   },
   "user": {
-    "settings": "Settings",
+    "settings": "My Settings",
     "signout": "Sign out",
     "signin": "Sign in",
     "signinSubtitle": "If you already have started your biggest adventure !",
@@ -47,7 +47,7 @@
     "progress": "Progress",
     "progressOf": "Progress of {username}",
     "openPc": "Open PC",
-    "openPokedex": "Open Pokédex",
+    "openPokedex": "Open List",
     "byRegion": "By Region",
     "byTag": "By Tag"
   },

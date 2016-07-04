@@ -15,7 +15,7 @@ export default {
   },
   pokedex: {
     settings: {
-      username: '',
+      username: undefined,
       public: false,
       tags: {},
     },

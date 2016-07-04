@@ -66,45 +66,36 @@ class Main extends Component {
   }
 
   renderLayout() {
-    const {isSignedIn, width} = this.props;
+    const {isSignedIn, username, width} = this.props;
     const {formatMessage} = this.props.intl;
 
     const currentRoute = this.props.location.pathname;
 
-    let menu;
+    let appbarRight;
     let navItems;
+    let userItems;
+
+    if (username) {
+      navItems = [
+        <ListItem key="dashboard" leftIcon={<DashboardIcon/>} containerElement={<Link to={`/pokedex/${username}`}/>}>{formatMessage(messages.dashboard)}</ListItem>,
+        <ListItem key="pc" leftIcon={<ViewModuleIcon/>} containerElement={<Link to={`/pokedex/${username}/pc`}/>}>{formatMessage(messages.byBox)}</ListItem>,
+        <ListItem key="list" leftIcon={<ListIcon/>} containerElement={<Link to={`/pokedex/${username}/list`}/>}>{formatMessage(messages.byList)}</ListItem>,
+      ];
+    }
 
     if (isSignedIn) {
-      navItems = (
-        <SelectableList value={currentRoute} onChange={() => true}>
-          <ListItem value="/" onTouchTap={this.handleToggleNav} leftIcon={<DashboardIcon/>} containerElement={<Link to="/" />}>{formatMessage(messages.dashboard)}</ListItem>
-          <ListItem value="/pc" onTouchTap={this.handleToggleNav} leftIcon={<ViewModuleIcon/>} containerElement={<Link to="/pc" />}>{formatMessage(messages.byBox)}</ListItem>
-          <ListItem value="/pokedex" onTouchTap={this.handleToggleNav} leftIcon={<ListIcon/>} containerElement={<Link to="/pokedex" />}>{formatMessage(messages.byList)}</ListItem>
-          <ListItem value="/friends" onTouchTap={this.handleToggleNav} leftIcon={<PeopleIcon/>} containerElement={<Link to="/friends" />}>{formatMessage(messages.friends)}</ListItem>
-          <Divider/>
-        </SelectableList>
-      );
+      userItems = [
+        <ListItem key="friends" leftIcon={<PeopleIcon/>} containerElement={<Link to="/friends"/>}>{formatMessage(messages.friends)}</ListItem>,
+        <ListItem key="settings" leftIcon={<SettingsIcon/>} containerElement={<Link to="/settings"/>}>{formatMessage(messages.settings)}</ListItem>,
+      ];
 
-      menu = (
-        <IconMenu
-          iconButtonElement={
-            <IconButton><MoreVertIconIcon/></IconButton>
-          }
-          targetOrigin={{horizontal: 'right', vertical: 'top'}}
-          anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-        >
-          <MenuItem primaryText={formatMessage(messages.settings)} leftIcon={<SettingsIcon/>} containerElement={<Link to="/settings" />}/>
-          <Divider/>
-          <MenuItem primaryText={formatMessage(messages.signout)} leftIcon={<PowerSettingsNewIcon/>} containerElement={<Link to="/signout" />}/>
-        </IconMenu>
+      appbarRight = (
+        <IconButton containerElement={<Link to="/signout" />}><PowerSettingsNewIcon/></IconButton>
       );
     } else {
-      navItems = (
-        <SelectableList value={currentRoute} onChange={() => true}>
-          <ListItem value="/sign" onTouchTap={this.handleToggleNav} leftIcon={<HomeIcon/>} containerElement={<Link to="/sign" />}>{formatMessage(messages.home)}</ListItem>
-          <Divider/>
-        </SelectableList>
-      );
+      userItems = [
+        <ListItem key="sign" onTouchTap={this.handleToggleNav} leftIcon={<HomeIcon/>} containerElement={<Link to="/sign" />}>{formatMessage(messages.home)}</ListItem>,
+      ];
     }
 
     // Handle drawer
@@ -129,7 +120,7 @@ class Main extends Component {
         <AppBar
           title={formatMessage(messages.app)}
           onLeftIconButtonTouchTap={this.handleToggleNav}
-          iconElementRight={menu}
+          iconElementRight={appbarRight}
           showMenuIconButton={showMenuIconButton}
           style={styles.appbar}
         />
@@ -139,17 +130,17 @@ class Main extends Component {
           onRequestChange={this.handleToggleNavRequest}
         >
           <div className="Drawer">
-            {navItems}
-            <List>
+            <List onChange={this.handleToggleNav}>
+              {navItems}
+              <Divider/>
+              {userItems}
+              <Divider/>
               <ListItem
                 primaryText={formatMessage(messages.language)}
                 leftIcon={<LanguageIcon />}
                 primaryTogglesNestedList={true}
                 nestedItems={_.map({ en: 'English', fr: 'Français' }, this.renderLocaleMenuItem)}
               />
-            </List>
-            <List>
-              <Divider/>
               <ListItem leftIcon={<BugReportIcon/>} href="https://github.com/carab/Prof-Sylve/issues" target="blank">{formatMessage(messages.bugs)}</ListItem>
             </List>
           </div>
@@ -205,6 +196,7 @@ const mapStateToProps = (state) => {
   return {
     isSignedIn: state.auth.isSignedIn,
     locale: state.profile.locale,
+    username: state.pokedex.settings.username
   };
 };
 

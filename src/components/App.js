@@ -1,18 +1,20 @@
 'use strict';
 
+import _ from 'lodash';
+
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
 import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 import {IntlProvider, addLocaleData} from 'react-intl';
 import frLocaleData from 'react-intl/locale-data/fr';
-import _ from 'lodash';
 
 import CircularProgress from 'material-ui/CircularProgress';
 
 import Main from './Main';
-import PagePokedex from './Page/Pokedex';
+import PageList from './Page/List';
 import PokemonPc from 'components/pokemon/Pc';
+import Pokedex from 'components/user/Pokedex';
 import SignComponent from 'components/user/SignComponent';
 import SignoutComponent from 'components/user/SignoutComponent';
 import UserSettings from 'components/user/SettingsComponent';
@@ -66,18 +68,30 @@ class App extends Component {
       <IntlProvider locale={locale} messages={this.getMessages(locale)}>
         <Router history={browserHistory}>
           <Route path="/" component={Main}>
-            <IndexRoute name="dashboard" component={UserDashboard} onEnter={this.handleAuthRequired}/>
-            <Route name="pc" path="pc(/:currentBox)" component={PokemonPc} onEnter={this.handleAuthRequired}/>
-            <Route name="pokedex" path="pokedex(/**)" component={PagePokedex} onEnter={this.handleAuthRequired}/>
+            <IndexRoute name="sign" component={SignComponent} onEnter={this.handleAuthenticated}/>
+            <Route name="signout" path="signout" component={SignoutComponent}/>
+            <Route path="pokedex/:username" component={Pokedex}>
+              <IndexRoute name="dashboard" component={UserDashboard}/>
+              <Route name="pc" path="pc(/:currentBox)" component={PokemonPc}/>
+              <Route name="list" path="list(/**)" component={PageList}/>
+            </Route>
             <Route name="friends" path="friends" component={UserFriends} onEnter={this.handleAuthRequired}/>
             <Route name="settings" path="settings" component={UserSettings} onEnter={this.handleAuthRequired}/>
-            <Route name="user" path="user/:username" component={UserPublic}/>
-            <Route name="sign" path="sign" component={SignComponent}/>
-            <Route name="signout" path="signout" component={SignoutComponent} onEnter={this.handleAuthRequired}/>
           </Route>
         </Router>
       </IntlProvider>
     );
+  }
+
+  handleAuthenticated = (nextState, replace) => {
+    const {isSignedIn, username} = this.props;
+
+    if (isSignedIn && username) {
+      replace({
+        pathname: '/pokedex/' + username,
+        state: { nextPathname: nextState.location.pathname },
+      });
+    }
   }
 
   handleAuthRequired(nextState, replace) {
@@ -137,17 +151,14 @@ class App extends Component {
 }
 
 App.displayName = 'App';
-App.propTypes = {
-  isReady: PropTypes.bool.isRequired,
-  isSignedIn: PropTypes.bool.isRequired,
-  locale: PropTypes.string,
-};
+App.propTypes = {};
 
 const mapStateToProps = (state) => {
   return {
     isReady: state.auth.isReady,
     isSignedIn: state.auth.isSignedIn,
     locale: state.profile.locale,
+    username: state.pokedex.settings.username,
   };
 };
 

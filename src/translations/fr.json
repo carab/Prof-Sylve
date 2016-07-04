@@ -6,7 +6,7 @@
   "nav": {
     "dashboard": "Résumé",
     "byBox": "PC",
-    "byList": "Pokédex",
+    "byList": "Liste",
     "friends": "Mes Amis",
     "home": "Accueil",
     "language": "Langue",
@@ -22,7 +22,7 @@
     "userNotFound": "Ce compte n'existe pas."
   },
   "user": {
-    "settings": "Paramètres",
+    "settings": "Mes Paramètres",
     "signout": "Déconnexion",
     "signin": "Se connecter",
     "signinSubtitle": "Si tu as déjà commencé ta plus grande aventure !",
