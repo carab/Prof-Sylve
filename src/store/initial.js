@@ -3,7 +3,6 @@ import Immutable from 'immutable';
 export default {
   feedback: [],
   auth: {
-    currently: 'AUTH_GUEST',
     ready: false,
     signedIn: false,
     data: {},
@@ -15,18 +14,12 @@ export default {
     email: undefined,
     friends: [],
   },
-  pokedex: {
-    settings: {
-      public: false,
-      tags: {},
-    },
-    pokemons: [],
-  },
   ui: {
     pokedexes: Immutable.Map(),
-    currentPokedex: undefined,
+    currentUsername: undefined,
     currentBox: 0,
     publicPokedex: null,
     filters: Immutable.Map(),
+    title: undefined,
   },
 };

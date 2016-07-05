@@ -48,7 +48,7 @@ class FilterMenuItem extends Component {
   }
 
   getUrl() {
-    const {name, value, filters} = this.props;
+    const {name, value, filters, currentUsername} = this.props;
     const splat = {};
 
     filters.forEach((filter) => {
@@ -63,7 +63,7 @@ class FilterMenuItem extends Component {
 
     return _.reduce(splat, function(path, value, name) {
       return path + '/' + name + '=' + value;
-    }, '/pokedex');
+    }, `/pokedex/${currentUsername}/list`);
   }
 }
 
@@ -73,6 +73,7 @@ FilterMenuItem.propTypes = {};
 const mapStateToProps = (state) => {
   return {
     filters: state.ui.filters,
+    currentUsername: state.ui.currentUsername,
   };
 };
 

@@ -9,7 +9,15 @@ export default (state = initial.ui, action) => {
       return Object.assign({}, state, action.payload);
 
     case 'SET_POKEDEX':
-      return Object.assign({}, state, action.payload);
+      return Object.assign({}, state, {
+        pokedexes: state.pokedexes.set(action.meta.username, action.payload),
+      });
+
+    case 'SET_CURRENT_USERNAME':
+      return Object.assign({}, state, { currentUsername: action.payload });
+
+    case 'SET_TITLE':
+      return Object.assign({}, state, { title: action.payload });
 
     case 'ADD_FILTER':
       return Object.assign({}, state, {

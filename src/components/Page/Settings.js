@@ -48,7 +48,7 @@ class Settings extends Component {
     const {settings, profile} = this.props;
     const tags = settings.tags || {};
     const errors = {};
-    
+
     if (settings.public && !profile.username) {
       errors.username = formatMessage(messages.missingUsername);
     }
@@ -123,8 +123,10 @@ Settings.propTypes = {
 };
 
 const mapStateToProps = (state) => {
+  const pokedex = state.ui.pokedexes.get(state.profile.username);
+
   return {
-    settings: state.pokedex.settings,
+    settings: pokedex.settings,
     profile: state.profile,
   };
 };

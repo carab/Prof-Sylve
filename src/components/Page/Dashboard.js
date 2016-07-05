@@ -25,14 +25,14 @@ import BookmarkIcon from 'material-ui/svg-icons/action/bookmark';
 import Colors from '../../utils/colors';
 import Regions from '../../utils/regions';
 
-import 'styles/user/Progress.css';
+import 'styles/Page/Dashboard.css';
 
 const messages = defineMessages({
   progress: {id: 'dashboard.progress'},
-  progressOf: {id: 'dashboard.progressOf'},
+  shareMessage: {id: 'dashboard.share.message'},
   byRegion: {id: 'dashboard.byRegion'},
   openPc: {id: 'dashboard.openPc'},
-  openPokedex: {id: 'dashboard.openPokedex'},
+  openList: {id: 'dashboard.openList'},
   byTag: {id: 'dashboard.byTag'},
 
   kanto: {id: 'pokemon.region.kanto'},
@@ -56,13 +56,13 @@ const messages = defineMessages({
   brown: {id: 'pokemon.tag.color.brown'},
 });
 
-class Progress extends Component {
+class Dashboard extends Component {
   render() {
     const {formatMessage} = this.props.intl;
-    const {auth, pokedex, profile} = this.props;
+    const {auth, pokedex, currentUsername, profile} = this.props;
 
-    const shared = (pokedex.username !== profile.username);
-    const path = `/pokedex/${pokedex.username}`;
+    const shared = (currentUsername !== profile.username);
+    const path = `/pokedex/${currentUsername}`;
 
     // Build absolute URL
     const a = document.createElement('a');
@@ -74,27 +74,33 @@ class Progress extends Component {
       addFriendButton = <IconButton><PersonAddIcon/></IconButton>;
     }
 
+    const { progress } = this.calculateProgress(pokedex.pokemons);
+    const message = encodeURIComponent(formatMessage(messages.shareMessage, { progress }));
+    const encodedUrl = encodeURIComponent(url);
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&t=${message}`;
+    const twitterUrl = `https://twitter.com/intent/tweet?source=${encodedUrl}&text=${message}%20${encodedUrl}`;
+
     return (
       <div className="Progress container">
         <Paper zDepth={1} className="Progress__card">
           <Toolbar>
             <ToolbarGroup>
-              <ToolbarTitle text={shared ? formatMessage(messages.progressOf, { username: pokedex.username }) : formatMessage(messages.progress)}/>
+              <ToolbarTitle text={formatMessage(messages.progress)}/>
             </ToolbarGroup>
             <ToolbarGroup float="right">
               {addFriendButton}
               <IconMenu iconButtonElement={<IconButton><ShareIcon/></IconButton>}>
-                <MenuItem primaryText="Facebook" leftIcon={<FontAwesome name="facebook-official"/>} href="http://google.fr" target="_blank"/>
-                <MenuItem primaryText="Twitter" leftIcon={<FontAwesome name="twitter"/>} href="http://google.fr" target="_blank"/>
+                <MenuItem primaryText="Facebook" href={facebookUrl} target="_blank"/>
+                <MenuItem primaryText="Twitter" href={twitterUrl} target="_blank"/>
               </IconMenu>
             </ToolbarGroup>
-          </Toolbar><FontAwesome name="twitter"/>
+          </Toolbar>
           <div className="Progress_content">
             {this.renderProgress(pokedex.pokemons, true)}
           </div>
           <div className="Progress__actions">
             <FlatButton secondary={true} label={formatMessage(messages.openPc)} containerElement={<Link to={`${path}/pc`}/>}/>
-            <FlatButton secondary={true} label={formatMessage(messages.openPokedex)} containerElement={<Link to={`${path}/list`}/>}/>
+            <FlatButton secondary={true} label={formatMessage(messages.openList)} containerElement={<Link to={`${path}/list`}/>}/>
           </div>
         </Paper>
         <div className="row">
@@ -135,12 +141,18 @@ class Progress extends Component {
     );
   }
 
-  renderProgress(pokemons, main, color) {
+  calculateProgress(pokemons) {
     const collected = _.reduce(pokemons, (collected, pokemon) => {
       return collected + (pokemon.collected ? 1 : 0);
     }, 0);
 
     const progress = Math.ceil(10 * collected / pokemons.length * 100)/10;
+
+    return { collected, progress };
+  }
+
+  renderProgress(pokemons, main, color) {
+    const { collected, progress } = this.calculateProgress(pokemons);
 
     return (
       <div className={'ProgressBar '+ (main ? 'ProgressBar--main' : '')}>
@@ -154,14 +166,18 @@ class Progress extends Component {
   }
 }
 
-Progress.displayName = 'UserProgress';
-Progress.propTypes = {};
+Dashboard.displayName = 'Dashboard';
+Dashboard.propTypes = {};
 
 const mapStateToProps = (state) => {
+  const currentPokedex = state.ui.pokedexes.get(state.ui.currentUsername);
+
   return {
     auth: state.auth,
     profile: state.profile,
+    pokedex: currentPokedex,
+    currentUsername: state.ui.currentUsername,
   };
 };
 
-export default injectIntl(connect(mapStateToProps)(Progress));
+export default injectIntl(connect(mapStateToProps)(Dashboard));

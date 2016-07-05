@@ -4,6 +4,7 @@
     "save": "Save"
   },
   "nav": {
+    "back": "Back",
     "dashboard": "Dashboard",
     "byBox": "PC",
     "byList": "List",
@@ -22,6 +23,10 @@
     "userNotFound": "This account does not exist."
   },
   "user": {
+    "pokedex": {
+      "mine": "My Pokédex",
+      "of": "Pokédex of {username}"
+    },
     "settings": "My Settings",
     "signout": "Sign out",
     "signin": "Sign in",
@@ -47,9 +52,12 @@
     "progress": "Progress",
     "progressOf": "Progress of {username}",
     "openPc": "Open PC",
-    "openPokedex": "Open List",
+    "openList": "Open List",
     "byRegion": "By Region",
-    "byTag": "By Tag"
+    "byTag": "By Tag",
+    "share": {
+      "message": "{progress}% completed Pokédex!"
+    }
   },
   "pokemon": {
     "toolbar": {

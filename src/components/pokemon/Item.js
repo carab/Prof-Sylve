@@ -18,7 +18,7 @@ import LaunchIcon from 'material-ui/svg-icons/action/launch';
 import BookmarkIcon from 'material-ui/svg-icons/action/bookmark';
 import ViewModuleIcon from 'material-ui/svg-icons/action/view-module';
 
-import {BOX_SIZE} from './Pc';
+import {BOX_SIZE} from '../Page/Pc';
 
 import Colors from '../../utils/colors';
 import actions from '../../actions';
@@ -70,7 +70,7 @@ class PokemonComponent extends Component {
   }
 
   render() {
-    const {pokemon, tags, type, mode} = this.props;
+    const {pokemon, tags, type, mode, currentUsername, profile} = this.props;
     const {formatMessage} = this.props.intl;
 
     const name = formatMessage({ id: 'pokemon.name.' + pokemon.id });
@@ -97,33 +97,37 @@ class PokemonComponent extends Component {
       pcMenuItem = <MenuItem primaryText={formatMessage(messages.inPc)} leftIcon={<ViewModuleIcon/>} containerElement={<Link to={`/pc/${box}`} />}/>;
     }
 
-    const menu = (
-      <IconMenu
-        className="PokemonItem__menu"
-        iconButtonElement={menuButton}
-        targetOrigin={targetOrigin}
-        anchorOrigin={anchorOrigin}
-        value={pokemon.tag}
-      >
-        <MenuItem primaryText={formatMessage(messages.collected)} leftIcon={<Checkbox checked={pokemon.collected}/>} onTouchTap={this.handleCollected}/>
-        {pcMenuItem}
-        <MenuItem primaryText={formatMessage(messages.externalService)} leftIcon={<LaunchIcon/>} href={externalUrl} target="_blank"/>
-        <Divider/>
-        <MenuItem primaryText={formatMessage(messages.none)}
-          leftIcon={<BookmarkIcon color={Colors.default}/>}
-          onTouchTap={this.handleTag.bind(this, 'none')}
-          value="none"
-        />
-        {_.map(Colors.tags, (color, name) => (
-          <MenuItem primaryText={tags && tags[name] && tags[name].title || formatMessage(messages[name])}
-            key={name}
-            leftIcon={<BookmarkIcon color={color}/>}
-            onTouchTap={this.handleTag.bind(this, name)}
-            value={name}
+    let menu;
+
+    if (currentUsername === profile.username) {
+      menu = (
+        <IconMenu
+          className="PokemonItem__menu"
+          iconButtonElement={menuButton}
+          targetOrigin={targetOrigin}
+          anchorOrigin={anchorOrigin}
+          value={pokemon.tag}
+        >
+          <MenuItem primaryText={formatMessage(messages.collected)} leftIcon={<Checkbox checked={pokemon.collected}/>} onTouchTap={this.handleCollected}/>
+          <MenuItem primaryText={formatMessage(messages.externalService)} leftIcon={<LaunchIcon/>} href={externalUrl} target="_blank"/>
+          {pcMenuItem}
+          <Divider/>
+          <MenuItem primaryText={formatMessage(messages.none)}
+            leftIcon={<BookmarkIcon color={Colors.default}/>}
+            onTouchTap={this.handleTag.bind(this, 'none')}
+            value="none"
           />
-        ))}
-      </IconMenu>
-    );
+          {_.map(Colors.tags, (color, name) => (
+            <MenuItem primaryText={tags && tags[name] && tags[name].title || formatMessage(messages[name])}
+              key={name}
+              leftIcon={<BookmarkIcon color={color}/>}
+              onTouchTap={this.handleTag.bind(this, name)}
+              value={name}
+            />
+          ))}
+        </IconMenu>
+      );
+    }
 
     if (type === 'tile') {
       const image = 'https://raw.githubusercontent.com/carab/Prof-Sylve-Sprites/master/sprites/' + pokemon.name + '.gif';
@@ -227,9 +231,13 @@ PokemonComponent.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
+  const currentPokedex = state.ui.pokedexes.get(state.ui.currentUsername);
+
   return {
-    pokemon: state.pokedex.pokemons[ownProps.id-1],
-    tags: state.pokedex.settings.tags,
+    profile: state.profile,
+    currentUsername: state.ui.currentUsername,
+    pokemon: currentPokedex.pokemons[ownProps.id-1],
+    tags: currentPokedex.settings.tags,
     locale: state.profile.locale,
   };
 };

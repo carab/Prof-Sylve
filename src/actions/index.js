@@ -1,6 +1,8 @@
 import firebase from 'firebase';
 
 import './configure-firebase';
+
+import auth from './auth';
 import profile from './profile';
 import ui from './ui';
 //import pokedex from './pokedex';
@@ -29,79 +31,7 @@ const actions = {
   profile,
   ui,
   //pokedex,
-  auth: {
-    listens() {
-      return (dispatch) => {
-        firebase.auth().onAuthStateChanged((authData) => {
-          if (authData) {
-            getUserRef().child('profile').on('value', (snapshot) => {
-              dispatch({
-                type: 'SET_PROFILE',
-                profile: snapshot.val(),
-              });
-
-              dispatch({
-                type: 'SET_AUTH',
-                auth: {
-                  currently: 'AUTH_AUTHENTICATED',
-                  ready: true,
-                  signedIn: true,
-                  data: authData,
-                },
-              });
-            });
-          } else {
-            dispatch({
-              type: 'SET_AUTH',
-              auth: {
-                currently: 'AUTH_GUEST',
-                ready: true,
-                signedIn: false,
-                data: {},
-              },
-            });
-          }
-        });
-      };
-    },
-    signup(email, password, locale) {
-      return (dispatch) => {
-        return firebase.auth().createUserWithEmailAndPassword(email, password)
-          .then((user) => {
-            firebase.database().ref().child('users').child(user.uid).set({
-              profile: {
-                email: user.email,
-                uid: user.uid,
-                locale,
-              },
-            }).then(() => {
-              firebase.auth().signInWithEmailAndPassword(email, password);
-            });
-          }).catch((error) => {
-            dispatch({
-              type: 'SET_AUTH_ERROR',
-              errors: { signup: error },
-            });
-          });
-      };
-    },
-    signin(email, password) {
-      return (dispatch) => {
-        return firebase.auth().signInWithEmailAndPassword(email, password)
-          .catch((error) => {
-            dispatch({
-              type: 'SET_AUTH_ERROR',
-              errors: { signin: error },
-            });
-          });
-      };
-    },
-    signout() {
-      return () => {
-        return firebase.auth().signOut();
-      };
-    },
-  },
+  auth,
   pokedex: {
     setCollected(index, collected) {
       return () => {

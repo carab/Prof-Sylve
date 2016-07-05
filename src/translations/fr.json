@@ -4,6 +4,7 @@
     "save": "Sauvegarder"
   },
   "nav": {
+    "back": "Retour",
     "dashboard": "Résumé",
     "byBox": "PC",
     "byList": "Liste",
@@ -22,6 +23,10 @@
     "userNotFound": "Ce compte n'existe pas."
   },
   "user": {
+    "pokedex": {
+      "mine": "Mon Pokédex",
+      "of": "Pokédex de {username}"
+    },
     "settings": "Mes Paramètres",
     "signout": "Déconnexion",
     "signin": "Se connecter",
@@ -45,11 +50,13 @@
   "dashboard": {
     "notVisible": "Ce Pokédex n'existe pas ou n'est pas visible.",
     "progress": "Avancement",
-    "progressOf": "Avancement de {username}",
-    "openPc": "Ouvrir le PC",
-    "openPokedex": "Ouvrir le Pokédex",
+    "openPc": "Voir le PC",
+    "openList": "Voir la liste",
     "byRegion": "Par Région",
-    "byTag": "Par Tag"
+    "byTag": "Par Tag",
+    "share": {
+      "message": "Pokédex complété à {progress}% !"
+    }
   },
   "pokemon": {
     "toolbar": {

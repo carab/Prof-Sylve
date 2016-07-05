@@ -4,10 +4,8 @@ import React, {Component, PropTypes} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
+import Helmet from 'react-helmet';
 
-import DocumentTitle from 'react-document-title';
-
-import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import Divider from 'material-ui/Divider';
 import IconMenu from 'material-ui/IconMenu';
@@ -24,8 +22,11 @@ import BugReportIcon from 'material-ui/svg-icons/action/bug-report';
 import LanguageIcon from 'material-ui/svg-icons/action/language';
 import PeopleIcon from 'material-ui/svg-icons/social/people';
 import HomeIcon from 'material-ui/svg-icons/action/home';
+import BackIcon from 'material-ui/svg-icons/navigation/arrow-back';
 
-import withWidth, {XS, SM, MD, LG} from '../utils/with-width';
+import Appbar from './Ui/Appbar';
+
+import withWidth, {LG} from '../utils/with-width';
 import actions from '../actions';
 
 import 'bootstrap/dist/css/bootstrap.css';
@@ -34,6 +35,7 @@ import 'styles/App.css';
 const messages = defineMessages({
   app: {id: 'app'},
   dashboard: {id: 'nav.dashboard'},
+  back: {id: 'nav.back'},
   home: {id: 'nav.home'},
   byBox: {id: 'nav.byBox'},
   byList: {id: 'nav.byList'},
@@ -57,71 +59,59 @@ class Main extends Component {
 
   render() {
     return (
-      <DocumentTitle title="Prof. Sylve">
+      <div className="Main">
+        <Helmet title="Prof. Sylve" onChangeClientState={this.handleChangeTitle}/>
         {this.renderLayout()}
-      </DocumentTitle>
+      </div>
     );
   }
 
+  handleChangeTitle = (newState) => {
+    this.props.setTitle(newState.title);
+  }
+
   renderLayout() {
-    const {signedIn, profile, params, width} = this.props;
+    const {signedIn, profile, currentUsername, params, width} = this.props;
     const {formatMessage} = this.props.intl;
 
-    let appbarRight;
-    let navItems;
-    let userItems;
+    let navItems = [];
 
-    const username = params.username || profile.username;
-
-    if (username) {
-      navItems = [
-        <ListItem key="dashboard" leftIcon={<DashboardIcon/>} containerElement={<Link to={`/pokedex/${username}`}/>}>{formatMessage(messages.dashboard)}</ListItem>,
-        <ListItem key="pc" leftIcon={<ViewModuleIcon/>} containerElement={<Link to={`/pokedex/${username}/pc`}/>}>{formatMessage(messages.byBox)}</ListItem>,
-        <ListItem key="list" leftIcon={<ListIcon/>} containerElement={<Link to={`/pokedex/${username}/list`}/>}>{formatMessage(messages.byList)}</ListItem>,
-      ];
+    if (!signedIn) {
+      navItems.push(this.renderNavMenuItem(<HomeIcon/>, '/', formatMessage(messages.home)));
+      navItems.push(<Divider key="divider1"/>);
     }
 
-    if (signedIn) {
-      userItems = [
-        <ListItem key="friends" leftIcon={<PeopleIcon/>} containerElement={<Link to="/friends"/>}>{formatMessage(messages.friends)}</ListItem>,
-        <ListItem key="settings" leftIcon={<SettingsIcon/>} containerElement={<Link to="/settings"/>}>{formatMessage(messages.settings)}</ListItem>,
-      ];
+    if (currentUsername) {
+      if (signedIn && currentUsername !== profile.username) {
+        navItems.push(this.renderNavMenuItem(<BackIcon/>, `/pokedex/${profile.username}/dashboard`, formatMessage(messages.back)));
+        navItems.push(<Divider key="divider2"/>);
+      }
 
-      appbarRight = (
-        <IconButton containerElement={<Link to="/signout" />}><PowerSettingsNewIcon/></IconButton>
-      );
-    } else {
-      userItems = [
-        <ListItem key="sign" onTouchTap={this.handleToggleNav} leftIcon={<HomeIcon/>} containerElement={<Link to="/sign" />}>{formatMessage(messages.home)}</ListItem>,
-      ];
+      navItems.push(this.renderNavMenuItem(<DashboardIcon/>, `/pokedex/${currentUsername}/dashboard`, formatMessage(messages.dashboard)));
+      navItems.push(this.renderNavMenuItem(<ViewModuleIcon/>, `/pokedex/${currentUsername}/pc`, formatMessage(messages.byBox)));
+      navItems.push(this.renderNavMenuItem(<ListIcon/>, `/pokedex/${currentUsername}/list`, formatMessage(messages.byList)));
+      navItems.push(<Divider key="divider3"/>);
+
+      if (signedIn && currentUsername === profile.username) {
+        //navItems.push(this.renderNavMenuItem(<PeopleIcon/>, '/friends', formatMessage(messages.friends)));
+        navItems.push(this.renderNavMenuItem(<SettingsIcon/>, '/settings', formatMessage(messages.settings)));
+        navItems.push(<Divider key="divider4"/>);
+      }
     }
 
     // Handle drawer
-    const drawerDocked = !(width === XS || width === SM || width === MD || width === LG);
-    let showMenuIconButton = true;
+    const drawerDocked = width > LG;
+    let showMenuButton = true;
     let drawerOpen = this.state.navOpen;
 
     if (drawerDocked) {
-      showMenuIconButton = false;
+      showMenuButton = false;
       drawerOpen = true;
     }
 
-    const styles = {
-      appbar: {
-        position: 'fixed',
-        zIndex: this.context.muiTheme.zIndex.drawer + 1,
-      },
-    };
-
     return (
       <div className="prof-sylve">
-        <AppBar
-          title={formatMessage(messages.app)}
-          onLeftIconButtonTouchTap={this.handleToggleNav}
-          iconElementRight={appbarRight}
-          showMenuIconButton={showMenuIconButton}
-          style={styles.appbar}
-        />
+        <Appbar onToggleNav={this.handleToggleNav} showMenuButton={showMenuButton}/>
         <Drawer
           docked={drawerDocked}
           open={drawerOpen}
@@ -130,16 +120,13 @@ class Main extends Component {
           <div className="Drawer">
             <List onChange={this.handleToggleNav}>
               {navItems}
-              <Divider/>
-              {userItems}
-              <Divider/>
+              <ListItem leftIcon={<BugReportIcon/>} href="https://github.com/carab/Prof-Sylve/issues" target="blank">{formatMessage(messages.bugs)}</ListItem>
               <ListItem
                 primaryText={formatMessage(messages.language)}
                 leftIcon={<LanguageIcon />}
                 primaryTogglesNestedList={true}
                 nestedItems={_.map({ en: 'English', fr: 'Français' }, this.renderLocaleMenuItem)}
               />
-              <ListItem leftIcon={<BugReportIcon/>} href="https://github.com/carab/Prof-Sylve/issues" target="blank">{formatMessage(messages.bugs)}</ListItem>
             </List>
           </div>
         </Drawer>
@@ -147,6 +134,20 @@ class Main extends Component {
           {this.props.children}
         </div>
       </div>
+    );
+  }
+
+  renderNavMenuItem = (icon, path, text) => {
+    const style = {};
+
+    if (this.context.router.isActive(path, true)) {
+      style.color = this.context.muiTheme.palette.accent1Color;
+    }
+
+    return (
+      <ListItem key={path} leftIcon={icon} containerElement={<Link to={path}/>} onTouchTap={this.handleToggleNav} style={style}>
+        {text}
+      </ListItem>
     );
   }
 
@@ -179,16 +180,17 @@ class Main extends Component {
 }
 
 Main.displayName = 'Main';
+Main.propTypes = {};
 Main.contextTypes = {
   router: PropTypes.object.isRequired,
   muiTheme: PropTypes.object.isRequired,
 };
-Main.propTypes = {};
 
 const mapStateToProps = (state) => {
   return {
     signedIn: state.auth.signedIn,
     profile: state.profile,
+    currentUsername: state.ui.currentUsername,
   };
 };
 
@@ -196,6 +198,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setLocale: (locale) => {
       dispatch(actions.profile.setLocale(locale));
+    },
+    setTitle: (title) => {
+      dispatch(actions.ui.setTitle(title));
     },
   };
 }

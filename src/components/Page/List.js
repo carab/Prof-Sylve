@@ -69,6 +69,10 @@ const messages = defineMessages({
 class PageList extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      query: '',
+    };
   }
 
   componentWillMount() {
@@ -96,7 +100,7 @@ class PageList extends Component {
 
   render() {
     const {formatMessage} = this.props.intl;
-    const {pokemons, tags, filters} = this.props;
+    const {pokemons, tags, filters, currentUsername} = this.props;
 
     const filtersConfig = {
       region: {
@@ -158,11 +162,18 @@ class PageList extends Component {
       return filter.process(pokemons, filter.value);
     }, pokemons);
 
-    let q = '';
-    const qFilter = filters.get('q');
+    let query = this.state.query;
+    const queryFilter = filters.get('q');
 
-    if (qFilter) {
-      q = qFilter.value;
+    if (!query.length && queryFilter) {
+      query = queryFilter.value;
+    }
+
+    // Build reset path
+    let resetPath = `/pokedex/${currentUsername}/list`;
+
+    if (query.length) {
+      resetPath += `/q=${query}`;
     }
 
     // Find colors
@@ -187,13 +198,13 @@ class PageList extends Component {
                 <div className="FilterSearch_icon">
                   <SearchIcon/>
                 </div>
-                <TextField value={q} hintText={formatMessage(messages.search)} onChange={this.handleFilterSearchChange}/>
+                <TextField value={query} hintText={formatMessage(messages.search)} onChange={this.handleFilterSearchChange}/>
                 <div className="FilterSearch_cancel">
-                  {q.length ? <IconButton onTouchTap={this.handleFilterSearchCancel}><CancelIcon/></IconButton> : ''}
+                  {query.length ? <IconButton onTouchTap={this.handleFilterSearchCancel}><CancelIcon/></IconButton> : ''}
                 </div>
               </div>
               <IconMenu iconButtonElement={<IconButton><FilterIcon/></IconButton>}>
-                <MenuItem primaryText={formatMessage(messages.all)} leftIcon={<CancelIcon/>} containerElement={<Link to="/pokedex" />}/>
+                <MenuItem primaryText={formatMessage(messages.all)} leftIcon={<CancelIcon/>} containerElement={<Link to={resetPath} />}/>
                 <Divider/>
                 <FilterMenuItem
                   name="collected"
@@ -266,19 +277,22 @@ class PageList extends Component {
   }
 
   handleFilterSearchCancel = () => {
+    this.setState({ query: '' });
     this.handleFilterSearch('');
+    this.handleFilterSearch.flush();
   }
 
   handleFilterSearchChange = (e) => {
     this.handleFilterSearch(e.target.value);
   }
 
-  handleFilterSearchChange = _.debounce((event, query) => {
+  handleFilterSearchChange = (event, query) => {
+    this.setState({ query });
     this.handleFilterSearch(query);
-  }, 200)
+  }
 
-  handleFilterSearch(query) {
-    const {filters} = this.props;
+  handleFilterSearch = _.debounce((query) => {
+    const {filters, currentUsername} = this.props;
     const splat = {};
 
     filters.forEach((filter) => {
@@ -293,10 +307,10 @@ class PageList extends Component {
 
     const path = _.reduce(splat, function(path, value, name) {
       return path + '/' + name + '=' + value;
-    }, `/pokedex/${params.username}/`);
+    }, `/pokedex/${currentUsername}/list`);
 
     this.context.router.push(path);
-  }
+  }, 300)
 
   handleFilterReset = () => {
     this.props.onResetFilters();
@@ -320,18 +334,16 @@ class PageList extends Component {
 }
 
 PageList.displayName = 'PageList';
-PageList.propTypes = {
-  pokemons: PropTypes.array.isRequired,
-  intl: intlShape.isRequired,
-};
+PageList.propTypes = {};
 PageList.contextTypes = {
   router: React.PropTypes.object,
 };
 
 const mapStateToProps = (state) => {
-  const currentPokedex = state.ui.pokedexes.get(state.ui.currentPokedex);
-  
+  const currentPokedex = state.ui.pokedexes.get(state.ui.currentUsername);
+
   return {
+    currentUsername: state.ui.currentUsername,
     pokemons: currentPokedex.pokemons,
     tags: currentPokedex.settings.tags,
     filters: state.ui.filters,

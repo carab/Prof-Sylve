@@ -11,8 +11,8 @@ import IconButton from 'material-ui/IconButton';
 import NavigateBeforeIcon from 'material-ui/svg-icons/image/navigate-before';
 import NavigateNextIcon from 'material-ui/svg-icons/image/navigate-next';
 
-import Box from './Box';
-import Toolbar from './Toolbar';
+import Box from '../pokemon/Box';
+import Toolbar from '../pokemon/Toolbar';
 import actions from '../../actions';
 
 import 'styles/pokemon/Pc.css';
@@ -121,7 +121,7 @@ class PokemonPc extends Component {
   }
 
   handleSwipe(currentBox) {
-    this.context.router.push('/pc/' + currentBox);
+    this.context.router.push(`/pokedex/${this.props.currentUsername}/pc/${currentBox}`);
     this.props.setCurrentBox(currentBox);
   }
 
@@ -139,19 +139,18 @@ class PokemonPc extends Component {
 }
 
 PokemonPc.displayName = 'PokemonPcComponent';
+PokemonPc.propTypes = {};
 PokemonPc.contextTypes = {
   router: () => { return PropTypes.func.isRequired; },
 };
 
-PokemonPc.propTypes = {
-  pokemons: PropTypes.array.isRequired,
-  intl: intlShape.isRequired,
-};
-
 const mapStateToProps = (state) => {
+  const currentPokedex = state.ui.pokedexes.get(state.ui.currentUsername);
+
   return {
     currentBox: state.ui.currentBox,
-    pokemons: state.pokedex.pokemons,
+    pokemons: currentPokedex.pokemons,
+    currentUsername: state.ui.currentUsername,
   };
 };
 

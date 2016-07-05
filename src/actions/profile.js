@@ -7,12 +7,15 @@ const refs = {
   user() {
     return this.root().child('users').child(firebase.auth().currentUser.uid);
   },
-}
+};
 
 const actions = {
   setLocale(locale) {
     return (dispatch) => {
-      dispatch({ type: 'SET_LOCALE', locale });
+      dispatch({
+        type: 'SET_PROFILE',
+        payload: { locale },
+      });
 
       if (firebase.auth().currentUser) {
         refs.user().child('profile/locale').set(locale);
@@ -21,7 +24,10 @@ const actions = {
   },
   setProfile(profile) {
     return (dispatch) => {
-      dispatch({ type: 'SET_PROFILE', profile });
+      dispatch({
+        type: 'SET_PROFILE',
+        payload: profile,
+      });
 
       refs.user().child('profile').set(profile);
     };

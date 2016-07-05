@@ -5,46 +5,50 @@ import _ from 'lodash';
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
-import {Router, Route, IndexRoute, browserHistory} from 'react-router';
+import {Router, Route, IndexRoute, IndexRedirect, browserHistory} from 'react-router';
 import {IntlProvider, addLocaleData} from 'react-intl';
 import frLocaleData from 'react-intl/locale-data/fr';
 
 import CircularProgress from 'material-ui/CircularProgress';
 
 import Main from './Main';
+import Pokedex from './Pokedex/Pokedex';
 import PageList from './Page/List';
-import Loader from 'components/Utils/Loader';
-import PokemonPc from 'components/pokemon/Pc';
-import Pokedex from 'components/User/Pokedex';
+import PagePc from 'components/Page/Pc';
+import PageDashboard from 'components/Page/Dashboard';
 import SignComponent from 'components/user/SignComponent';
 import SignoutComponent from 'components/user/SignoutComponent';
 import PageSettings from 'components/Page/Settings';
-import UserDashboard from 'components/user/Dashboard';
 import UserFriends from 'components/user/Friends';
+import Loader from 'components/Utils/Loader';
 
 import actions from '../actions';
 
 addLocaleData(frLocaleData);
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-
-    props.auth();
-  }
-
   componentWillMount() {
-    const {profile, setLocale} = this.props;
+    const {locale, setLocale, listenToAuth} = this.props;
 
-    if (!profile.locale) {
+    listenToAuth();
+
+    if (!locale) {
       setLocale(this.getDefaultLocale());
     }
   }
 
   render() {
-    const {profile, ready} = this.props;
+    const {auth, locale, loaded} = this.props;
 
-    if (ready && profile.locale) {
+    // Render the app or the splash
+    if (
+      locale // User locale has been found
+      && auth.ready // User is ready (either signed in or not)
+      && (
+        !auth.signedIn // The user is not signed in
+        || auth.signedIn && loaded // The user is signed in and his Pokédex has been loaded.
+      )
+    ) {
       return this.renderApp();
     }
 
@@ -60,17 +64,18 @@ class App extends Component {
   }
 
   renderApp() {
-    const {profile} = this.props;
+    const {locale} = this.props;
 
     return (
-      <IntlProvider locale={profile.locale} messages={this.getMessages(profile.locale)}>
+      <IntlProvider locale={locale} messages={this.getMessages(locale)}>
         <Router history={browserHistory}>
           <Route path="/" component={Main}>
             <IndexRoute name="sign" component={SignComponent} onEnter={this.handleAuthenticated}/>
             <Route name="signout" path="signout" component={SignoutComponent}/>
             <Route path="pokedex/:username" component={Pokedex}>
-              <IndexRoute name="dashboard" component={UserDashboard}/>
-              <Route name="pc" path="pc(/:currentBox)" component={PokemonPc}/>
+              <IndexRedirect to="dashboard" />
+              <Route name="dashboard" path="dashboard" component={PageDashboard}/>
+              <Route name="pc" path="pc(/:currentBox)" component={PagePc}/>
               <Route name="list" path="list(/**)" component={PageList}/>
             </Route>
             <Route component={Pokedex}>
@@ -84,20 +89,20 @@ class App extends Component {
   }
 
   handleAuthenticated = (nextState, replace) => {
-    const {signedIn, profile} = this.props;
+    const {auth, username} = this.props;
 
-    if (signedIn) {
+    if (auth.signedIn) {
       replace({
-        pathname: `/pokedex/${profile.username}`,
+        pathname: `/pokedex/${username}`,
         state: { nextPathname: nextState.location.pathname },
       });
     }
   }
 
   handleAuthRequired = (nextState, replace) => {
-    const {signedIn} = this.props;
+    const {auth} = this.props;
 
-    if (!signedIn) {
+    if (!auth.signedIn) {
       replace({
         pathname: '/sign',
         state: { nextPathname: nextState.location.pathname },
@@ -154,10 +159,13 @@ App.displayName = 'App';
 App.propTypes = {};
 
 const mapStateToProps = (state) => {
+  const pokedex = state.ui.pokedexes.get(state.profile.username);
+
   return {
-    ready: state.auth.ready,
-    signedIn: state.auth.signedIn,
-    profile: state.profile,
+    auth: state.auth,
+    locale: state.profile.locale,
+    username: state.profile.username,
+    loaded: !!pokedex, // Force boolean
   };
 };
 
@@ -166,8 +174,8 @@ const mapDispatchToProps = (dispatch) => {
     setLocale: (locale) => {
       dispatch(actions.profile.setLocale(locale));
     },
-    auth: (locale) => {
-      dispatch(actions.auth.listens(locale));
+    listenToAuth: () => {
+      dispatch(actions.auth.listenToAuth());
     },
   };
 }

@@ -76,19 +76,14 @@ class PokemonToolbar extends Component {
 }
 
 PokemonToolbar.displayName = 'PokemonToolbarComponent';
-
-PokemonToolbar.propTypes = {
-    pokemons: PropTypes.array.isRequired,
-    right: PropTypes.object,
-    boxes: PropTypes.array,
-    onSelectBox: PropTypes.func,
-    intl: intlShape.isRequired,
-};
+PokemonToolbar.propTypes = {};
 
 const mapStateToProps = (state) => {
+  const currentPokedex = state.ui.pokedexes.get(state.ui.currentUsername);
+
   return {
     currentBox: state.ui.currentBox,
-    pokemons: state.pokedex.pokemons,
+    pokemons: currentPokedex.pokemons,
     locale: state.profile.locale,
   };
 };
