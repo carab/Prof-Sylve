@@ -13,14 +13,14 @@ import CircularProgress from 'material-ui/CircularProgress';
 
 import Main from './Main';
 import PageList from './Page/List';
+import Loader from 'components/Utils/Loader';
 import PokemonPc from 'components/pokemon/Pc';
-import Pokedex from 'components/user/Pokedex';
+import Pokedex from 'components/User/Pokedex';
 import SignComponent from 'components/user/SignComponent';
 import SignoutComponent from 'components/user/SignoutComponent';
-import UserSettings from 'components/user/SettingsComponent';
+import PageSettings from 'components/Page/Settings';
 import UserDashboard from 'components/user/Dashboard';
 import UserFriends from 'components/user/Friends';
-import UserPublic from 'components/user/Public';
 
 import actions from '../actions';
 
@@ -30,23 +30,21 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.handleAuthRequired = this.handleAuthRequired.bind(this);
-
     props.auth();
   }
 
   componentWillMount() {
-    const {locale, setLocale} = this.props;
+    const {profile, setLocale} = this.props;
 
-    if (!locale) {
+    if (!profile.locale) {
       setLocale(this.getDefaultLocale());
     }
   }
 
   render() {
-    const {locale, isReady} = this.props;
+    const {profile, ready} = this.props;
 
-    if (isReady && locale) {
+    if (ready && profile.locale) {
       return this.renderApp();
     }
 
@@ -56,16 +54,16 @@ class App extends Component {
   renderSplash() {
     return (
       <div className="Splash">
-        <CircularProgress size={2}/>
+        <Loader/>
       </div>
     );
   }
 
   renderApp() {
-    const {locale} = this.props;
+    const {profile} = this.props;
 
     return (
-      <IntlProvider locale={locale} messages={this.getMessages(locale)}>
+      <IntlProvider locale={profile.locale} messages={this.getMessages(profile.locale)}>
         <Router history={browserHistory}>
           <Route path="/" component={Main}>
             <IndexRoute name="sign" component={SignComponent} onEnter={this.handleAuthenticated}/>
@@ -75,8 +73,10 @@ class App extends Component {
               <Route name="pc" path="pc(/:currentBox)" component={PokemonPc}/>
               <Route name="list" path="list(/**)" component={PageList}/>
             </Route>
-            <Route name="friends" path="friends" component={UserFriends} onEnter={this.handleAuthRequired}/>
-            <Route name="settings" path="settings" component={UserSettings} onEnter={this.handleAuthRequired}/>
+            <Route component={Pokedex}>
+              <Route name="friends" path="friends" component={UserFriends} onEnter={this.handleAuthRequired}/>
+              <Route name="settings" path="settings" component={PageSettings} onEnter={this.handleAuthRequired}/>
+            </Route>
           </Route>
         </Router>
       </IntlProvider>
@@ -84,20 +84,20 @@ class App extends Component {
   }
 
   handleAuthenticated = (nextState, replace) => {
-    const {isSignedIn, username} = this.props;
+    const {signedIn, profile} = this.props;
 
-    if (isSignedIn && username) {
+    if (signedIn) {
       replace({
-        pathname: '/pokedex/' + username,
+        pathname: `/pokedex/${profile.username}`,
         state: { nextPathname: nextState.location.pathname },
       });
     }
   }
 
-  handleAuthRequired(nextState, replace) {
-    const {isSignedIn} = this.props;
+  handleAuthRequired = (nextState, replace) => {
+    const {signedIn} = this.props;
 
-    if (!isSignedIn) {
+    if (!signedIn) {
       replace({
         pathname: '/sign',
         state: { nextPathname: nextState.location.pathname },
@@ -155,10 +155,9 @@ App.propTypes = {};
 
 const mapStateToProps = (state) => {
   return {
-    isReady: state.auth.isReady,
-    isSignedIn: state.auth.isSignedIn,
-    locale: state.profile.locale,
-    username: state.pokedex.settings.username,
+    ready: state.auth.ready,
+    signedIn: state.auth.signedIn,
+    profile: state.profile,
   };
 };
 

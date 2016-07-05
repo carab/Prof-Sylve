@@ -28,6 +28,7 @@
     "signinSubtitle": "Si tu as déjà commencé ta plus grande aventure !",
     "signup": "S'inscrire",
     "signupSubtitle": "Si tu veux tous les attraper !",
+    "username": "Nom d'utilisateur",
     "email": "Adresse email",
     "password": "Mot de passe",
     "passwordConfirmation": "Confirmation du mot de passe",
@@ -39,7 +40,6 @@
   "settings": {
     "visibility": "Visibilité du Pokédex",
     "public": "Public",
-    "username": "Nom",
     "missingUsername": "A Pokédex public doit avoir un nom."
   },
   "dashboard": {

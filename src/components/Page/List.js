@@ -273,6 +273,10 @@ class PageList extends Component {
     this.handleFilterSearch(e.target.value);
   }
 
+  handleFilterSearchChange = _.debounce((event, query) => {
+    this.handleFilterSearch(query);
+  }, 200)
+
   handleFilterSearch(query) {
     const {filters} = this.props;
     const splat = {};
@@ -289,7 +293,7 @@ class PageList extends Component {
 
     const path = _.reduce(splat, function(path, value, name) {
       return path + '/' + name + '=' + value;
-    }, '/pokedex');
+    }, `/pokedex/${params.username}/`);
 
     this.context.router.push(path);
   }
@@ -325,9 +329,11 @@ PageList.contextTypes = {
 };
 
 const mapStateToProps = (state) => {
+  const currentPokedex = state.ui.pokedexes.get(state.ui.currentPokedex);
+  
   return {
-    pokemons: state.pokedex.pokemons,
-    tags: state.pokedex.settings.tags,
+    pokemons: currentPokedex.pokemons,
+    tags: currentPokedex.settings.tags,
     filters: state.ui.filters,
   };
 };

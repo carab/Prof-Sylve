@@ -14,9 +14,9 @@ class Signout extends Component {
   }
 
   componentWillUpdate(nextProps) {
-    const {isSignedIn} = nextProps;
+    const {signedIn} = nextProps;
 
-    if (!isSignedIn) {
+    if (!signedIn) {
       this.context.router.replace('/sign');
     }
   }
@@ -33,7 +33,7 @@ Signout.contextTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    isSignedIn: state.auth.isSignedIn,
+    signedIn: state.auth.signedIn,
   };
 };
 

@@ -21,8 +21,8 @@ const messages = defineMessages({
   settings: {id: 'user.settings'},
   visibility: {id: 'settings.visibility'},
   isPublic: {id: 'settings.public'},
-  username: {id: 'settings.username'},
   missingUsername: {id: 'settings.missingUsername'},
+  username: {id: 'user.username'},
   tags: {id: 'pokemon.tag.tags'},
   save: {id: 'label.save'},
   red: {id: 'pokemon.tag.color.red'},
@@ -41,18 +41,15 @@ const messages = defineMessages({
 class Settings extends Component {
   constructor(props) {
     super(props);
-
-    this.handlePublicChange = this.handlePublicChange.bind(this);
-    this.handleUsernameChange = this.handleUsernameChange.bind(this);
   }
 
   render() {
     const {formatMessage} = this.props.intl;
-    const {settings} = this.props;
+    const {settings, profile} = this.props;
     const tags = settings.tags || {};
     const errors = {};
-
-    if (settings.public && !settings.username) {
+    
+    if (settings.public && !profile.username) {
       errors.username = formatMessage(messages.missingUsername);
     }
 
@@ -65,13 +62,10 @@ class Settings extends Component {
                 <ToolbarGroup float="left">
                   <ToolbarTitle text={formatMessage(messages.visibility)}/>
                 </ToolbarGroup>
-                <ToolbarGroup float="right">
-                  {this.renderShareMenu()}
-                </ToolbarGroup>
               </Toolbar>
               <div className="Settings__fields">
                 <Toggle ref="public" label={formatMessage(messages.isPublic)} defaultToggled={settings.public} onToggle={this.handlePublicChange}/>
-                <TextField ref="username" floatingLabelText={formatMessage(messages.username)} fullWidth={true} defaultValue={settings.username} errorText={errors.username} onChange={this.handleUsernameChange}/>
+                <TextField ref="username" floatingLabelText={formatMessage(messages.username)} fullWidth={true} defaultValue={profile.username} errorText={errors.username} onChange={this.handleUsernameChange}/>
               </div>
             </Paper>
           </div>
@@ -106,29 +100,15 @@ class Settings extends Component {
     );
   }
 
-  renderShareMenu() {
-    const {settings} = this.props;
-
-    if (settings.public && settings.username) {
-      // Build absolute URL
-      const path = '/user/' + settings.username;
-      const a = document.createElement('a');
-      a.href = path;
-      const url = a.href;
-
-      return <IconButton containerElement={<a href={url} target="_blank"/>}><OpenIcon/></IconButton>;
-    }
-  }
-
-  handlePublicChange(event, isPublic) {
+  handlePublicChange = (event, isPublic) => {
     const {setPublic} = this.props;
     setPublic(isPublic);
   }
 
-  handleUsernameChange(event, username) {
-    const {setUsername} = this.props;
-    setUsername(username);
-  }
+  handleUsernameChange = _.debounce((event, username) => {
+    const {profile, setUsername} = this.props;
+    setUsername(username, profile.username);
+  }, 200)
 
   handleTagChange(tag, title) {
     const {setTagTitle} = this.props;
@@ -145,6 +125,7 @@ Settings.propTypes = {
 const mapStateToProps = (state) => {
   return {
     settings: state.pokedex.settings,
+    profile: state.profile,
   };
 };
 
@@ -153,8 +134,8 @@ const mapDispatchToProps = (dispatch) => {
     setPublic: (isPublic) => {
       dispatch(actions.pokedex.setSettingsPublic(isPublic));
     },
-    setUsername: (username) => {
-      dispatch(actions.pokedex.setSettingsUsername(username));
+    setUsername: (username, oldUsername) => {
+      dispatch(actions.profile.setUsername(username, oldUsername));
     },
     setTagTitle: (tag, title) => {
       dispatch(actions.pokedex.setSettingsTagTitle(tag, title));

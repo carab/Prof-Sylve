@@ -41,9 +41,9 @@ class SigninComponent extends Component {
   }
 
   componentWillUpdate(nextProps) {
-    const {isSignedIn} = nextProps;
+    const {signedIn} = nextProps;
 
-    if (isSignedIn) {
+    if (signedIn) {
       this.context.router.replace('/');
     }
   }
@@ -137,7 +137,7 @@ SigninComponent.propTypes = {
 const mapStateToProps = (state) => {
   return {
     error: state.auth.errors.signin,
-    isSignedIn: state.auth.isSignedIn,
+    signedIn: state.auth.signedIn,
   };
 };
 

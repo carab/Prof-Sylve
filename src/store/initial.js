@@ -4,24 +4,27 @@ export default {
   feedback: [],
   auth: {
     currently: 'AUTH_GUEST',
-    isReady: false,
-    isSignedIn: false,
+    ready: false,
+    signedIn: false,
     data: {},
     errors: {},
   },
   profile: {
     locale: null,
+    username: undefined,
+    email: undefined,
     friends: [],
   },
   pokedex: {
     settings: {
-      username: undefined,
       public: false,
       tags: {},
     },
     pokemons: [],
   },
   ui: {
+    pokedexes: Immutable.Map(),
+    currentPokedex: undefined,
     currentBox: 0,
     publicPokedex: null,
     filters: Immutable.Map(),

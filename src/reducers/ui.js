@@ -3,23 +3,17 @@ import Immutable from 'immutable';
 import initial from '../store/initial';
 
 export default (state = initial.ui, action) => {
-  let index, filters;
-
   switch (action.type) {
 
     case 'SET_CURRENT_BOX':
-      return Object.assign({}, state, {
-        currentBox: action.currentBox,
-      });
+      return Object.assign({}, state, action.payload);
 
-    case 'SET_PUBLIC_POKEDEX':
-      return Object.assign({}, state, {
-        publicPokedex: action.publicPokedex,
-      });
+    case 'SET_POKEDEX':
+      return Object.assign({}, state, action.payload);
 
     case 'ADD_FILTER':
       return Object.assign({}, state, {
-        filters: state.filters.set(action.filter.name, action.filter),
+        filters: state.filters.set(action.payload.filter.name, action.payload.filter),
       });
 
     case 'RESET_FILTERS':

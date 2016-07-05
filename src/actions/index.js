@@ -1,16 +1,11 @@
 import firebase from 'firebase';
 
-// Initialize firebase
-const config = {
-  apiKey: 'AIzaSyAa2dt9-n6blULUhfZ1WEm7AC9L_V8f0QM',
-  authDomain: 'prof-sylve.firebaseapp.com',
-  databaseURL: 'https://prof-sylve.firebaseio.com',
-  storageBucket: 'prof-sylve.appspot.com',
-};
+import './configure-firebase';
+import profile from './profile';
+import ui from './ui';
+//import pokedex from './pokedex';
 
-firebase.initializeApp(config);
-
-function isSignedIn() {
+function signedIn() {
   const authData = firebase.auth().currentUser;
 
   return authData && true;
@@ -21,7 +16,7 @@ function getRootRef() {
 }
 
 function getUserRef() {
-  if (isSignedIn()) {
+  if (signedIn()) {
     const authData = firebase.auth().currentUser;
 
     return getRootRef()
@@ -31,6 +26,9 @@ function getUserRef() {
 }
 
 const actions = {
+  profile,
+  ui,
+  //pokedex,
   auth: {
     listens() {
       return (dispatch) => {
@@ -46,8 +44,8 @@ const actions = {
                 type: 'SET_AUTH',
                 auth: {
                   currently: 'AUTH_AUTHENTICATED',
-                  isReady: true,
-                  isSignedIn: true,
+                  ready: true,
+                  signedIn: true,
                   data: authData,
                 },
               });
@@ -57,8 +55,8 @@ const actions = {
               type: 'SET_AUTH',
               auth: {
                 currently: 'AUTH_GUEST',
-                isReady: true,
-                isSignedIn: false,
+                ready: true,
+                signedIn: false,
                 data: {},
               },
             });
@@ -104,47 +102,15 @@ const actions = {
       };
     },
   },
-  profile: {
-    setLocale(locale) {
-      return (dispatch) => {
-        dispatch({ type: 'SET_LOCALE', locale });
-
-        if (isSignedIn()) {
-          getUserRef()
-            .child('profile/locale')
-            .set(locale);
-        }
-      };
-    },
-    setProfile(profile) {
-      return (dispatch) => {
-        dispatch({ type: 'SET_PROFILE', profile });
-
-        getUserRef()
-          .child('profile')
-          .set(profile);
-      };
-    },
-  },
   pokedex: {
     setCollected(index, collected) {
       return () => {
-        getUserRef()
-          .child('pokedex')
-          .child('pokemons')
-          .child(index)
-          .child('collected')
-          .set(collected);
+        getUserRef().child(`pokedex/pokemons/${index}/collected`).set(collected);
       };
     },
     setTag(index, tag) {
       return () => {
-        getUserRef()
-          .child('pokedex')
-          .child('pokemons')
-          .child(index)
-          .child('tag')
-          .set(tag);
+        getUserRef().child(`pokedex/pokemons/${index}/tag`).set(tag);
       };
     },
     setSettingsPublic(isPublic) {
@@ -160,51 +126,9 @@ const actions = {
     },
     setSettingsTagTitle(tag, title) {
       return () => {
-        getUserRef().child('pokedex/settings/tags/' + tag + '/title').set(title);
+        getUserRef().child(`pokedex/settings/tags/${tag}/title`).set(title);
       };
     },
-  },
-  ui: {
-    setCurrentBox(currentBox) {
-      return (dispatch) => {
-        dispatch({ type: 'SET_CURRENT_BOX', currentBox });
-      };
-    },
-    loadPublicPokedex(username) {
-      return (dispatch) => {
-        if (username) {
-          getRootRef().child('usernames').orderByValue().equalTo(username).once('child_added', (snapshot) => {
-            const uid = snapshot.key;
-
-            getRootRef().child('users').child(uid).child('pokedex').once('value', (snapshot) => {
-              const publicPokedex = snapshot.val();
-
-              if (publicPokedex.settings.public) {
-                dispatch({ type: 'SET_PUBLIC_POKEDEX', publicPokedex });
-              } else {
-                dispatch({ type: 'SET_PUBLIC_POKEDEX', publicPokedex: false });
-              }
-            }, () => {
-              dispatch({ type: 'SET_PUBLIC_POKEDEX', publicPokedex: false });
-            });
-          }, () => {
-            dispatch({ type: 'SET_PUBLIC_POKEDEX', publicPokedex: false });
-          });
-        } else {
-          dispatch({ type: 'SET_PUBLIC_POKEDEX', publicPokedex: null });
-        }
-      };
-    },
-    addFilter(filter) {
-      return (dispatch) => {
-        dispatch({ type: 'ADD_FILTER', filter });
-      };
-    },
-    resetFilters() {
-      return (dispatch) => {
-        dispatch({ type: 'RESET_FILTERS' });
-      };
-    }
   },
 };
 

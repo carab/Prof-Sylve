@@ -31,8 +31,6 @@ import actions from '../actions';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'styles/App.css';
 
-const SelectableList = MakeSelectable(List);
-
 const messages = defineMessages({
   app: {id: 'app'},
   dashboard: {id: 'nav.dashboard'},
@@ -66,14 +64,14 @@ class Main extends Component {
   }
 
   renderLayout() {
-    const {isSignedIn, username, width} = this.props;
+    const {signedIn, profile, params, width} = this.props;
     const {formatMessage} = this.props.intl;
-
-    const currentRoute = this.props.location.pathname;
 
     let appbarRight;
     let navItems;
     let userItems;
+
+    const username = params.username || profile.username;
 
     if (username) {
       navItems = [
@@ -83,7 +81,7 @@ class Main extends Component {
       ];
     }
 
-    if (isSignedIn) {
+    if (signedIn) {
       userItems = [
         <ListItem key="friends" leftIcon={<PeopleIcon/>} containerElement={<Link to="/friends"/>}>{formatMessage(messages.friends)}</ListItem>,
         <ListItem key="settings" leftIcon={<SettingsIcon/>} containerElement={<Link to="/settings"/>}>{formatMessage(messages.settings)}</ListItem>,
@@ -172,7 +170,7 @@ class Main extends Component {
   }
 
   isActiveLocale(locale) {
-    return (locale === this.props.locale);
+    return (locale === this.props.profile.locale);
   }
 
   setLocale(locale) {
@@ -185,18 +183,12 @@ Main.contextTypes = {
   router: PropTypes.object.isRequired,
   muiTheme: PropTypes.object.isRequired,
 };
-
-Main.propTypes = {
-  isSignedIn: PropTypes.bool.isRequired,
-  locale: PropTypes.string.isRequired,
-  intl: intlShape.isRequired,
-};
+Main.propTypes = {};
 
 const mapStateToProps = (state) => {
   return {
-    isSignedIn: state.auth.isSignedIn,
-    locale: state.profile.locale,
-    username: state.pokedex.settings.username
+    signedIn: state.auth.signedIn,
+    profile: state.profile,
   };
 };
 
