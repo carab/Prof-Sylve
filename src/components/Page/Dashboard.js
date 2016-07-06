@@ -74,11 +74,22 @@ class Dashboard extends Component {
       addFriendButton = <IconButton><PersonAddIcon/></IconButton>;
     }
 
-    const { progress } = this.calculateProgress(pokedex.pokemons);
-    const message = encodeURIComponent(formatMessage(messages.shareMessage, { progress }));
-    const encodedUrl = encodeURIComponent(url);
-    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&t=${message}`;
-    const twitterUrl = `https://twitter.com/intent/tweet?source=${encodedUrl}&text=${message}%20${encodedUrl}`;
+    let shareMenu;
+
+    if (pokedex.settings.public) {
+      const { progress } = this.calculateProgress(pokedex.pokemons);
+      const message = encodeURIComponent(formatMessage(messages.shareMessage, { progress }));
+      const encodedUrl = encodeURIComponent(url);
+      const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&t=${message}`;
+      const twitterUrl = `https://twitter.com/intent/tweet?source=${encodedUrl}&text=${message}%20${encodedUrl}`;
+
+      shareMenu = (
+        <IconMenu iconButtonElement={<IconButton><ShareIcon/></IconButton>}>
+          <MenuItem primaryText="Facebook" href={facebookUrl} target="_blank"/>
+          <MenuItem primaryText="Twitter" href={twitterUrl} target="_blank"/>
+        </IconMenu>
+      );
+    }
 
     return (
       <div className="Progress container">
@@ -89,10 +100,7 @@ class Dashboard extends Component {
             </ToolbarGroup>
             <ToolbarGroup float="right">
               {addFriendButton}
-              <IconMenu iconButtonElement={<IconButton><ShareIcon/></IconButton>}>
-                <MenuItem primaryText="Facebook" href={facebookUrl} target="_blank"/>
-                <MenuItem primaryText="Twitter" href={twitterUrl} target="_blank"/>
-              </IconMenu>
+              {shareMenu}
             </ToolbarGroup>
           </Toolbar>
           <div className="Progress_content">

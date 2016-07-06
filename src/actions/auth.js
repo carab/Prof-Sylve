@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import firebase from 'firebase';
 
 const refs = {
@@ -15,28 +16,6 @@ const actions = {
       firebase.auth().onAuthStateChanged((authData) => {
         // Is signed in
         if (authData) {
-
-          // Load user profile
-          refs.user().child('profile').on('value', (snapshot) => {
-            const profile = snapshot.val();
-
-            dispatch({
-              type: 'SET_PROFILE',
-              payload: profile,
-            });
-
-            // Load user pokedex and add it to the pokedexes
-            refs.user().child('pokedex').on('value', (snapshot) => {
-              const pokedex = snapshot.val();
-
-              dispatch({
-                type: 'SET_POKEDEX',
-                payload: pokedex,
-                meta: { username: profile.username },
-              });
-            });
-          });
-
           dispatch({
             type: 'SET_AUTH',
             payload: {
@@ -44,6 +23,74 @@ const actions = {
               signedIn: true,
               data: authData,
             },
+          });
+
+          // Load user profile and Pokédex
+          refs.user().child('profile').on('value', (snapshot) => {
+            const profile = snapshot.val();
+
+            // Handle first sign in and create username
+            if (!profile.username) {
+              const to = profile.email.indexOf('@');
+              const username = profile.email.substring(0, to).replace('+', '').replace('.', '').replace('$', '').replace('#', '').replace('[', '').replace(']', '').replace('/', '')
+              const setUsername = (increment) => {
+                let computedUsername = username;
+
+                if (increment > 1) {
+                  computedUsername = computedUsername + '' + increment;
+                }
+
+                refs.root().child(`username_lookup/${computedUsername}`).set(authData.uid)
+                  .then(() => {
+                    refs.user().child('profile/username').set(computedUsername);
+                  })
+                  .catch(() => {
+                    setUsername(++increment);
+                  });
+              };
+
+              setUsername(1);
+            } else {
+              dispatch({
+                type: 'SET_PROFILE',
+                payload: profile,
+              });
+
+              // Load user pokedex and add it to the available pokedexes
+              refs.user().child('pokedex').on('value', (snapshot) => {
+                const pokedex = snapshot.val();
+
+                if (pokedex) {
+                  dispatch({
+                    type: 'SET_POKEDEX',
+                    payload: pokedex,
+                    meta: { username: profile.username },
+                  });
+                } else {
+                  // Create the Pokédex if it doesn't exist
+                  refs.root().child('pokemons').once('value', (snapshot) => {
+                    const pokemons = snapshot.val();
+                    const pokedex = {
+                      pokemons: [],
+                      settings: {
+                        public: false,
+                      },
+                    };
+
+                    _.forEach(pokemons, (pokemon) => {
+                      pokedex.pokemons.push({
+                        id: pokemon.id,
+                        name: pokemon.name,
+                        collected: false,
+                        tag: 'none',
+                      });
+                    });
+
+                    refs.user().child('pokedex').set(pokedex);
+                  });
+                }
+              });
+            }
           });
         } else {
           dispatch({
@@ -91,7 +138,12 @@ const actions = {
     };
   },
   signout() {
-    return () => {
+    return (dispatch) => {
+      dispatch({
+        type: 'SET_CURRENT_USERNAME',
+        payload: null,
+      });
+
       return firebase.auth().signOut();
     };
   },

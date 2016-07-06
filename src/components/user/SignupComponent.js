@@ -1,5 +1,6 @@
 'use strict';
 
+import _ from 'lodash';
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
@@ -16,7 +17,6 @@ import 'styles/user/Signup.css';
 const messages = defineMessages({
   signup: {id: 'user.signup'},
   subtitle: {id: 'user.signupSubtitle'},
-  username: {id: 'user.username'},
   email: {id: 'user.email'},
   password: {id: 'user.password'},
   passwordConfirmation: {id: 'user.passwordConfirmation'},
@@ -73,13 +73,6 @@ class SignupComponent extends Component {
         <Card>
           <CardTitle title={formatMessage(messages.signup)} subtitle={formatMessage(messages.subtitle)}/>
           <CardText>
-            <TextField
-              ref="username"
-              type="username"
-              floatingLabelText={formatMessage(messages.username)}
-              fullWidth={true}
-              errorText={errors.email && formatMessage(errors.username)}
-            />
             <TextField
               ref="email"
               type="email"

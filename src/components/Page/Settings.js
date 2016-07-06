@@ -1,16 +1,14 @@
 'use strict';
 
+import _ from 'lodash';
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
-import _ from 'lodash';
 
 import Paper from 'material-ui/Paper';
-import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
 import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar';
 import Toggle from 'material-ui/Toggle';
-import OpenIcon from 'material-ui/svg-icons/action/open-in-new';
 
 import Colors from '../../utils/colors';
 import actions from '../../actions';
@@ -39,10 +37,6 @@ const messages = defineMessages({
 });
 
 class Settings extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const {formatMessage} = this.props.intl;
     const {settings, profile} = this.props;
@@ -108,12 +102,12 @@ class Settings extends Component {
   handleUsernameChange = _.debounce((event, username) => {
     const {profile, setUsername} = this.props;
     setUsername(username, profile.username);
-  }, 200)
+  }, 300)
 
-  handleTagChange(tag, title) {
+  handleTagChange = _.debounce((tag, title) => {
     const {setTagTitle} = this.props;
     setTagTitle(tag, title);
-  }
+  }, 300)
 }
 
 Settings.displayName = 'UserSettings';

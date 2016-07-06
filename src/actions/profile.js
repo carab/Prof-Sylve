@@ -35,9 +35,9 @@ const actions = {
   setUsername(username, oldUsername) {
     return () => {
       // Add the new username and remove the old one only if it succeed
-      refs.root().child('username_lookup').child(username).set(firebase.auth().currentUser.uid).then(() => {
+      refs.root().child(`username_lookup/${username}`).set(firebase.auth().currentUser.uid).then(() => {
         if (oldUsername) {
-          refs.root().child('username_lookup').child(oldUsername).remove();
+          refs.root().child(`username_lookup/${oldUsername}`).remove();
         }
 
         refs.user().child('profile/username').set(username);

@@ -17,7 +17,7 @@ class Signout extends Component {
     const {signedIn} = nextProps;
 
     if (!signedIn) {
-      this.context.router.replace('/sign');
+      this.context.router.replace('/');
     }
   }
 
