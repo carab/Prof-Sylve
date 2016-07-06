@@ -2,25 +2,22 @@
 
 import _ from 'lodash';
 
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Link} from 'react-router';
 import {Router, Route, IndexRoute, IndexRedirect, browserHistory} from 'react-router';
 import {IntlProvider, addLocaleData} from 'react-intl';
 import frLocaleData from 'react-intl/locale-data/fr';
 
-import CircularProgress from 'material-ui/CircularProgress';
-
-import Main from './Main';
-import Pokedex from './Pokedex/Pokedex';
-import PageList from './Page/List';
-import PagePc from 'components/Page/Pc';
-import PageDashboard from 'components/Page/Dashboard';
-import SignComponent from 'components/user/SignComponent';
-import SignoutComponent from 'components/user/SignoutComponent';
-import PageSettings from 'components/Page/Settings';
-import UserFriends from 'components/user/Friends';
-import Loader from 'components/Utils/Loader';
+import Main from 'components/Main/Main';
+import Pokedex from 'components/Pokedex/Pokedex';
+import PokedexDashboard from 'components/Pokedex/Dashboard/Dashboard';
+import PokedexPc from 'components/Pokedex/Pc/Pc';
+import PokedexList from 'components/Pokedex/List/List';
+import UserSign from 'components/User/Sign/Sign';
+import UserSignout from 'components/User/Signout/Signout';
+import UserSettings from 'components/User/Settings/Settings';
+import UserFriends from 'components/User/Friends/Friends';
+import Loader from 'components/Utils/Loader/Loader';
 
 import actions from '../actions';
 
@@ -70,17 +67,17 @@ class App extends Component {
       <IntlProvider locale={locale} messages={this.getMessages(locale)}>
         <Router history={browserHistory}>
           <Route path="/" component={Main}>
-            <IndexRoute name="sign" component={SignComponent} onEnter={this.handleAuthenticated}/>
-            <Route name="signout" path="signout" component={SignoutComponent}/>
+            <IndexRoute name="sign" component={UserSign} onEnter={this.handleAuthenticated}/>
+            <Route name="signout" path="signout" component={UserSignout}/>
             <Route path="pokedex/:username" component={Pokedex}>
               <IndexRedirect to="dashboard" />
-              <Route name="dashboard" path="dashboard" component={PageDashboard}/>
-              <Route name="pc" path="pc(/:currentBox)" component={PagePc}/>
-              <Route name="list" path="list(/**)" component={PageList}/>
+              <Route name="dashboard" path="dashboard" component={PokedexDashboard}/>
+              <Route name="pc" path="pc(/:currentBox)" component={PokedexPc}/>
+              <Route name="list" path="list(/**)" component={PokedexList}/>
             </Route>
             <Route component={Pokedex}>
               <Route name="friends" path="friends" component={UserFriends} onEnter={this.handleAuthRequired}/>
-              <Route name="settings" path="settings" component={PageSettings} onEnter={this.handleAuthRequired}/>
+              <Route name="settings" path="settings" component={UserSettings} onEnter={this.handleAuthRequired}/>
             </Route>
           </Route>
         </Router>

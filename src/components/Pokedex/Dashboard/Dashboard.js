@@ -1,7 +1,7 @@
 'use strict';
 
-import React, {Component, PropTypes} from 'react';
-import {injectIntl, intlShape, defineMessages} from 'react-intl';
+import React, {Component} from 'react';
+import {injectIntl, defineMessages} from 'react-intl';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
 import FontAwesome from 'react-fontawesome';
@@ -13,19 +13,17 @@ import Paper from 'material-ui/Paper';
 import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar';
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
-import OpenIcon from 'material-ui/svg-icons/action/open-in-new';
 import ShareIcon from 'material-ui/svg-icons/social/share';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
-import PersonAddIcon from 'material-ui/svg-icons/social/person-add';
 import PublicIcon from 'material-ui/svg-icons/social/public';
 import BookmarkIcon from 'material-ui/svg-icons/action/bookmark';
 
-import Colors from '../../utils/colors';
-import Regions from '../../utils/regions';
+import Colors from 'utils/colors';
+import Regions from 'utils/regions';
 
-import 'styles/Page/Dashboard.css';
+import './Dashboard.css';
 
 const messages = defineMessages({
   pokedexOf: {id: 'user.pokedex.of'},

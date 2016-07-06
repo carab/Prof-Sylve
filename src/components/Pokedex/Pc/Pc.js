@@ -3,7 +3,7 @@
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import ReactSwipe from 'react-swipe';
-import {injectIntl, intlShape, defineMessages} from 'react-intl';
+import {injectIntl, defineMessages} from 'react-intl';
 import _ from 'lodash';
 
 import Paper from 'material-ui/Paper';
@@ -11,11 +11,12 @@ import IconButton from 'material-ui/IconButton';
 import NavigateBeforeIcon from 'material-ui/svg-icons/image/navigate-before';
 import NavigateNextIcon from 'material-ui/svg-icons/image/navigate-next';
 
-import Box from '../pokemon/Box';
-import Toolbar from '../pokemon/Toolbar';
-import actions from '../../actions';
+import PokedexBox from 'components/Pokedex/Box/Box';
+import PokedexToolbar from 'components/Pokedex/Toolbar/Toolbar';
 
-import 'styles/pokemon/Pc.css';
+import actions from 'actions';
+
+import './Pc.css';
 
 const messages = defineMessages({
   previousBox: {id: 'pokemon.toolbar.previousBox'},
@@ -93,7 +94,7 @@ class PokemonPc extends Component {
     return (
       <div className="PokemonPc container">
         <Paper zDepth={1} className="PokemonPc__paper">
-          <Toolbar boxes={boxes} onSelectBox={this.handleSelectBox}/>
+          <PokedexToolbar boxes={boxes} onSelectBox={this.handleSelectBox}/>
           <div className="PokemonPc__view">
             <div className="PokemonPc__previousBox">
               <IconButton onClick={this.handlePreviousBox} tooltip={formatMessage(messages.previousBox)}>
@@ -104,7 +105,7 @@ class PokemonPc extends Component {
               <ReactSwipe ref="swipe" swipeOptions={{continuous: false, startSlide: currentBox, transitionEnd: this.handleSwipe}}>
                 {_.map(boxes, (box, i) => (
                   <div key={i}>
-                    <Box box={box} cols={BOX_COLS}/>
+                    <PokedexBox box={box} cols={BOX_COLS}/>
                   </div>
                 ))}
               </ReactSwipe>

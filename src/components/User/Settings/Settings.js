@@ -10,10 +10,10 @@ import TextField from 'material-ui/TextField';
 import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar';
 import Toggle from 'material-ui/Toggle';
 
-import Colors from '../../utils/colors';
-import actions from '../../actions';
+import Colors from 'utils/colors';
+import actions from 'actions';
 
-import 'styles/user/Settings.css';
+import './Settings.css';
 
 const messages = defineMessages({
   settings: {id: 'user.settings'},

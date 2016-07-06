@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {green400, lightGreen500, orange800} from 'material-ui/styles/colors';
+import {green400, lightGreen500, lime700} from 'material-ui/styles/colors';
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 // Needed for onTouchTap
@@ -18,10 +18,9 @@ const muiTheme = getMuiTheme({
   palette: {
     primary1Color: green400,
     primary2Color: lightGreen500,
-    accent1Color: orange800,
+    accent1Color: lime700,
   },
 });
-
 
 class Root extends Component {
   render() {

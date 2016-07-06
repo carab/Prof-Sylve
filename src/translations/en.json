@@ -1,5 +1,9 @@
 {
-  "app": "Prof. Sylve's Living Dex",
+  "app": "Prof. Sylve",
+  "intro": {
+    "subtitle": "The Living Pokédex follow up solution",
+    "text": "You have always wanted to catch'em all but do not know where to start?<br/> Prof. Sylve helps you to do so by organizing your journey : same display as in game PC, Pokémon tagging to group them, captured state, links to Wiki, etc.<br/><br/> The application is designed for completing a <a target='_blank' href='http://bulbapedia.bulbagarden.net/wiki/Living_Pok%C3%A9dex'>Living Pokédex</a> but can also be used for simple Pokédex."
+  },
   "label": {
     "save": "Save"
   },

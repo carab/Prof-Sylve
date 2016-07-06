@@ -1,5 +1,3 @@
-import Immutable from 'immutable';
-
 import initial from '../store/initial';
 
 export default (state = initial.ui, action) => {

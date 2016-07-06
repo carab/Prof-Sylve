@@ -1,36 +1,31 @@
 'use strict';
 
+import _ from 'lodash';
 import React, {Component, PropTypes} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
-import {injectIntl, intlShape, defineMessages} from 'react-intl';
+import {injectIntl, defineMessages} from 'react-intl';
 import Helmet from 'react-helmet';
 
 import Drawer from 'material-ui/Drawer';
 import Divider from 'material-ui/Divider';
-import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
-import {List, ListItem, MakeSelectable} from 'material-ui/List';
-import IconButton from 'material-ui/IconButton';
-import MoreVertIconIcon from 'material-ui/svg-icons/navigation/more-vert';
-import PowerSettingsNewIcon from 'material-ui/svg-icons/action/power-settings-new';
+import {List, ListItem} from 'material-ui/List';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import ListIcon from 'material-ui/svg-icons/action/list';
 import DashboardIcon from 'material-ui/svg-icons/action/dashboard';
 import ViewModuleIcon from 'material-ui/svg-icons/action/view-module';
 import BugReportIcon from 'material-ui/svg-icons/action/bug-report';
 import LanguageIcon from 'material-ui/svg-icons/action/language';
-import PeopleIcon from 'material-ui/svg-icons/social/people';
 import HomeIcon from 'material-ui/svg-icons/action/home';
 import BackIcon from 'material-ui/svg-icons/navigation/arrow-back';
 
-import Appbar from './Ui/Appbar';
+import Appbar from 'components/Ui/Appbar/Appbar';
 
-import withWidth, {LG} from '../utils/with-width';
-import actions from '../actions';
+import withWidth, {LG} from 'utils/with-width';
+import actions from 'actions';
 
 import 'bootstrap/dist/css/bootstrap.css';
-import 'styles/App.css';
+import './Main.css';
 
 const messages = defineMessages({
   app: {id: 'app'},
@@ -71,7 +66,7 @@ class Main extends Component {
   }
 
   renderLayout() {
-    const {signedIn, profile, currentUsername, params, width} = this.props;
+    const {signedIn, profile, currentUsername, width} = this.props;
     const {formatMessage} = this.props.intl;
 
     let navItems = [];

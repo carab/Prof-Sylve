@@ -1,11 +1,9 @@
 'use strict';
 
-import _ from 'lodash';
-
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
-import {injectIntl, intlShape, defineMessages} from 'react-intl';
+import {injectIntl} from 'react-intl';
 
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
@@ -14,7 +12,7 @@ import PowerSettingsNewIcon from 'material-ui/svg-icons/action/power-settings-ne
 class Appbar extends Component {
   render() {
     const {showMenuButton, onToggleNav} = this.props;
-    const {title, currentUsername, profile} = this.props;
+    const {title} = this.props;
 
     const style = {
       position: 'fixed',
@@ -51,8 +49,6 @@ const mapStateToProps = (state) => {
   return {
     signedIn: state.auth.signedIn,
     title: state.ui.title,
-    currentUsername: state.ui.currentUsername,
-    profile: state.profile,
   };
 };
 

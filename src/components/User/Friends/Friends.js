@@ -11,7 +11,7 @@ import IconButton from 'material-ui/IconButton';
 import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar';
 import PersonAddIcon from 'material-ui/svg-icons/social/person-add';
 
-import 'styles/user/Friends.css';
+import './Friends.css';
 
 const messages = defineMessages({
   none: {id: 'user.friends.none'},

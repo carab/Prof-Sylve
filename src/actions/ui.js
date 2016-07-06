@@ -75,10 +75,10 @@ const actions = {
     return (dispatch) => {
       dispatch({
         type: 'SET_TITLE',
-        payload: title
+        payload: title,
       });
     };
-  }
+  },
 };
 
 export default actions;

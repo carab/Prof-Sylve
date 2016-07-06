@@ -1,15 +1,15 @@
 'use strict';
 
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
-import {injectIntl, intlShape, defineMessages} from 'react-intl';
+import {injectIntl, defineMessages} from 'react-intl';
 
 import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 
-import 'styles/pokemon/Toolbar.css';
+import './Toolbar.css';
 
 const messages = defineMessages({
   counter: {id: 'pokemon.toolbar.counter'},

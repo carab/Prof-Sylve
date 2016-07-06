@@ -1,7 +1,7 @@
 'use strict';
 
 import _ from 'lodash';
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
 
@@ -21,20 +21,20 @@ import ArrowDropRightIcon from 'material-ui/svg-icons/navigation-arrow-drop-righ
 import CancelIcon from 'material-ui/svg-icons/navigation/cancel';
 import RadioUncheckedIcon from 'material-ui/svg-icons/toggle/radio-button-unchecked';
 
-import {injectIntl, intlShape, defineMessages} from 'react-intl';
+import {injectIntl, defineMessages} from 'react-intl';
 
 import {VirtualScroll, AutoSizer} from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
-import Colors from '../../utils/colors';
-import actions from '../../actions';
-import Regions from '../../utils/regions';
+import actions from 'actions';
+import Colors from 'utils/colors';
+import Regions from 'utils/regions';
 
 import FilterMenuItem from 'components/Filter/MenuItem';
-import PokemonItem from 'components/pokemon/Item';
-import Toolbar from 'components/pokemon/Toolbar';
+import Pokemon from 'components/Pokemon/Pokemon';
+import PokedexToolbar from 'components/Pokedex/Toolbar/Toolbar';
 
-import 'styles/Page/Pokedex.css';
+import './List.css';
 
 const messages = defineMessages({
   noResult: {id: 'pokemon.filter.noResult'},
@@ -192,7 +192,7 @@ class PageList extends Component {
     return (
       <div className="PokemonList container">
         <Paper zDepth={1} className="PokemonList__paper">
-          <Toolbar pokemons={pokemons} filteredPokemons={this.filteredPokemons} right={
+          <PokedexToolbar pokemons={pokemons} filteredPokemons={this.filteredPokemons} right={
             <div>
               <div className="FilterSearch">
                 <div className="FilterSearch_icon">
@@ -221,7 +221,7 @@ class PageList extends Component {
                   primaryText={formatMessage(messages.region)}
                   leftIcon={<PublicIcon color={active.region ? active.region.color : ''}/>}
                   rightIcon={<ArrowDropRightIcon/>}
-                  menuItems={_.map(Regions, (region, index) => (
+                  menuItems={_.map(Regions, (region) => (
                     <FilterMenuItem
                       key={region.name}
                       name="region"
@@ -328,7 +328,7 @@ class PageList extends Component {
     const pokemon = this.filteredPokemons[index];
 
     return (
-      <PokemonItem key={pokemon.id} id={pokemon.id} type="row"/>
+      <Pokemon key={pokemon.id} id={pokemon.id} type="row"/>
     )
   }
 }

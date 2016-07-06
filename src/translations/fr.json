@@ -1,5 +1,9 @@
 {
-  "app": "Living Dex du Prof. Sylve",
+  "app": "Prof. Sylve",
+  "intro": {
+    "subtitle": "Suivi et gestion d'un Living Pokédex",
+    "text": "T'as toujours voulu tous les capturer mais tu ne sais pas par où commencer ?<br/> Prof. Sylve est un outil qui te simplifiera la tâche : affichage par boîte comme en jeu, tag des Pokémons pour facilement les retrouver, liens vers le Wiki, etc.<br/><br/> Cette application est faite pour compléter un <a href=\"http://bulbapedia.bulbagarden.net/wiki/Living_Pok%C3%A9dex\">Living Pokédex</a> mais peut aussi être utilisée pour un simple Pokédex."
+  },
   "label": {
     "save": "Sauvegarder"
   },
@@ -30,7 +34,7 @@
     "settings": "Mes Paramètres",
     "signout": "Déconnexion",
     "signin": "Se connecter",
-    "signinSubtitle": "Si tu as déjà commencé ta plus grande aventure !",
+    "signinSubtitle": "Si ta plus grande aventure a déjà commencé !",
     "signup": "S'inscrire",
     "signupSubtitle": "Si tu veux tous les attraper !",
     "username": "Nom d'utilisateur",

@@ -8,7 +8,7 @@ import {Link} from 'react-router';
 import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
 
-import actions from '../../actions';
+import actions from 'actions';
 
 class FilterMenuItem extends Component {
   constructor(props) {
@@ -17,7 +17,6 @@ class FilterMenuItem extends Component {
 
   render() {
     const {text, color, checkedIcon, uncheckedIcon} = this.props;
-    const hash = '';
     const style = {};
     const iconStyle = {};
 

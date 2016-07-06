@@ -3,7 +3,7 @@
 import React from 'react';
 import CircularProgress from 'material-ui/CircularProgress';
 
-import 'styles/Utils/Loader.css';
+import './Loader.css';
 
 function Loader() {
   return (

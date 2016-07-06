@@ -8,9 +8,9 @@ import _ from 'lodash';
 import {GridList} from 'material-ui/GridList';
 import CircularProgress from 'material-ui/CircularProgress';
 
-import PokemonItem from 'components/pokemon/Item';
+import Pokemon from 'components/Pokemon/Pokemon';
 
-import 'styles/pokemon/Box.css';
+import './Box.css';
 
 class Box extends React.Component {
   render() {
@@ -39,7 +39,7 @@ class Box extends React.Component {
           cellHeight={cellHeight}
         >
           {_.map(box.ids, (id) => (
-            <PokemonItem key={id} id={id} type="tile" mode={mode}/>
+            <Pokemon key={id} id={id} type="tile" mode={mode}/>
           ))}
         </GridList>
       );

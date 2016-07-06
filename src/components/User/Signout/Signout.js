@@ -3,9 +3,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import actions from '../../actions';
+import actions from 'actions';
 
-import 'styles/user/Signout.css';
+import './Signout.css';
 
 class Signout extends Component {
   componentWillMount() {

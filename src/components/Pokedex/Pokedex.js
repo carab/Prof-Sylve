@@ -7,9 +7,9 @@ import Helmet from 'react-helmet';
 
 import Paper from 'material-ui/Paper';
 
-import Loader from '../Utils/Loader';
+import Loader from 'components/Utils/Loader/Loader';
 
-import Actions from '../../actions';
+import Actions from 'actions';
 
 import './Pokedex.css';
 
@@ -53,7 +53,7 @@ class Pokedex extends Component {
     return (
       <div className="Pokedex">
         <Helmet title={title} meta={[
-          { property: 'og:title', content: title }
+          { property: 'og:title', content: title },
         ]}/>
         {this.props.children}
       </div>

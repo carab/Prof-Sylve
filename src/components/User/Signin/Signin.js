@@ -1,6 +1,5 @@
 'use strict';
 
-import _ from 'lodash';
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
@@ -10,23 +9,22 @@ import TextField from 'material-ui/TextField';
 import {Card, CardActions, CardTitle, CardText} from 'material-ui/Card';
 import CircularProgress from 'material-ui/CircularProgress';
 
-import actions from '../../actions';
+import actions from 'actions';
 
-import 'styles/user/Signup.css';
+import './Signin.css';
 
 const messages = defineMessages({
-  signup: {id: 'user.signup'},
-  subtitle: {id: 'user.signupSubtitle'},
+  signin: {id: 'user.signin'},
+  subtitle: {id: 'user.signinSubtitle'},
   email: {id: 'user.email'},
   password: {id: 'user.password'},
-  passwordConfirmation: {id: 'user.passwordConfirmation'},
-  alreadyUsed: {id: 'errors.alreadyUsed'},
   invalidEmail: {id: 'errors.invalidEmail'},
-  invalidPassword: {id: 'errors.invalidPassword'},
-  invalidConfirmation: {id: 'errors.invalidConfirmation'},
+  wrongPassword: {id: 'errors.wrongPassword'},
+  userDisabled: {id: 'errors.userDisabled'},
+  userNotFound: {id: 'errors.userNotFound'},
 });
 
-class SignupComponent extends Component {
+class UserSignin extends Component {
   constructor(props, context) {
     super(props, context);
 
@@ -38,19 +36,34 @@ class SignupComponent extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentWillMount() {
+    this.componentWillUpdate(this.props);
+  }
+
+  componentWillUpdate(nextProps) {
+    const {signedIn} = nextProps;
+
+    if (signedIn) {
+      this.context.router.replace('/');
+    }
+  }
+
   componentWillReceiveProps(newsProps) {
     const {error} = newsProps;
 
     if (error) {
       switch (error.code) {
-        case 'auth/email-already-in-use':
-          this.setState({errors: { email: messages.alreadyUsed }})
-          break;
         case 'auth/invalid-email':
           this.setState({errors: { email: messages.invalidEmail }})
           break;
-        case 'auth/weak-password':
-          this.setState({errors: { password: messages.invalidPassword }})
+        case 'auth/user-disabled':
+          this.setState({errors: { email: messages.userDisabled }})
+          break;
+        case 'auth/user-not-found':
+          this.setState({errors: { email: messages.userNotFound }})
+          break;
+        case 'auth/wrong-password':
+          this.setState({errors: { password: messages.wrongPassword }})
           break;
       }
 
@@ -62,7 +75,7 @@ class SignupComponent extends Component {
     const {loading, errors} = this.state;
     const {formatMessage} = this.props.intl;
 
-    let action = <RaisedButton type="submit" label={formatMessage(messages.signup)} secondary={true} />;
+    let action = <RaisedButton type="submit" label={formatMessage(messages.signin)} primary={true} />;
 
     if (loading) {
       action = <CircularProgress size={0.5}/>;
@@ -71,12 +84,13 @@ class SignupComponent extends Component {
     return (
       <form onSubmit={this.handleSubmit}>
         <Card>
-          <CardTitle title={formatMessage(messages.signup)} subtitle={formatMessage(messages.subtitle)}/>
+          <CardTitle title={formatMessage(messages.signin)} subtitle={formatMessage(messages.subtitle)}/>
           <CardText>
             <TextField
               ref="email"
               type="email"
               floatingLabelText={formatMessage(messages.email)}
+              errorText={this.state.errors.email}
               fullWidth={true}
               errorText={errors.email && formatMessage(errors.email)}
             />
@@ -86,13 +100,6 @@ class SignupComponent extends Component {
               floatingLabelText={formatMessage(messages.password)}
               fullWidth={true}
               errorText={errors.password && formatMessage(errors.password)}
-            />
-            <TextField
-              ref="passwordConfirmation"
-              type="password"
-              floatingLabelText={formatMessage(messages.passwordConfirmation)}
-              fullWidth={true}
-              errorText={errors.passwordConfirmation && formatMessage(errors.passwordConfirmation)}
             />
           </CardText>
           <CardActions className="text-xs-center">
@@ -113,42 +120,33 @@ class SignupComponent extends Component {
 
     const email = this.refs.email.getValue();
     const password = this.refs.password.getValue();
-    const passwordConfirmation = this.refs.passwordConfirmation.getValue();
 
-    if (password !== passwordConfirmation) {
-      this.setState({
-        errors: { passwordConfirmation: messages.invalidConfirmation },
-        loading: false,
-      });
-    } else {
-      this.props.signup(email, password, this.props.locale);
-    }
+    this.props.signin(email, password);
   }
 }
 
-SignupComponent.displayName = 'UserSignupComponent';
-SignupComponent.contextTypes = {
-    router: () => { return React.PropTypes.func.isRequired; },
+UserSignin.displayName = 'UserSignin';
+UserSignin.contextTypes = {
+  router: () => { return PropTypes.func.isRequired; },
 };
 
-SignupComponent.propTypes = {
-  locale: PropTypes.string.isRequired,
+UserSignin.propTypes = {
   intl: intlShape.isRequired,
 };
 
 const mapStateToProps = (state) => {
   return {
-    error: state.auth.errors.signup,
-    locale: state.profile.locale,
+    error: state.auth.errors.signin,
+    signedIn: state.auth.signedIn,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    signup: (email, password, locale) => {
-      dispatch(actions.auth.signup(email, password, locale));
+    signin: (email, password) => {
+      dispatch(actions.auth.signin(email, password));
     },
   };
 }
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(SignupComponent));
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(UserSignin));

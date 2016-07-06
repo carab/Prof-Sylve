@@ -18,12 +18,12 @@ import LaunchIcon from 'material-ui/svg-icons/action/launch';
 import BookmarkIcon from 'material-ui/svg-icons/action/bookmark';
 import ViewModuleIcon from 'material-ui/svg-icons/action/view-module';
 
-import {BOX_SIZE} from '../Page/Pc';
+import {BOX_SIZE} from 'components/Pokedex/Pc/Pc';
 
-import Colors from '../../utils/colors';
-import actions from '../../actions';
+import Colors from 'utils/colors';
+import actions from 'actions';
 
-import 'styles/pokemon/Pokemon.css';
+import './Pokemon.css';
 
 const messages = defineMessages({
   collected: {id: 'pokemon.collected'},
