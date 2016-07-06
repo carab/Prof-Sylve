@@ -52,7 +52,9 @@ class Pokedex extends Component {
 
     return (
       <div className="Pokedex">
-        <Helmet title={title}/>
+        <Helmet title={title} meta={[
+          { property: 'og:title', content: title }
+        ]}/>
         {this.props.children}
       </div>
     );

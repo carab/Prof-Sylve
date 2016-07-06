@@ -28,6 +28,7 @@ import Regions from '../../utils/regions';
 import 'styles/Page/Dashboard.css';
 
 const messages = defineMessages({
+  pokedexOf: {id: 'user.pokedex.of'},
   progress: {id: 'dashboard.progress'},
   shareMessage: {id: 'dashboard.share.message'},
   byRegion: {id: 'dashboard.byRegion'},
@@ -71,22 +72,32 @@ class Dashboard extends Component {
 
     let addFriendButton;
     if (shared && auth.signedIn) {
-      addFriendButton = <IconButton><PersonAddIcon/></IconButton>;
+      //addFriendButton = <IconButton><PersonAddIcon/></IconButton>;
     }
 
     let shareMenu;
 
     if (pokedex.settings.public) {
       const { progress } = this.calculateProgress(pokedex.pokemons);
-      const message = encodeURIComponent(formatMessage(messages.shareMessage, { progress }));
+      const message = formatMessage(messages.shareMessage, { progress });
       const encodedUrl = encodeURIComponent(url);
-      const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&t=${message}`;
-      const twitterUrl = `https://twitter.com/intent/tweet?source=${encodedUrl}&text=${message}%20${encodedUrl}`;
+      const twitterUrl = `https://twitter.com/intent/tweet?source=${encodedUrl}&text=${encodeURIComponent(message)}%20${encodedUrl}`;
+
+      const handleFacebookShare = () => {
+        FB.ui({
+					method: 'feed',
+					link: url,
+					name: message,
+          //picture: attr.picture,
+          //caption: attr.caption,
+          description: formatMessage(messages.pokedexOf, { username: currentUsername }),
+				});
+      };
 
       shareMenu = (
         <IconMenu iconButtonElement={<IconButton><ShareIcon/></IconButton>}>
-          <MenuItem primaryText="Facebook" href={facebookUrl} target="_blank"/>
-          <MenuItem primaryText="Twitter" href={twitterUrl} target="_blank"/>
+          <MenuItem style={{ textAlign: 'center' }} primaryText={<FontAwesome size="lg" name="facebook-official"/>} onClick={handleFacebookShare}/>
+          <MenuItem style={{ textAlign: 'center' }} primaryText={<FontAwesome size="lg" name="twitter"/>} href={twitterUrl} target="_blank"/>
         </IconMenu>
       );
     }
