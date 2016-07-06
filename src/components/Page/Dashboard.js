@@ -119,7 +119,7 @@ class Dashboard extends Component {
                 {_.map(Regions, (region) => (
                   <ListItem key={region.name}
                     leftIcon={<PublicIcon color={region.color}/>}
-                    containerElement={<Link to={`${path}/list/collected=❌/region=${region.name}`}/>}
+                    containerElement={<Link to={`${path}/list/region=${region.name}`}/>}
                     primaryText={formatMessage(messages[region.name])}
                     secondaryText={this.renderProgress(_.slice(pokedex.pokemons, region.from-1, region.to), false, region.color)}
                     secondaryTextLines={2}
@@ -135,7 +135,7 @@ class Dashboard extends Component {
                 {_.map(_.groupBy(pokedex.pokemons, 'tag'), (pokemons, tag) => (tag === 'none') ? null : (
                   <ListItem key={tag}
                     leftIcon={<BookmarkIcon color={Colors.tags[tag]}/>}
-                    containerElement={<Link to={`${path}/list/collected=❌/tag=${tag}`}/>}
+                    containerElement={<Link to={`${path}/list/tag=${tag}`}/>}
                     primaryText={pokedex.settings.tags && pokedex.settings.tags[tag] && pokedex.settings.tags[tag].title || formatMessage(messages[tag])}
                     secondaryText={this.renderProgress(pokemons, false, Colors.tags[tag])}
                     secondaryTextLines={2}
