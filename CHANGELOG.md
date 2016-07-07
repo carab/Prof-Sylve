@@ -1,6 +1,17 @@
 Changelog
 =========
 
+## v0.19.0 (2016-07-07)
+
+- Add introduction text on sign page.
+- Add Facebook/Twitter shares on dashboard.
+- Add a default username calculated from email.
+- Add colors to regions.
+- Allow to browse a public Pokédex.
+- Add search field in list.
+- Persist filters and search in URL.
+- Massive rewrite of the code structure.
+
 ## v0.18.0 (2016-06-27)
 
 - Allow for multiple filters and rework filters management.
