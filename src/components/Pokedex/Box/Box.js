@@ -2,54 +2,33 @@
 
 import React from 'react';
 import {connect} from 'react-redux';
-import MediaQuery from 'react-responsive';
 import _ from 'lodash';
 
-import {GridList} from 'material-ui/GridList';
 import CircularProgress from 'material-ui/CircularProgress';
 
-import Pokemon from 'components/Pokemon/Pokemon';
+import PokemonTile from 'components/Pokemon/Tile/Tile';
 
 import './Box.css';
 
 class Box extends React.Component {
   render() {
-    return (
-      <div className="PokemonBox">
-          <MediaQuery maxWidth={767}>
-            {this.renderGrid('small', 100)}
-          </MediaQuery>
-          <MediaQuery minWidth={768} maxWidth={991}>
-            {this.renderGrid('medium', 150)}
-          </MediaQuery>
-          <MediaQuery minWidth={992}>
-            {this.renderGrid('large', 150)}
-          </MediaQuery>
-      </div>
-    );
-  }
-
-  renderGrid(mode, cellHeight) {
-    const {box, cols, currentBox} = this.props;
+    const {box, currentBox} = this.props;
 
     if (box.index === currentBox) {
       return (
-        <GridList
-          cols={cols}
-          cellHeight={cellHeight}
-        >
+        <div className="PokedexBox">
           {_.map(box.ids, (id) => (
-            <Pokemon key={id} id={id} type="tile" mode={mode}/>
+            <PokemonTile key={id} id={id}/>
           ))}
-        </GridList>
+        </div>
       );
     }
 
-    return <div className="PokemonBox__loader"><CircularProgress size={1}/></div>;
+    return <div className="PokedexBox__loader"><CircularProgress size={1}/></div>;
   }
 }
 
-Box.displayName = 'PokemonBoxComponent';
+Box.displayName = 'PokedexBox';
 
 const mapStateToProps = (state) => {
   return {

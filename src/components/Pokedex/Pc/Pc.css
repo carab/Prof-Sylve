@@ -1,5 +1,4 @@
 .PokemonPc {
-  max-height: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -8,17 +7,30 @@
 .PokemonPc__paper {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex: 1 1 auto;
 }
 
 .PokemonPc__view {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .PokemonPc__boxes {
   overflow: auto;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 100%;
+}
+
+/* Targets react-slider elements */
+.PokemonPc__boxes > div,
+.PokemonPc__boxes > div > div,
+.PokemonPc__boxes > div > div > div {
+  height: 100%;
 }
 
 .PokemonPc__previousBox,
@@ -28,15 +40,18 @@
 
 @media (min-width: 34em) {
   .PokemonPc {
-    height: auto;
-    max-height: calc(100% - 2rem);
+    height: calc(100% - 2rem);
+    min-height: 600px;
   }
 }
 
 @media (min-width: 62em) {
   .PokemonPc__view {
-    position: relative;
-    padding: 0 60px;
+  }
+
+  .PokemonPc__boxes {
+    left: 60px;
+    right: 60px;
   }
 
   .PokemonPc__previousBox,
@@ -45,11 +60,13 @@
     position: absolute;
     top: 50%;
     transform: translate(0, -50%);
-    left: 5px;
   }
 
+  .PokemonPc__previousBox {
+    left: 5px;
+}
+
   .PokemonPc__nextBox {
-    left: inherit;
     right: 5px;
   }
 }

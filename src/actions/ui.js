@@ -79,6 +79,14 @@ const actions = {
       });
     };
   },
+  setSelected(id, selected) {
+    return (dispatch) => {
+      dispatch({
+        type: 'SET_SELECTED',
+        payload: { id, selected },
+      });
+    };
+  },
 };
 
 export default actions;

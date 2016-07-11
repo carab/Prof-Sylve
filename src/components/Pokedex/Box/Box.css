@@ -1,8 +1,11 @@
-.PokemonBox {
-
+.PokedexBox {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  height: 100%;
 }
 
-.PokemonBox__loader {
+.PokedexBox__loader {
   padding: 10rem 0 0;
   text-align: center;
 }

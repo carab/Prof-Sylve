@@ -1,0 +1,73 @@
+:root {
+  --pokemon-tile-width: calc(100% / 6);
+  --pokemon-tile-height: calc(100% / 5);
+  --pokemon-tile-margin: 2px;
+  --pokemon-tile-footer-height: 48px;
+}
+
+.PokemonTile {
+  width: calc(var(--pokemon-tile-width) -  2 * var(--pokemon-tile-margin));
+  height: calc(var(--pokemon-tile-height) -  2 * var(--pokemon-tile-margin));
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0 var(--pokemon-tile-footer-height);
+  margin: var(--pokemon-tile-margin);
+  transition: 200ms ease all;
+  cursor: pointer;
+  position: relative;
+}
+
+.PokemonTile__checkbox {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.PokemonTile__footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--pokemon-tile-footer-height);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  background: rgba(239,239,239,0.5);
+  padding: 0 10px;
+  font-size: 16px;
+  transition: 200ms ease background;
+}
+
+.PokemonTile__name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.PokemonTile__id {
+  border-radius: 9px;
+  line-height: 18px;
+  font-size: 12px;
+  color: #fff;
+  padding: 0 5px;
+  background: #aaa;
+  transition: 200ms ease background;
+  margin: 0 10px 0 0;
+}
+
+.PokemonTile--collected {
+  opacity: 0.4;
+  background: #efefef;
+
+  .PokemonTile__footer {
+    background: none;
+  }
+}
+
+.PokemonTile--selected {
+  border: 1px solid var(--primary-color);
+}

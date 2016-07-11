@@ -18,8 +18,9 @@ export default {
     pokedexes: Immutable.Map(),
     currentUsername: undefined,
     currentBox: 0,
-    publicPokedex: null,
     filters: Immutable.Map(),
     title: undefined,
+    selected: Immutable.Map(), // Selected Pokémons for mass-actions
+    selectionMode: false, // true if Pokémons are selected
   },
 };

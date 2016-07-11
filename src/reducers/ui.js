@@ -27,6 +27,11 @@ export default (state = initial.ui, action) => {
         filters: initial.ui.filters,
       });
 
+    case 'SET_SELECTED':
+      return Object.assign({}, state, {
+        selected: state.selected.set(action.payload.id, action.payload.selected),
+      });
+
     default: return state;
   }
 };
