@@ -1,6 +1,10 @@
+import Immutable from 'immutable';
+
 import initial from '../store/initial';
 
 export default (state = initial.ui, action) => {
+  let selected;
+
   switch (action.type) {
 
     case 'SET_CURRENT_BOX':
@@ -25,6 +29,34 @@ export default (state = initial.ui, action) => {
     case 'RESET_FILTERS':
       return Object.assign({}, state, {
         filters: initial.ui.filters,
+      });
+
+    case 'SET_FILTERED':
+      return Object.assign({}, state, {
+        filtered: Immutable.List(action.payload),
+      });
+
+    case 'SET_SELECTED':
+      if (action.payload.selected) {
+        selected = state.selected.set(action.payload.id, action.payload.selected);
+      } else {
+        selected = state.selected.delete(action.payload.id);
+      }
+
+      return Object.assign({}, state, {
+        selected,
+        selecting: (selected.size > 0),
+      });
+
+    case 'RESET_SELECTED':
+      return Object.assign({}, state, {
+        selected: initial.ui.selected,
+        selecting: false,
+      });
+
+    case 'SET_CURRENT_POKEMON':
+      return Object.assign({}, state, {
+        currentPokemon: action.payload,
       });
 
     default: return state;

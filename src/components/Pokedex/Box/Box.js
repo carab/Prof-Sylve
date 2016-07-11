@@ -2,66 +2,60 @@
 
 import React from 'react';
 import {connect} from 'react-redux';
-import MediaQuery from 'react-responsive';
 import _ from 'lodash';
 
-import {GridList} from 'material-ui/GridList';
 import CircularProgress from 'material-ui/CircularProgress';
 
-import Pokemon from 'components/Pokemon/Pokemon';
+import PokemonTile from 'components/Pokemon/Tile/Tile';
+
+import actions from 'actions';
+import withWidth, {LG} from 'utils/with-width';
 
 import './Box.css';
 
 class Box extends React.Component {
   render() {
-    return (
-      <div className="PokemonBox">
-          <MediaQuery maxWidth={767}>
-            {this.renderGrid('small', 100)}
-          </MediaQuery>
-          <MediaQuery minWidth={768} maxWidth={991}>
-            {this.renderGrid('medium', 150)}
-          </MediaQuery>
-          <MediaQuery minWidth={992}>
-            {this.renderGrid('large', 150)}
-          </MediaQuery>
-      </div>
-    );
-  }
-
-  renderGrid(mode, cellHeight) {
-    const {box, cols, currentBox} = this.props;
+    const {pokemons, box, currentBox, width, onFiltered} = this.props;
 
     if (box.index === currentBox) {
+      const touch = (width < LG);
+      const filtered = _.map(pokemons.slice(box.start, box.end), 'id');
+
+      onFiltered(filtered);
+
       return (
-        <GridList
-          cols={cols}
-          cellHeight={cellHeight}
-        >
-          {_.map(box.ids, (id) => (
-            <Pokemon key={id} id={id} type="tile" mode={mode}/>
+        <div className="PokedexBox">
+          {_.map(filtered, (id) => (
+            <PokemonTile key={id} id={id} touch={touch}/>
           ))}
-        </GridList>
+        </div>
       );
     }
 
-    return <div className="PokemonBox__loader"><CircularProgress size={1}/></div>;
+    return <div className="PokedexBox__loader"><CircularProgress size={1}/></div>;
   }
 }
 
-Box.displayName = 'PokemonBoxComponent';
+Box.displayName = 'PokedexBox';
 
 const mapStateToProps = (state) => {
+  const currentPokedex = state.ui.pokedexes.get(state.ui.currentUsername);
+
   return {
+    pokemons: currentPokedex.pokemons,
     currentBox: state.ui.currentBox,
   };
 };
 
-const mapDispatchToProps = () => {
-  return {};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onFiltered: (filtered) => {
+      dispatch(actions.ui.setFiltered(filtered));
+    },
+  };
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Box);
+)(withWidth()(Box));

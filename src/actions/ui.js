@@ -79,6 +79,45 @@ const actions = {
       });
     };
   },
+  setFiltered(filtered) {
+    return (dispatch) => {
+      dispatch({
+        type: 'SET_FILTERED',
+        payload: filtered,
+      });
+    };
+  },
+  setSelected(id, selected) {
+    return (dispatch) => {
+      dispatch({
+        type: 'SET_SELECTED',
+        payload: { id, selected },
+      });
+    };
+  },
+  resetSelected() {
+    return (dispatch) => {
+      dispatch({
+        type: 'RESET_SELECTED',
+      });
+    };
+  },
+  setCurrentPokemon(id) {
+    return (dispatch) => {
+      dispatch({
+        type: 'SET_CURRENT_POKEMON',
+        payload: id,
+      });
+    };
+  },
+  setMenuOpen(id) {
+    return (dispatch) => {
+      dispatch({
+        type: 'SET_MENU_OPEN',
+        payload: id,
+      });
+    };
+  },
 };
 
 export default actions;

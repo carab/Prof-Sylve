@@ -27,10 +27,6 @@
     "userNotFound": "This account does not exist."
   },
   "user": {
-    "pokedex": {
-      "mine": "My Pokédex",
-      "of": "Pokédex of {username}"
-    },
     "settings": "My Settings",
     "signout": "Sign out",
     "signin": "Sign in",
@@ -46,10 +42,16 @@
       "none": "None yet"
     }
   },
+  "pokedex": {
+    "mine": "My Pokédex",
+    "of": "Pokédex of {username}",
+    "selected": "{selected} selected",
+    "cancelSelection": "Cancel selection"
+  },
   "settings": {
     "visibility": "Pokédex visibility",
     "public": "Public",
-    "missingUsername": "A public Pokédex needs a name."
+    "missingUsername": "Please fill in a valid username."
   },
   "dashboard": {
     "notVisible": "This Pokédex does not exist or is not public.",
@@ -73,7 +75,7 @@
     },
     "filter": {
       "search": "Search...",
-      "all": "Cancel",
+      "all": "Cancel filters",
       "collected": "Collected",
       "notCollected": "Not Collected",
       "noResult": "No Result"

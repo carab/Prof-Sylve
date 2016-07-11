@@ -15,14 +15,14 @@ import './Pokedex.css';
 
 const messages = defineMessages({
   notVisible: {id: 'dashboard.notVisible'},
-  myPokedex: {id: 'user.pokedex.mine'},
-  pokedexOf: {id: 'user.pokedex.of'},
+  myPokedex: {id: 'pokedex.mine'},
+  pokedexOf: {id: 'pokedex.of'},
 });
 
 class Pokedex extends Component {
   render() {
-    const {params, profile, pokedexes, loadPokedex, setCurrentUsername, intl} = this.props;
-    const username = params.username;
+    const {profile, pokedexes, intl, setCurrentUsername, loadPokedex} = this.props;
+    const {username} = this.props.params;
 
     let title = intl.formatMessage(messages.myPokedex);
 
@@ -69,6 +69,7 @@ const mapStateToProps = (state) => {
   return {
     profile: state.profile,
     pokedexes: state.ui.pokedexes,
+    currentUsername: state.ui.currentUsername,
   };
 };
 

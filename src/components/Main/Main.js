@@ -136,7 +136,7 @@ class Main extends Component {
     const style = {};
 
     if (this.context.router.isActive(path, true)) {
-      style.color = this.context.muiTheme.palette.accent1Color;
+      style.color = this.context.muiTheme.palette.primary1Color;
     }
 
     return (

@@ -1,3 +1,48 @@
 .PokemonToolbar {
-  
+  background: #E8E8E8;
+  height: 56px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+}
+
+.PokemonToolbar__group {
+  display: flex;
+  align-items: center;
+}
+
+.PokemonToolbar--selecting {
+  background: #3F51B5;
+  color: #fff;
+
+  /* Override Material UI DropdownMenu */
+  & div {
+    color: #fff !important;
+  }
+}
+
+.PokemonToolbar__selection {
+  display: flex;
+  align-items: center;
+}
+
+.PokemonToolbar__boxes {
+  margin-right: -16px;
+
+  /* Override Material UI Dropdown Menu height */
+  & > div {
+    height: auto !important;
+  }
+}
+
+.PokemonToolbar--selecting {
+  & .PokemonToolbar__selection,
+  & .PokedexSearch,
+  & .PokedexFilter {
+    /* Override Material UI IconMenu */
+    & svg {
+      fill: #fff !important;
+    }
+  }
 }

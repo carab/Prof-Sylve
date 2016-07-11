@@ -31,8 +31,8 @@ import Colors from 'utils/colors';
 import Regions from 'utils/regions';
 
 import FilterMenuItem from 'components/Filter/MenuItem';
-import Pokemon from 'components/Pokemon/Pokemon';
 import PokedexToolbar from 'components/Pokedex/Toolbar/Toolbar';
+import PokemonRow from 'components/Pokemon/Row/Row';
 
 import './List.css';
 
@@ -100,7 +100,7 @@ class PageList extends Component {
 
   render() {
     const {formatMessage} = this.props.intl;
-    const {pokemons, tags, filters, currentUsername} = this.props;
+    const {pokemons, tags, filters, currentUsername, onFiltered} = this.props;
 
     const filtersConfig = {
       region: {
@@ -158,9 +158,12 @@ class PageList extends Component {
     });
 
     // Execute filters sorted by priority
-    this.filteredPokemons = _.reduce(_.sortBy(filtersToExecute, 'priority'), (pokemons, filter) => {
+    const filtered = _.map(_.reduce(_.sortBy(filtersToExecute, 'priority'), (pokemons, filter) => {
       return filter.process(pokemons, filter.value);
-    }, pokemons);
+    }, pokemons), 'id');
+
+    this.filtered = filtered;
+    onFiltered(filtered);
 
     let query = this.state.query;
     const queryFilter = filters.get('q');
@@ -192,17 +195,17 @@ class PageList extends Component {
     return (
       <div className="PokemonList container">
         <Paper zDepth={1} className="PokemonList__paper">
-          <PokedexToolbar pokemons={pokemons} filteredPokemons={this.filteredPokemons} right={
-            <div>
-              <div className="FilterSearch">
-                <div className="FilterSearch_icon">
-                  <SearchIcon/>
-                </div>
-                <TextField value={query} hintText={formatMessage(messages.search)} onChange={this.handleFilterSearchChange}/>
-                <div className="FilterSearch_cancel">
-                  {query.length ? <IconButton onTouchTap={this.handleFilterSearchCancel}><CancelIcon/></IconButton> : ''}
-                </div>
+          <PokedexToolbar showFiltered={true} right={[
+            <div key="search" className="PokedexSearch">
+              <div className="PokedexSearch__icon">
+                <SearchIcon/>
               </div>
+              <TextField value={query} hintText={formatMessage(messages.search)} onChange={this.handleFilterSearchChange}/>
+              <div className="PokedexSearch__cancel">
+                {query.length ? <IconButton onTouchTap={this.handleFilterSearchCancel}><CancelIcon/></IconButton> : ''}
+              </div>
+            </div>,
+            <div key="filter" className="PokedexFilter">
               <IconMenu iconButtonElement={<IconButton><FilterIcon/></IconButton>}>
                 <MenuItem primaryText={formatMessage(messages.all)} leftIcon={<CancelIcon/>} containerElement={<Link to={resetPath} />}/>
                 <Divider/>
@@ -250,8 +253,8 @@ class PageList extends Component {
                   ))}
                 />
               </IconMenu>
-            </div>
-          }/>
+            </div>,
+          ]}/>
           <List className="PokemonList__list">
             <AutoSizer>
               {({ height, width }) => (
@@ -260,7 +263,7 @@ class PageList extends Component {
                   width={width}
                   overscanRowsCount={5}
                   noRowsRenderer={this.noItemRenderer}
-                  rowsCount={this.filteredPokemons.length}
+                  rowsCount={filtered.length}
                   rowHeight={48}
                   rowRenderer={this.itemRenderer}
                 />
@@ -325,11 +328,11 @@ class PageList extends Component {
   }
 
   itemRenderer = (index) => {
-    const pokemon = this.filteredPokemons[index];
+    const id = this.filtered[index];
 
     return (
-      <Pokemon key={pokemon.id} id={pokemon.id} type="row"/>
-    )
+      <PokemonRow key={id} id={id}/>
+    );
   }
 }
 
@@ -352,6 +355,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    onFiltered: (filtered) => {
+      dispatch(actions.ui.setFiltered(filtered));
+    },
     onAddFilter: (filter) => {
       dispatch(actions.ui.addFilter(filter));
     },

@@ -26,7 +26,7 @@ import Regions from 'utils/regions';
 import './Dashboard.css';
 
 const messages = defineMessages({
-  pokedexOf: {id: 'user.pokedex.of'},
+  pokedexOf: {id: 'pokedex.of'},
   progress: {id: 'dashboard.progress'},
   shareMessage: {id: 'dashboard.share.message'},
   byRegion: {id: 'dashboard.byRegion'},

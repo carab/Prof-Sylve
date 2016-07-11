@@ -10,14 +10,14 @@ const refs = {
 };
 
 const actions = {
-  setCollected(index, collected) {
+  setCollected(id, collected) {
     return () => {
-      refs.user().child(`pokedex/pokemons/${index}/collected`).set(collected);
+      refs.user().child(`pokedex/pokemons/${id-1}/collected`).set(collected);
     };
   },
-  setTag(index, tag) {
+  setTag(id, tag) {
     return () => {
-      refs.user().child(`pokedex/pokemons/${index}/tag`).set(tag);
+      refs.user().child(`pokedex/pokemons/${id-1}/tag`).set(tag);
     };
   },
   setSettingsPublic(isPublic) {

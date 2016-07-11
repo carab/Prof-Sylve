@@ -245,10 +245,10 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onCollected: (collected) => {
-      dispatch(actions.pokedex.setCollected(ownProps.id-1, collected));
+      dispatch(actions.pokedex.setCollected(ownProps.id, collected));
     },
     onTag: (color) => {
-      dispatch(actions.pokedex.setTag(ownProps.id-1, color));
+      dispatch(actions.pokedex.setTag(ownProps.id, color));
     },
   };
 }

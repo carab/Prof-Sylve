@@ -1,55 +1,72 @@
-.PokemonPc {
-  max-height: 100%;
+.PokedexPc {
   height: 100%;
   display: flex;
   flex-direction: column;
 }
 
-.PokemonPc__paper {
+.PokedexPc__paper {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex: 1 1 auto;
 }
 
-.PokemonPc__view {
+.PokedexPc__view {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
-.PokemonPc__boxes {
+.PokedexPc__boxes {
   overflow: auto;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 100%;
 }
 
-.PokemonPc__previousBox,
-.PokemonPc__nextBox {
+/* Targets react-slider elements */
+.PokedexPc__boxes > div,
+.PokedexPc__boxes > div > div,
+.PokedexPc__boxes > div > div > div {
+  height: 100%;
+}
+
+.PokedexPc__previousBox,
+.PokedexPc__nextBox {
   display: none;
 }
 
 @media (min-width: 34em) {
-  .PokemonPc {
-    height: auto;
-    max-height: calc(100% - 2rem);
+  .PokedexPc {
+    height: calc(100% - 2rem);
+    min-height: 600px;
   }
 }
 
 @media (min-width: 62em) {
-  .PokemonPc__view {
-    position: relative;
-    padding: 0 60px;
+  .PokedexPc__view {
   }
 
-  .PokemonPc__previousBox,
-  .PokemonPc__nextBox {
+  .PokedexPc__boxes {
+    left: 60px;
+    right: 60px;
+  }
+
+  .PokedexPc__previousBox,
+  .PokedexPc__nextBox {
     display: block;
     position: absolute;
     top: 50%;
     transform: translate(0, -50%);
-    left: 5px;
   }
 
-  .PokemonPc__nextBox {
-    left: inherit;
+  .PokedexPc__previousBox {
+    left: 5px;
+}
+
+  .PokedexPc__nextBox {
     right: 5px;
   }
 }

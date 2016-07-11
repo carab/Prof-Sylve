@@ -6,6 +6,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .PokemonList__list {
@@ -19,19 +20,19 @@
   }
 }
 
-.FilterSearch {
+.PokedexSearch {
   display: inline-block;
   position: relative;
   padding-left: 28px;
 }
 
-.FilterSearch_icon {
+.PokedexSearch__icon {
   position: absolute;
   left: 0;
   top: 12px;
 }
 
-.FilterSearch_cancel {
+.PokedexSearch__cancel {
   position: absolute;
   top: -2px;
   right: 0;
