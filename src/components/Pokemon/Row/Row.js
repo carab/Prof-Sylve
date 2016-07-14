@@ -116,7 +116,7 @@ class Row extends Component {
 
     return (
       <div className="PokemonRow__menu">
-        <PokemonMenu pokemon={pokemon}/>
+        <PokemonMenu pokemon={pokemon} showPcLink={true}/>
       </div>
     );
   }

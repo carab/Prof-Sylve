@@ -49,7 +49,7 @@ const targetOrigin = {horizontal: 'right', vertical: 'top'};
 class Menu extends Component {
   render() {
     const {icon, pokemon} = this.props;
-    const {tags, collected} = this.props;
+    const {tags} = this.props;
     const {formatMessage} = this.props.intl;
 
     let value = null;
@@ -67,9 +67,7 @@ class Menu extends Component {
           anchorOrigin={anchorOrigin}
           value={value}
         >
-          {this.renderMultiplePokemonItems()}
-          <MenuItem primaryText={formatMessage(messages.collected)} leftIcon={<Checkbox checked={collected}/>} onTouchTap={this.handleCollected}/>
-          {this.renderSinglePokemonItems()}
+          {this.renderItems()}
           <Divider/>
           <MenuItem primaryText={formatMessage(messages.none)}
             leftIcon={<BookmarkIcon color={Colors.default}/>}
@@ -89,33 +87,33 @@ class Menu extends Component {
     );
   }
 
-  renderMultiplePokemonItems() {
-    const {pokemon} = this.props;
+  renderItems() {
+    const {pokemon, showPcLink, collected} = this.props;
     const {formatMessage} = this.props.intl;
+    const items = [];
 
-    if (!pokemon) {
-      return [
-        <MenuItem key="cancel" primaryText={formatMessage(messages.cancelSelection)} leftIcon={<CancelIcon/>} onTouchTap={this.handleCancelSelection}/>,
-        <Divider key="divider1"/>,
-      ];
-    }
-  }
-
-  renderSinglePokemonItems() {
-    const {pokemon} = this.props;
-    const {currentUsername} = this.props;
-    const {formatMessage} = this.props.intl;
+    const collectedItem = <MenuItem key="collected" primaryText={formatMessage(messages.collected)} leftIcon={<Checkbox checked={collected}/>} onTouchTap={this.handleCollected}/>;
 
     if (pokemon) {
-      const box = parseInt((pokemon.id-1) / BOX_SIZE);
       const name = formatMessage({ id: 'pokemon.name.' + pokemon.id });
       const externalUrl = formatMessage(messages.externalUrl, { name });
 
-      return [
-        <MenuItem key="externalService" primaryText={formatMessage(messages.externalService)} leftIcon={<LaunchIcon/>} href={externalUrl} target="_blank"/>,
-        <MenuItem key="inPc" primaryText={formatMessage(messages.inPc)} leftIcon={<ViewModuleIcon/>} containerElement={<Link to={`/pokedex/${currentUsername}/pc/${box}`} />}/>,
-      ];
+      items.push(collectedItem);
+      items.push(<MenuItem key="externalService" primaryText={formatMessage(messages.externalService)} leftIcon={<LaunchIcon/>} href={externalUrl} target="_blank"/>);
+
+      if (showPcLink) {
+        const box = parseInt((pokemon.id-1) / BOX_SIZE);
+        const {currentUsername} = this.props;
+
+        items.push(<MenuItem key="inPc" primaryText={formatMessage(messages.inPc)} leftIcon={<ViewModuleIcon/>} containerElement={<Link to={`/pokedex/${currentUsername}/pc/${box}`} />}/>);
+      }
+    } else {
+      items.push(<MenuItem key="cancel" primaryText={formatMessage(messages.cancelSelection)} leftIcon={<CancelIcon/>} onTouchTap={this.handleCancelSelection}/>);
+      items.push(<Divider key="divider1"/>);
+      items.push(collectedItem);
     }
+
+    return items;
   }
 
   handleCancelSelection = () => {
