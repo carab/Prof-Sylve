@@ -32,7 +32,7 @@ const actions = {
             // Handle first sign in and create username
             if (!profile.username) {
               const to = profile.email.indexOf('@');
-              const username = profile.email.substring(0, to).replace(/\+\.\$\#\[\//i, '');
+              const username = profile.email.substring(0, to).replace(/[\+\.\$\#\[\/]/g, '');
               const setUsername = (increment) => {
                 let computedUsername = username;
 
