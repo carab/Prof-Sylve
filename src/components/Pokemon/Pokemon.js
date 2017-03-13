@@ -109,7 +109,7 @@ class PokemonComponent extends Component {
           value={pokemon.tag}
         >
           <MenuItem primaryText={formatMessage(messages.collected)} leftIcon={<Checkbox checked={pokemon.collected}/>} onTouchTap={this.handleCollected}/>
-          <MenuItem primaryText={formatMessage(messages.externalService)} leftIcon={<LaunchIcon/>} href={externalUrl} target="_blank"/>
+          <MenuItem primaryText={formatMessage(messages.externalService)} leftIcon={<LaunchIcon/>} href={externalUrl} rel="noopener" target="_blank"/>
           {pcMenuItem}
           <Divider/>
           <MenuItem primaryText={formatMessage(messages.none)}

@@ -1,0 +1,20 @@
+{
+  "short_name": "Prof. Sylve",
+  "name": "Prof. Sylve's Living Dex",
+  "start_url": "/",
+  "background_color": "#ffffff",
+  "theme_color": "#f44336",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "icon-144.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    },
+    {
+      "src": "icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 'use strict';
 
+const OfflinePlugin = require('offline-plugin');
+
 let path = require('path');
 let webpack = require('webpack');
 let baseConfig = require('./base');
@@ -21,7 +23,8 @@ let config = Object.assign({}, baseConfig, {
     new webpack.NoErrorsPlugin(),
     new BowerWebpackPlugin({
       searchResolveModulesDirectories: false
-    })
+    }),
+    new OfflinePlugin()
   ],
   module: defaultSettings.getDefaultModules()
 });

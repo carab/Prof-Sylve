@@ -5,7 +5,12 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {red500, red300, indigo500} from 'material-ui/styles/colors';
 
+import * as OfflinePluginRuntime from 'offline-plugin/runtime';
+
 import injectTapEventPlugin from 'react-tap-event-plugin';
+
+OfflinePluginRuntime.install();
+
 // Needed for onTouchTap
 // Can go away when react 1.0 release
 // Check this repo:

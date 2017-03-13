@@ -99,7 +99,7 @@ class Menu extends Component {
       const externalUrl = formatMessage(messages.externalUrl, { name });
 
       items.push(collectedItem);
-      items.push(<MenuItem key="externalService" primaryText={formatMessage(messages.externalService)} leftIcon={<LaunchIcon/>} href={externalUrl} target="_blank"/>);
+      items.push(<MenuItem key="externalService" primaryText={formatMessage(messages.externalService)} leftIcon={<LaunchIcon/>} rel="noopener" href={externalUrl} target="_blank"/>);
 
       if (showPcLink) {
         const box = parseInt((pokemon.id-1) / BOX_SIZE);

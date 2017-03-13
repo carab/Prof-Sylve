@@ -96,7 +96,7 @@ class Dashboard extends Component {
       shareMenu = (
         <IconMenu iconButtonElement={<IconButton><ShareIcon/></IconButton>}>
           <MenuItem style={{ textAlign: 'center' }} primaryText={<FontAwesome size="lg" name="facebook-official"/>} onClick={handleFacebookShare}/>
-          <MenuItem style={{ textAlign: 'center' }} primaryText={<FontAwesome size="lg" name="twitter"/>} href={twitterUrl} target="_blank"/>
+          <MenuItem style={{ textAlign: 'center' }} primaryText={<FontAwesome size="lg" name="twitter"/>} href={twitterUrl} rel="noopener" target="_blank"/>
         </IconMenu>
       );
     }

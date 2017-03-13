@@ -115,7 +115,7 @@ class Main extends Component {
           <div className="Drawer">
             <List onChange={this.handleToggleNav}>
               {navItems}
-              <ListItem leftIcon={<BugReportIcon/>} href="https://github.com/carab/Prof-Sylve/issues" target="blank">{formatMessage(messages.bugs)}</ListItem>
+              <ListItem leftIcon={<BugReportIcon/>} href="https://github.com/carab/Prof-Sylve/issues" rel="noopener" target="blank">{formatMessage(messages.bugs)}</ListItem>
               <ListItem
                 primaryText={formatMessage(messages.language)}
                 leftIcon={<LanguageIcon />}

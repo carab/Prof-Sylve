@@ -15,9 +15,9 @@ module.exports = {
   debug: true,
   devtool: 'eval',
   output: {
-    path: path.join(__dirname, '/../dist/assets'),
+    path: path.join(__dirname, '/../dist/'),
     filename: 'app.js',
-    publicPath: `.${defaultSettings.publicPath}`
+    publicPath: `${defaultSettings.publicPath}`
   },
   devServer: {
     contentBase: './src/',

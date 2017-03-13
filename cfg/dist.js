@@ -1,5 +1,7 @@
 'use strict';
 
+const OfflinePlugin = require('offline-plugin');
+
 let path = require('path');
 let webpack = require('webpack');
 
@@ -24,7 +26,15 @@ let config = Object.assign({}, baseConfig, {
     new webpack.optimize.UglifyJsPlugin(),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.optimize.AggressiveMergingPlugin(),
-    new webpack.NoErrorsPlugin()
+    new webpack.NoErrorsPlugin(),
+    new OfflinePlugin({
+      publicPath: `${defaultSettings.publicPath}`,
+      relativePaths: false,
+      ServiceWorker: {
+        navigateFallbackURL: '/index.html'
+      },
+      AppCache: false
+    })
   ],
   module: defaultSettings.getDefaultModules()
 });
