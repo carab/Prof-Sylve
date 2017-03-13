@@ -32,7 +32,7 @@ class Box extends React.Component {
       );
     }
 
-    return <div className="PokedexBox__loader"><CircularProgress size={1}/></div>;
+    return <div className="PokedexBox__loader"><CircularProgress size={40}/></div>;
   }
 }
 

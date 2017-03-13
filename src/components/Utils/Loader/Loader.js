@@ -8,7 +8,7 @@ import './Loader.css';
 function Loader() {
   return (
     <div className="Loader">
-      <CircularProgress size={2}/>
+      <CircularProgress size={80}/>
     </div>
   )
 }

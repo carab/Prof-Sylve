@@ -64,7 +64,7 @@ class UserSignup extends Component {
     let action = <RaisedButton type="submit" label={formatMessage(messages.signup)} secondary={true} />;
 
     if (loading) {
-      action = <CircularProgress size={0.5}/>;
+      action = <CircularProgress size={20}/>;
     }
 
     return (

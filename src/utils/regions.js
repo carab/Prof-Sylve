@@ -5,4 +5,5 @@ export default [
   { name: 'sinnoh', index: '4', from: 387, to: 494, color: '#90A4AE' }, // gray
   { name: 'ulys', index: '5', from: 495, to: 649, color: '#424242' }, // black
   { name: 'kalos', index: '6', from: 650, to: 721, color: '#42A5F5' }, // blue
+  { name: 'alola', index: '7', from: 722, to: 802, color: '#8e659f' }, // violet
 ];

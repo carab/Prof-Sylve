@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## v1.0.0 (2017-03-13)
+
+- Add Sun/Moon Pokémon.
+- Improve backend data fetching.
+
 ## v0.19.0 (2016-07-07)
 
 - Add introduction text on sign page.

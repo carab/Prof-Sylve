@@ -51,6 +51,7 @@ const messages = defineMessages({
   sinnoh: {id: 'pokemon.region.sinnoh'},
   ulys: {id: 'pokemon.region.ulys'},
   kalos: {id: 'pokemon.region.kalos'},
+  alola: {id: 'pokemon.region.alola'},
 
   tag: {id: 'pokemon.tag.tag'},
   red: {id: 'pokemon.tag.color.red'},

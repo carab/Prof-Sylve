@@ -24,6 +24,7 @@ So please enjoy using this if you need it too, and don't hesitate to ask for fea
 - [x] Easy search.
 - [x] Share Pokédex progress.
 - [ ] Location data.
+- [ ] List public Pokédexes.
 - [ ] Exchange market place ?
 
 ## Contributing

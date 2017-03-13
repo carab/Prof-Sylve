@@ -66,6 +66,37 @@ const actions = {
                     payload: pokedex,
                     meta: { username: profile.username },
                   });
+                  
+                  // Complete the Pokédex if needed
+                  refs.root().child('pokemons').once('value', (snapshot) => {
+                    const pokemons = snapshot.val();
+
+                    if (pokedex.pokemons.length != pokemons.length) {
+                      // Build an index of name => pokemon to ease matching old to new pokemons
+                      const nameToPokemonIndex = {};
+                      _.forEach(pokedex.pokemons, (pokemon) => {
+                        nameToPokemonIndex[pokemon.name] = pokemon;
+                      });
+
+                      const newPokemons = [];
+
+                      _.forEach(pokemons, (pokemon) => {
+                        const _pokemon = nameToPokemonIndex[pokemon.name];
+                        if (undefined !== _pokemon) {
+                          newPokemons.push(_pokemon);
+                        } else {
+                          newPokemons.push({
+                            id: pokemon.id,
+                            name: pokemon.name,
+                            collected: false,
+                            tag: 'none',
+                          });
+                        }
+                      });
+
+                      refs.user().child('pokedex/pokemons').set(newPokemons);
+                    }
+                  });
                 } else {
                   // Create the Pokédex if it doesn't exist
                   refs.root().child('pokemons').once('value', (snapshot) => {
