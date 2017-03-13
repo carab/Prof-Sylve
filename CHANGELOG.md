@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## v1.1.0 (2017-03-13)
+
+- Add Service Worker implementation and Manifest.json to show the banner 'add to home' on Chrome Android
+
 ## v1.0.0 (2017-03-13)
 
 - Add Sun/Moon Pokémon.
