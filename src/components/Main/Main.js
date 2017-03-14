@@ -29,7 +29,7 @@ import UserFriends from 'components/User/Friends/Friends';
 import withWidth, {LG} from 'utils/with-width';
 import actions from 'actions';
 
-import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/css/bootstrap-grid.css';
 import './Main.css';
 
 const messages = defineMessages({
