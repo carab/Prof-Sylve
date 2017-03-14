@@ -1,9 +1,14 @@
 Changelog
 =========
 
+## v1.2.0 (2017-03-14)
+
+- Improve performances by removing dependencies.
+- Upgrade all other dependencies (big upgrade to react-router@4).
+
 ## v1.1.0 (2017-03-13)
 
-- Add Service Worker implementation and Manifest.json to show the banner 'add to home' on Chrome Android
+- Add Service Worker implementation and Manifest.json to show the banner 'add to home' on Chrome Android.
 
 ## v1.0.0 (2017-03-13)
 
