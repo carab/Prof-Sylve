@@ -62,7 +62,7 @@ class Pokedex extends Component {
 
         <Route exact path="/pokedex/:username" component={PokedexDashboard}/>
         <Route path="/pokedex/:username/pc/:currentBox?" component={PokedexPc}/>
-        <Route path="/pokedex/:username/list/:splat(.*)" component={PokedexList}/>
+        <Route path="/pokedex/:username/list/:splat(.*)?" component={PokedexList}/>
       </div>
     );
   }
