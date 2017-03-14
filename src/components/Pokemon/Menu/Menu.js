@@ -3,7 +3,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {injectIntl, defineMessages} from 'react-intl';
-import {Link} from 'react-router';
+import {Link} from 'react-router-dom';
 import _ from 'lodash';
 
 import Divider from 'material-ui/Divider';

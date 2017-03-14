@@ -4,23 +4,23 @@ let path = require('path');
 let srcPath = path.join(__dirname, '/../src/');
 
 let baseConfig = require('./base');
+let defaultSettings = require('./defaults');
 
 // Add needed plugins here
-let BowerWebpackPlugin = require('bower-webpack-plugin');
+let LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
 
 module.exports = {
   devtool: 'eval',
   module: {
-    preLoaders: [
+    rules: [
       {
+        enforce: 'pre',
         test: /\.(js|jsx)$/,
-        loader: 'isparta-instrumenter-loader',
+        loader: 'istanbul-instrumenter-loader',
         include: [
           path.join(__dirname, '/../src')
         ]
-      }
-    ],
-    loaders: [
+      },
       {
         test: /\.(png|jpg|gif|woff|woff2|css|sass|scss|less|styl)$/,
         loader: 'null-loader'
@@ -28,18 +28,15 @@ module.exports = {
       {
         test: /\.(js|jsx)$/,
         loader: 'babel-loader',
-        include: [].concat(
-          baseConfig.additionalPaths,
-          [
-            path.join(__dirname, '/../src'),
-            path.join(__dirname, '/../test')
-          ]
-        )
+        include: [
+          path.join(__dirname, '/../src'),
+          path.join(__dirname, '/../test')
+        ]
       }
     ]
   },
   resolve: {
-    extensions: [ '', '.js', '.jsx' ],
+    extensions: ['.js', '.jsx'],
     alias: {
       actions: srcPath + 'actions/',
       helpers: path.join(__dirname, '/../test/helpers'),
@@ -51,8 +48,12 @@ module.exports = {
     }
   },
   plugins: [
-    new BowerWebpackPlugin({
-      searchResolveModulesDirectories: false
+    new webpack.LoaderOptionsPlugin({
+      options: {
+        debug: true,
+        port: defaultSettings.port,
+        postcss: defaultSettings.postcss
+      }
     })
   ]
 };

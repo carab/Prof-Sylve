@@ -4,19 +4,10 @@ import _ from 'lodash';
 
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Router, Route, IndexRoute, IndexRedirect, browserHistory} from 'react-router';
 import {IntlProvider, addLocaleData} from 'react-intl';
 import frLocaleData from 'react-intl/locale-data/fr';
 
 import Main from 'components/Main/Main';
-import Pokedex from 'components/Pokedex/Pokedex';
-import PokedexDashboard from 'components/Pokedex/Dashboard/Dashboard';
-import PokedexPc from 'components/Pokedex/Pc/Pc';
-import PokedexList from 'components/Pokedex/List/List';
-import UserSign from 'components/User/Sign/Sign';
-import UserSignout from 'components/User/Signout/Signout';
-import UserSettings from 'components/User/Settings/Settings';
-import UserFriends from 'components/User/Friends/Friends';
 import Loader from 'components/Utils/Loader/Loader';
 
 import actions from '../actions';
@@ -65,22 +56,7 @@ class App extends Component {
 
     return (
       <IntlProvider locale={locale} messages={this.getMessages(locale)}>
-        <Router history={browserHistory}>
-          <Route path="/" component={Main}>
-            <IndexRoute name="sign" component={UserSign} onEnter={this.handleAuthenticated}/>
-            <Route name="signout" path="signout" component={UserSignout}/>
-            <Route path="pokedex/:username" component={Pokedex}>
-              <IndexRedirect to="dashboard" />
-              <Route name="dashboard" path="dashboard" component={PokedexDashboard}/>
-              <Route name="pc" path="pc(/:currentBox)" component={PokedexPc}/>
-              <Route name="list" path="list(/**)" component={PokedexList}/>
-            </Route>
-            <Route component={Pokedex}>
-              <Route name="friends" path="friends" component={UserFriends} onEnter={this.handleAuthRequired}/>
-              <Route name="settings" path="settings" component={UserSettings} onEnter={this.handleAuthRequired}/>
-            </Route>
-          </Route>
-        </Router>
+        <Main/>
       </IntlProvider>
     );
   }

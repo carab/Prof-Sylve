@@ -17,7 +17,7 @@ export default {
   ui: {
     pokedexes: Immutable.Map(),
     currentUsername: undefined,
-    currentBox: 0,
+    currentBox: 1,
     filters: Immutable.Map(),
     title: undefined,
     filtered: Immutable.List(), // Filtered Pokémons on PC (by box) or List (by search of filters)

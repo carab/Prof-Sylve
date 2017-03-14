@@ -2,8 +2,8 @@
 
 import _ from 'lodash';
 import React, {Component, PropTypes} from 'react';
-import {Link} from 'react-router';
 import {connect} from 'react-redux';
+import {BrowserRouter as Router, Route, Link, Switch} from 'react-router-dom';
 import {injectIntl, defineMessages} from 'react-intl';
 import Helmet from 'react-helmet';
 
@@ -20,6 +20,11 @@ import HomeIcon from 'material-ui/svg-icons/action/home';
 import BackIcon from 'material-ui/svg-icons/navigation/arrow-back';
 
 import Appbar from 'components/Ui/Appbar/Appbar';
+import Pokedex from 'components/Pokedex/Pokedex';
+import UserSign from 'components/User/Sign/Sign';
+import UserSignout from 'components/User/Signout/Signout';
+import UserSettings from 'components/User/Settings/Settings';
+import UserFriends from 'components/User/Friends/Friends';
 
 import withWidth, {LG} from 'utils/with-width';
 import actions from 'actions';
@@ -66,7 +71,7 @@ class Main extends Component {
   }
 
   renderLayout() {
-    const {signedIn, profile, currentUsername, width} = this.props;
+    const {signedIn, profile, currentUsername, currentBox, width} = this.props;
     const {formatMessage} = this.props.intl;
 
     let navItems = [];
@@ -78,12 +83,12 @@ class Main extends Component {
 
     if (currentUsername) {
       if (signedIn && currentUsername !== profile.username) {
-        navItems.push(this.renderNavMenuItem(<BackIcon/>, `/pokedex/${profile.username}/dashboard`, formatMessage(messages.back)));
+        navItems.push(this.renderNavMenuItem(<BackIcon/>, `/pokedex/${profile.username}`, formatMessage(messages.back)));
         navItems.push(<Divider key="divider2"/>);
       }
 
-      navItems.push(this.renderNavMenuItem(<DashboardIcon/>, `/pokedex/${currentUsername}/dashboard`, formatMessage(messages.dashboard)));
-      navItems.push(this.renderNavMenuItem(<ViewModuleIcon/>, `/pokedex/${currentUsername}/pc`, formatMessage(messages.byBox)));
+      navItems.push(this.renderNavMenuItem(<DashboardIcon/>, `/pokedex/${currentUsername}`, formatMessage(messages.dashboard)));
+      navItems.push(this.renderNavMenuItem(<ViewModuleIcon/>, `/pokedex/${currentUsername}/pc/${currentBox}`, formatMessage(messages.byBox)));
       navItems.push(this.renderNavMenuItem(<ListIcon/>, `/pokedex/${currentUsername}/list`, formatMessage(messages.byList)));
       navItems.push(<Divider key="divider3"/>);
 
@@ -105,39 +110,47 @@ class Main extends Component {
     }
 
     return (
-      <div className="prof-sylve">
-        <Appbar onToggleNav={this.handleToggleNav} showMenuButton={showMenuButton}/>
-        <Drawer
-          docked={drawerDocked}
-          open={drawerOpen}
-          onRequestChange={this.handleToggleNavRequest}
-        >
-          <div className="Drawer">
-            <List onChange={this.handleToggleNav}>
-              {navItems}
-              <ListItem leftIcon={<BugReportIcon/>} href="https://github.com/carab/Prof-Sylve/issues" rel="noopener" target="blank">{formatMessage(messages.bugs)}</ListItem>
-              <ListItem
-                primaryText={formatMessage(messages.language)}
-                leftIcon={<LanguageIcon />}
-                primaryTogglesNestedList={true}
-                nestedItems={_.map({ en: 'English', fr: 'Français' }, this.renderLocaleMenuItem)}
-              />
-            </List>
+      <Router>
+        <div className="prof-sylve">
+          <Appbar onToggleNav={this.handleToggleNav} showMenuButton={showMenuButton}/>
+          <Drawer
+            docked={drawerDocked}
+            open={drawerOpen}
+            onRequestChange={this.handleToggleNavRequest}
+          >
+            <div className="Drawer">
+              <List onChange={this.handleToggleNav}>
+                {navItems}
+                <ListItem leftIcon={<BugReportIcon/>} href="https://github.com/carab/Prof-Sylve/issues" rel="noopener" target="blank">{formatMessage(messages.bugs)}</ListItem>
+                <ListItem
+                  primaryText={formatMessage(messages.language)}
+                  leftIcon={<LanguageIcon />}
+                  primaryTogglesNestedList={true}
+                  nestedItems={_.map({ en: 'English', fr: 'Français' }, this.renderLocaleMenuItem)}
+                />
+              </List>
+            </div>
+          </Drawer>
+          <div className="Content">
+            <Switch>
+              <Route exact path="/" component={UserSign}/>
+              <Route path="/signout" component={UserSignout}/>
+              <Route path="/pokedex/:username" component={Pokedex}/>
+              <Route path="/friends" component={UserFriends}/>
+              <Route path="/settings" component={UserSettings}/>
+            </Switch>
           </div>
-        </Drawer>
-        <div className="Content">
-          {this.props.children}
         </div>
-      </div>
+      </Router>
     );
   }
 
   renderNavMenuItem = (icon, path, text) => {
     const style = {};
 
-    if (this.context.router.isActive(path, true)) {
+    /*/if (this.context.router.isActive(path, true)) {
       style.color = this.context.muiTheme.palette.primary1Color;
-    }
+    }/**/
 
     return (
       <ListItem key={path} leftIcon={icon} containerElement={<Link to={path}/>} onTouchTap={this.handleToggleNav} style={style}>
@@ -177,7 +190,6 @@ class Main extends Component {
 Main.displayName = 'Main';
 Main.propTypes = {};
 Main.contextTypes = {
-  router: PropTypes.object.isRequired,
   muiTheme: PropTypes.object.isRequired,
 };
 
@@ -186,6 +198,7 @@ const mapStateToProps = (state) => {
     signedIn: state.auth.signedIn,
     profile: state.profile,
     currentUsername: state.ui.currentUsername,
+    currentBox: state.ui.currentBox,
   };
 };
 

@@ -1,14 +1,12 @@
 'use strict';
 
-const OfflinePlugin = require('offline-plugin');
-
 let path = require('path');
 let webpack = require('webpack');
 let baseConfig = require('./base');
 let defaultSettings = require('./defaults');
 
 // Add needed plugins here
-let BowerWebpackPlugin = require('bower-webpack-plugin');
+let LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
 
 let config = Object.assign({}, baseConfig, {
   entry: [
@@ -19,24 +17,24 @@ let config = Object.assign({}, baseConfig, {
   cache: true,
   devtool: 'eval-source-map',
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
-    new BowerWebpackPlugin({
-      searchResolveModulesDirectories: false
+    new webpack.LoaderOptionsPlugin({
+      options: {
+        debug: true,
+        port: defaultSettings.port,
+        postcss: defaultSettings.postcss
+      }
     }),
-    new OfflinePlugin()
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoEmitOnErrorsPlugin()
   ],
   module: defaultSettings.getDefaultModules()
 });
 
 // Add needed loaders to the defaults here
-config.module.loaders.push({
+config.module.rules.push({
   test: /\.(js|jsx)$/,
-  loader: 'react-hot!babel-loader',
-  include: [].concat(
-    config.additionalPaths,
-    [ path.join(__dirname, '/../src') ]
-  )
+  loader: 'react-hot-loader!babel-loader',
+  include: [ path.join(__dirname, '/../src') ]
 });
 
 module.exports = config;

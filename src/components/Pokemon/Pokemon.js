@@ -3,7 +3,7 @@
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
-import {Link} from 'react-router';
+import {Link} from 'react-router-dom';
 import _ from 'lodash';
 
 import {GridTile} from 'material-ui/GridList';

@@ -9,24 +9,26 @@ let baseConfig = require('./base');
 let defaultSettings = require('./defaults');
 
 // Add needed plugins here
-let BowerWebpackPlugin = require('bower-webpack-plugin');
+let LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
 
 let config = Object.assign({}, baseConfig, {
   entry: path.join(__dirname, '../src/index'),
   cache: false,
   devtool: 'sourcemap',
   plugins: [
-    new webpack.optimize.DedupePlugin(),
+    new webpack.LoaderOptionsPlugin({
+      options: {
+        port: defaultSettings.port,
+        postcss: defaultSettings.postcss
+      }
+    }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"'
     }),
-    new BowerWebpackPlugin({
-      searchResolveModulesDirectories: false
-    }),
     new webpack.optimize.UglifyJsPlugin(),
-    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.optimize.AggressiveMergingPlugin(),
-    new webpack.NoErrorsPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
     new OfflinePlugin({
       publicPath: `${defaultSettings.publicPath}`,
       relativePaths: false,
@@ -40,13 +42,10 @@ let config = Object.assign({}, baseConfig, {
 });
 
 // Add needed loaders to the defaults here
-config.module.loaders.push({
+config.module.rules.push({
   test: /\.(js|jsx)$/,
-  loader: 'babel',
-  include: [].concat(
-    config.additionalPaths,
-    [ path.join(__dirname, '/../src') ]
-  )
+  loader: 'babel-loader',
+  include: [ path.join(__dirname, '/../src') ]
 });
 
 module.exports = config;

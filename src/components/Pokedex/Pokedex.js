@@ -4,10 +4,14 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {injectIntl, defineMessages} from 'react-intl';
 import Helmet from 'react-helmet';
+import {Route} from 'react-router-dom';
 
 import Paper from 'material-ui/Paper';
 
 import Loader from 'components/Utils/Loader/Loader';
+import PokedexDashboard from 'components/Pokedex/Dashboard/Dashboard';
+import PokedexPc from 'components/Pokedex/Pc/Pc';
+import PokedexList from 'components/Pokedex/List/List';
 
 import Actions from 'actions';
 
@@ -22,7 +26,7 @@ const messages = defineMessages({
 class Pokedex extends Component {
   render() {
     const {profile, pokedexes, intl, setCurrentUsername, loadPokedex} = this.props;
-    const {username} = this.props.params;
+    const {username} = this.props.match.params;
 
     let title = intl.formatMessage(messages.myPokedex);
 
@@ -55,14 +59,16 @@ class Pokedex extends Component {
         <Helmet title={title} meta={[
           { property: 'og:title', content: title },
         ]}/>
-        {this.props.children}
+
+        <Route exact path="/pokedex/:username" component={PokedexDashboard}/>
+        <Route path="/pokedex/:username/pc/:currentBox?" component={PokedexPc}/>
+        <Route path="/pokedex/:username/list/:splat(.*)" component={PokedexList}/>
       </div>
     );
   }
 }
 
 Pokedex.displayName = 'Pokedex';
-Pokedex.contextTypes = {};
 Pokedex.propTypes = {};
 
 const mapStateToProps = (state) => {

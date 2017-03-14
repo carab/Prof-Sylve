@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Link} from 'react-router';
+import {Link, withRouter} from 'react-router-dom';
 
 import Paper from 'material-ui/Paper';
 import {List, ListItem} from 'material-ui/List';
@@ -23,7 +23,7 @@ import RadioUncheckedIcon from 'material-ui/svg-icons/toggle/radio-button-unchec
 
 import {injectIntl, defineMessages} from 'react-intl';
 
-import {VirtualScroll, AutoSizer} from 'react-virtualized';
+import {List as VirtualizedList, AutoSizer} from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
 import actions from 'actions';
@@ -77,14 +77,14 @@ class PageList extends Component {
   }
 
   componentWillMount() {
-    const {splat} = this.props.params;
+    const {splat} = this.props.match.params;
     this.parseSplatParam(splat);
   }
 
   componentWillReceiveProps(nextProps) {
-    const {splat} = nextProps.params;
-
-    if (splat !== this.props.params.splat) {
+    const {splat} = nextProps.match.params;
+    
+    if (splat !== this.props.match.params.splat) {
       this.parseSplatParam(splat);
     }
   }
@@ -259,12 +259,12 @@ class PageList extends Component {
           <List className="PokemonList__list">
             <AutoSizer>
               {({ height, width }) => (
-                <VirtualScroll
+                <VirtualizedList
                   height={height}
                   width={width}
-                  overscanRowsCount={5}
+                  overscanRowCount={5}
                   noRowsRenderer={this.noItemRenderer}
-                  rowsCount={filtered.length}
+                  rowCount={filtered.length}
                   rowHeight={48}
                   rowRenderer={this.itemRenderer}
                 />
@@ -313,7 +313,7 @@ class PageList extends Component {
       return path + '/' + name + '=' + value;
     }, `/pokedex/${currentUsername}/list`);
 
-    this.context.router.push(path);
+    this.props.history.push(path);
   }, 300)
 
   handleFilterReset = () => {
@@ -328,11 +328,13 @@ class PageList extends Component {
     )
   }
 
-  itemRenderer = (index) => {
+  itemRenderer = ({ index, style }) => {
     const id = this.filtered[index];
 
     return (
-      <PokemonRow key={id} id={id}/>
+      <div key={id} style={style}>
+        <PokemonRow id={id}/>
+      </div>
     );
   }
 }
@@ -371,4 +373,4 @@ const mapDispatchToProps = (dispatch) => {
 export default injectIntl(connect(
   mapStateToProps,
   mapDispatchToProps
-)(PageList));
+)(withRouter(PageList)));

@@ -126,9 +126,6 @@ class UserSignup extends Component {
 }
 
 UserSignup.displayName = 'UserSignup';
-UserSignup.contextTypes = {
-    router: () => { return React.PropTypes.func.isRequired; },
-};
 
 UserSignup.propTypes = {
   locale: PropTypes.string.isRequired,

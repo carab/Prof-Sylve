@@ -2,7 +2,7 @@
 
 import React, {Component} from 'react';
 import {injectIntl, defineMessages} from 'react-intl';
-import {Link} from 'react-router';
+import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
@@ -59,7 +59,7 @@ const messages = defineMessages({
 class Dashboard extends Component {
   render() {
     const {formatMessage} = this.props.intl;
-    const {auth, pokedex, currentUsername, profile} = this.props;
+    const {auth, pokedex, currentUsername, currentBox, profile} = this.props;
 
     const shared = (currentUsername !== profile.username);
     const path = `/pokedex/${currentUsername}`;
@@ -117,7 +117,7 @@ class Dashboard extends Component {
             {this.renderProgress(pokedex.pokemons, true)}
           </div>
           <div className="Progress__actions">
-            <FlatButton secondary={true} label={formatMessage(messages.openPc)} containerElement={<Link to={`${path}/pc`}/>}/>
+            <FlatButton secondary={true} label={formatMessage(messages.openPc)} containerElement={<Link to={`${path}/pc/${currentBox}`}/>}/>
             <FlatButton secondary={true} label={formatMessage(messages.openList)} containerElement={<Link to={`${path}/list`}/>}/>
           </div>
         </Paper>
@@ -195,6 +195,7 @@ const mapStateToProps = (state) => {
     profile: state.profile,
     pokedex: currentPokedex,
     currentUsername: state.ui.currentUsername,
+    currentBox: state.ui.currentBox,
   };
 };
 

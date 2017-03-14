@@ -45,7 +45,7 @@ class PokedexPc extends Component {
   }
 
   componentWillMount() {
-    const {params} = this.props;
+    const {params} = this.props.match;
     const {pokemons, setCurrentBox} = this.props;
     const currentBox = parseInt(params.currentBox) || this.props.currentBox;
 
@@ -71,8 +71,8 @@ class PokedexPc extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    if (nextProps.params.currentBox !== this.props.currentBox) {
-      this.handleSelectBox(undefined, nextProps.params.currentBox);
+    if (nextProps.match.params.currentBox !== this.props.currentBox) {
+      this.handleSelectBox(undefined, nextProps.match.params.currentBox);
     }
 
     return (nextProps.currentBox !== this.props.currentBox);
@@ -131,7 +131,7 @@ class PokedexPc extends Component {
   }
 
   handleSwipe(currentBox) {
-    this.context.router.push(`/pokedex/${this.props.currentUsername}/pc/${currentBox}`);
+    this.props.history.push(`/pokedex/${this.props.currentUsername}/pc/${currentBox}`);
     this.props.setCurrentBox(currentBox);
   }
 

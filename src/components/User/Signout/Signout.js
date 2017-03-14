@@ -1,7 +1,8 @@
 'use strict';
 
-import React, {Component} from 'react';
+import {Component} from 'react';
 import {connect} from 'react-redux';
+import {withRouter} from 'react-router-dom';
 
 import actions from 'actions';
 
@@ -17,7 +18,7 @@ class Signout extends Component {
     const {signedIn} = nextProps;
 
     if (!signedIn) {
-      this.context.router.replace('/');
+      this.props.history.replace('/');
     }
   }
 
@@ -27,9 +28,6 @@ class Signout extends Component {
 }
 
 Signout.displayName = 'UserSignout';
-Signout.contextTypes = {
-  router: () => { return React.PropTypes.func.isRequired; },
-};
 
 const mapStateToProps = (state) => {
   return {
@@ -45,4 +43,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Signout);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Signout));

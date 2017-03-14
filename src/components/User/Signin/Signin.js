@@ -2,6 +2,7 @@
 
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
+import {Redirect, withRouter} from 'react-router-dom';
 import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
 import RaisedButton from 'material-ui/RaisedButton';
@@ -44,7 +45,7 @@ class UserSignin extends Component {
     const {signedIn} = nextProps;
 
     if (signedIn) {
-      this.context.router.replace('/');
+      this.props.history.replace('/');
     }
   }
 
@@ -74,11 +75,18 @@ class UserSignin extends Component {
   render() {
     const {loading, errors} = this.state;
     const {formatMessage} = this.props.intl;
+    const {signedIn, username} = this.props;
 
     let action = <RaisedButton type="submit" label={formatMessage(messages.signin)} primary={true} />;
 
     if (loading) {
       action = <CircularProgress size={20}/>;
+    }
+
+    if (signedIn && username) {
+      return (
+        <Redirect to={`/pokedex/${username}`}/>
+      );
     }
 
     return (
@@ -126,18 +134,17 @@ class UserSignin extends Component {
 }
 
 UserSignin.displayName = 'UserSignin';
-UserSignin.contextTypes = {
-  router: () => { return PropTypes.func.isRequired; },
-};
 
 UserSignin.propTypes = {
   intl: intlShape.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {
   return {
     error: state.auth.errors.signin,
     signedIn: state.auth.signedIn,
+    username: state.profile.username,
   };
 };
 
@@ -149,4 +156,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 }
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(UserSignin));
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withRouter(UserSignin)));
