@@ -40,6 +40,7 @@ const messages = defineMessages({
   ulys: {id: 'pokemon.region.ulys'},
   kalos: {id: 'pokemon.region.kalos'},
   alola: {id: 'pokemon.region.alola'},
+  galar: {id: 'pokemon.region.galar'},
 
   none: {id: 'pokemon.tag.none'},
   red: {id: 'pokemon.tag.color.red'},

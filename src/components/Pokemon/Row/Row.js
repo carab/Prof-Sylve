@@ -12,8 +12,6 @@ import PokemonMenu from 'components/Pokemon/Menu/Menu';
 import actions from 'actions';
 import Colors from 'utils/colors';
 
-import 'prof-sylve-sprites/sprite/sprite.css';
-
 import './Row.css';
 
 class Row extends Component {

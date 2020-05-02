@@ -4,6 +4,7 @@ export default [
   { name: 'hoenn', index: '3', from: 252, to: 386, color: '#F44336' }, // red
   { name: 'sinnoh', index: '4', from: 387, to: 494, color: '#90A4AE' }, // gray
   { name: 'ulys', index: '5', from: 495, to: 649, color: '#424242' }, // black
-  { name: 'kalos', index: '6', from: 650, to: 721, color: '#42A5F5' }, // blue
-  { name: 'alola', index: '7', from: 722, to: 802, color: '#8e659f' }, // violet
+  { name: 'kalos', index: '6', from: 650, to: 721, color: '#42A5F5' }, // cyan
+  { name: 'alola', index: '7', from: 722, to: 809, color: '#8e659f' }, // violet
+  { name: 'galar', index: '8', from: 810, to: 894, color: '#2e61f9' }, // blue
 ];

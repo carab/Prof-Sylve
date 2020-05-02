@@ -36,6 +36,13 @@ I'm open to suggestions and reviews concerning the code, as it is my first React
 
 Because a good friend of mine once said "I should be a Pokémon Professor".
 
+## How to add a Pokémon ?
+
+1. Update the file `data/pokemons.json` with the Pokémon identifier from [Veekun's Pokédex pokemon.csv](https://github.com/veekun/pokedex/blob/master/pokedex/data/csv/pokemon.csv).
+2. Update the translation files in `src/translations/*.json` with the localized Pokémon name from [Veekun's Pokédex pokemon_species_names.csv](https://github.com/veekun/pokedex/blob/master/pokedex/data/csv/pokemon_species_names.csv).
+3. Follow instructions on [Prof-Sylve-Sprites](https://github.com/carab/Prof-Sylve-Sprites) to add Pokémon image.
+4. Import `data/pokemons.json` in [Firebase](https://console.firebase.google.com/u/0/project/prof-sylve/database/prof-sylve/data/~2Fpokemons) on the path `/pokemons`.
+
 ## Credits
 
 Thanks to [PkParaiso](http://www.pkparaiso.com/) for creating the awesome gifs used in this app.

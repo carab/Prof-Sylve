@@ -130,7 +130,7 @@ class PokemonComponent extends Component {
     }
 
     if (type === 'tile') {
-      const image = 'https://raw.githubusercontent.com/carab/Prof-Sylve-Sprites/master/sprites/' + pokemon.name + '.gif';
+      const image = 'https://raw.githubusercontent.com/carab/Prof-Sylve-Sprites/master/gif/' + pokemon.name + '.gif';
 
       switch (mode) {
         case 'small':
