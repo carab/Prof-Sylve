@@ -62,7 +62,7 @@
     "mocha": "^3.2.0",
     "null-loader": "^0.1.1",
     "offline-plugin": "^4.6.1",
-    "open": "0.0.5",
+    "open": "6.0.0",
     "phantomjs-prebuilt": "^2.1.14",
     "postcss": "^5.2.16",
     "postcss-cssnext": "^2.9.0",
