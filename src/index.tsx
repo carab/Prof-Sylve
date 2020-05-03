@@ -5,18 +5,24 @@ import "./index.css";
 import App from "./components/App";
 import Store from "./components/Store";
 import Theme from "./components/Theme";
+import RouterProvider from "components/RouterProvider";
 import { HelmetProvider } from "react-helmet-async";
 
+const providers = [
+  React.StrictMode,
+  HelmetProvider,
+  RouterProvider,
+  Theme,
+  Store,
+];
+
+const app = providers.reduceRight(
+  (children, Component) => <Component>{children}</Component>,
+  <App/>,
+);
+
 ReactDOM.render(
-  <React.StrictMode>
-    <HelmetProvider>
-      <Theme>
-        <Store>
-          <App />
-        </Store>
-      </Theme>
-    </HelmetProvider>
-  </React.StrictMode>,
+  app,
   document.getElementById("root")
 );
 

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import firebase from 'firebase';
+import firebase from 'utils/firebase';
 
 const refs = {
   root() {

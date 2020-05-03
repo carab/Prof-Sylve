@@ -1,5 +1,3 @@
-import './configure-firebase';
-
 import auth from './auth';
 import profile from './profile';
 import ui from './ui';
