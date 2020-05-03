@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## v1.3.0 (2020-05-02)
+
+- Add Pokémon from Sword/Shield.
+
 ## v1.2.0 (2017-03-14)
 
 - Improve performances by removing dependencies.

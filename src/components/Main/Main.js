@@ -1,11 +1,12 @@
 'use strict';
 
 import _ from 'lodash';
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {BrowserRouter as Router, Route, Link, Switch} from 'react-router-dom';
 import {injectIntl, defineMessages} from 'react-intl';
-import Helmet from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 
 import Drawer from 'material-ui/Drawer';
 import Divider from 'material-ui/Divider';

@@ -3,7 +3,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {injectIntl, defineMessages} from 'react-intl';
-import Helmet from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import {Route} from 'react-router-dom';
 
 import Paper from 'material-ui/Paper';

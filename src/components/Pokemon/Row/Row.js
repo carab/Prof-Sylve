@@ -8,6 +8,7 @@ import classnames from 'classnames';
 import Checkbox from 'material-ui/Checkbox';
 
 import PokemonMenu from 'components/Pokemon/Menu/Menu';
+import Pokeball from 'components/Pokemon/Pokeball';
 
 import actions from 'actions';
 import Colors from 'utils/colors';
@@ -92,9 +93,7 @@ class Row extends Component {
   renderPokeball() {
     return (
       <div className="PokemonRow__pokeball">
-        <svg viewBox="92.412 180.844 427.177 430.313">
-          <path d="M369.448,395.99c0,35.041-28.407,63.448-63.448,63.448c-35.042,0-63.449-28.407-63.449-63.448 c0-35.042,28.407-63.448,63.449-63.448C341.041,332.542,369.448,360.949,369.448,395.99L369.448,395.99z M305.972,180.844 c-109.894,0-200.541,82.37-213.561,188.743h115.612c11.616-43.213,51.065-75.002,97.948-75.002 c46.884,0,86.375,31.789,98.004,75.002h115.612C506.561,263.214,415.866,180.844,305.972,180.844z M92.412,422.412 c13.02,106.373,103.667,188.744,213.561,188.744s200.589-82.371,213.616-188.744H403.976c-11.629,43.213-51.12,75.003-98.004,75.003 c-46.883,0-86.332-31.79-97.948-75.003H92.412L92.412,422.412z"/>
-        </svg>
+        <Pokeball />
       </div>
     );
   }

@@ -1,20 +1,9 @@
-'use strict';
+import React from "react";
+import { Provider } from "react-redux";
+import store from "../store";
 
-import React, {Component} from 'react';
-import {Provider} from 'react-redux';
-
-import App from './App';
-
-import store from '../store';
-
-class StoreComponent extends Component {
-  render() {
-    return (
-      <Provider store={store}>
-        <App/>
-      </Provider>
-    );
-  }
+function Store({ children }) {
+  return <Provider store={store}>{children}</Provider>;
 }
 
-export default StoreComponent;
+export default Store;

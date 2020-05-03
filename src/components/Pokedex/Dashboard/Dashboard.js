@@ -1,11 +1,8 @@
-'use strict';
-
 import React, {Component} from 'react';
 import {injectIntl, defineMessages} from 'react-intl';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import _ from 'lodash';
-
 import LinearProgress from 'material-ui/LinearProgress';
 import FlatButton from 'material-ui/FlatButton';
 import Paper from 'material-ui/Paper';
@@ -18,7 +15,6 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import PublicIcon from 'material-ui/svg-icons/social/public';
 import BookmarkIcon from 'material-ui/svg-icons/action/bookmark';
-
 import Colors from 'utils/colors';
 import Regions from 'utils/regions';
 
@@ -90,7 +86,7 @@ class Dashboard extends Component {
       const twitterUrl = `https://twitter.com/intent/tweet?source=${encodedUrl}&text=${encodeURIComponent(message)}%20${encodedUrl}`;
 
       const handleFacebookShare = () => {
-        FB.ui({
+        window.FB.ui({
 					method: 'feed',
 					link: url,
 					name: message,

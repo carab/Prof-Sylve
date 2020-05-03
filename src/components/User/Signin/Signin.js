@@ -1,6 +1,7 @@
 'use strict';
 
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Redirect, withRouter} from 'react-router-dom';
 import {injectIntl, intlShape, defineMessages} from 'react-intl';

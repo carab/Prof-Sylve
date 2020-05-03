@@ -2,6 +2,7 @@
 
 import _ from 'lodash';
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Link, withRouter} from 'react-router-dom';
 
@@ -343,7 +344,7 @@ class PageList extends Component {
 PageList.displayName = 'PageList';
 PageList.propTypes = {};
 PageList.contextTypes = {
-  router: React.PropTypes.object,
+  router: PropTypes.object,
 };
 
 const mapStateToProps = (state) => {
