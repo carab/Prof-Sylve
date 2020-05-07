@@ -1,46 +1,54 @@
-'use strict';
-
 import React from 'react';
-import {injectIntl, defineMessages, FormattedHTMLMessage} from 'react-intl';
-
-import {Card, CardTitle, CardText} from 'material-ui/Card';
-
+import { useSelector } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import { defineMessages, useIntl } from 'react-intl';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
 import UserSignup from 'components/User/Signup/Signup';
 import UserSignin from 'components/User/Signin/Signin';
-
-import './Sign.css';
+import { selectProfile, selectAuth } from 'selectors/selectors';
 
 const messages = defineMessages({
-  app: {id: 'app'},
-  subtitle: {id: 'intro.subtitle'},
-  text: {id: 'intro.text'},
+  app: { id: 'app' },
+  subtitle: { id: 'intro.subtitle' },
+  text: { id: 'intro.text' },
 });
 
-class UserSign extends React.Component {
-  render() {
-    const {formatMessage} = this.props.intl;
+function UserSign() {
+  const { formatMessage } = useIntl();
+  const { signed } = useSelector(selectAuth);
+  const { username } = useSelector(selectProfile);
 
-    return (
-      <div className="sign-component container">
-        <Card>
-          <CardTitle title={formatMessage(messages.app)} subtitle={formatMessage(messages.subtitle)}/>
-          <CardText>
-            <FormattedHTMLMessage id='intro.text'/>
-          </CardText>
-        </Card>
-        <div className="row">
-          <div className="col-xs-12 col-sm-6 sign-component__form">
-            <UserSignup/>
-          </div>
-          <div className="col-xs-12 col-sm-6 sign-component__form">
-            <UserSignin/>
-          </div>
+  if (signed && username) {
+    return <Redirect to={`/pokedex/${username}`} />;
+  }
+
+  return (
+    <div className="container" style={{ paddingTop: '2em' }}>
+      <Card>
+        <CardHeader
+          title={formatMessage(messages.app)}
+          subtitle={formatMessage(messages.subtitle)}
+        />
+        <CardContent>
+          <Typography
+            component="p"
+            dangerouslySetInnerHTML={{ __html: formatMessage(messages.text) }}
+          />
+        </CardContent>
+      </Card>
+      <div className="row" style={{ paddingTop: '2em' }}>
+        <div className="col-xs-12 col-sm-6">
+          <UserSignup />
+        </div>
+        <div className="col-xs-12 col-sm-6">
+          <UserSignin />
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
-UserSign.displayName = 'UserSign';
-
-export default injectIntl(UserSign);
+export default UserSign;

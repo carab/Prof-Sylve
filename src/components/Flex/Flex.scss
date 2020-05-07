@@ -1,0 +1,7 @@
+.Flex {
+  display: var(--flex-display, flex);
+  flex-wrap: var(--flex-wrap, wrap);
+  flex-direction: var(--flex-direction, row);
+  align-items: var(--flex-align, center);
+  justify-content: var(--flex-justify, center);
+}

@@ -1,160 +1,129 @@
-'use strict';
-
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
-import {Redirect, withRouter} from 'react-router-dom';
-import {injectIntl, intlShape, defineMessages} from 'react-intl';
-
-import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
-import {Card, CardActions, CardTitle, CardText} from 'material-ui/Card';
-import CircularProgress from 'material-ui/CircularProgress';
-
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { defineMessages, useIntl } from 'react-intl';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { selectAuth } from 'selectors/selectors';
 import actions from 'actions';
 
 import './Signin.css';
 
 const messages = defineMessages({
-  signin: {id: 'user.signin'},
-  subtitle: {id: 'user.signinSubtitle'},
-  email: {id: 'user.email'},
-  password: {id: 'user.password'},
-  invalidEmail: {id: 'errors.invalidEmail'},
-  wrongPassword: {id: 'errors.wrongPassword'},
-  userDisabled: {id: 'errors.userDisabled'},
-  userNotFound: {id: 'errors.userNotFound'},
+  signin: { id: 'user.signin' },
+  subtitle: { id: 'user.signinSubtitle' },
+  email: { id: 'user.email' },
+  password: { id: 'user.password' },
+  invalidEmail: { id: 'errors.invalidEmail' },
+  wrongPassword: { id: 'errors.wrongPassword' },
+  userDisabled: { id: 'errors.userDisabled' },
+  userNotFound: { id: 'errors.userNotFound' },
 });
 
-class UserSignin extends Component {
-  constructor(props, context) {
-    super(props, context);
+function UserSignin() {
+  const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const [values, setValues] = useState({
+    email: '',
+    password: '',
+    passwordConfirmation: '',
+  });
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const {
+    errors: { signin: signinError },
+  } = useSelector(selectAuth);
 
-    this.state = {
-      errors: {},
-      loading: false,
-    };
-
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  componentWillMount() {
-    this.componentWillUpdate(this.props);
-  }
-
-  componentWillUpdate(nextProps) {
-    const {signedIn} = nextProps;
-
-    if (signedIn) {
-      this.props.history.replace('/');
-    }
-  }
-
-  componentWillReceiveProps(newsProps) {
-    const {error} = newsProps;
-
-    if (error) {
-      switch (error.code) {
+  useEffect(() => {
+    if (signinError) {
+      switch (signinError.code) {
         case 'auth/invalid-email':
-          this.setState({errors: { email: messages.invalidEmail }})
+          setErrors({ email: messages.invalidEmail });
           break;
         case 'auth/user-disabled':
-          this.setState({errors: { email: messages.userDisabled }})
+          setErrors({ email: messages.userDisabled });
           break;
         case 'auth/user-not-found':
-          this.setState({errors: { email: messages.userNotFound }})
+          setErrors({ email: messages.userNotFound });
           break;
         case 'auth/wrong-password':
-          this.setState({errors: { password: messages.wrongPassword }})
+          setErrors({ password: messages.wrongPassword });
+          break;
+        default:
           break;
       }
 
-      this.setState({ loading: false });
+      setLoading(false);
     }
-  }
+  }, [signinError]);
 
-  render() {
-    const {loading, errors} = this.state;
-    const {formatMessage} = this.props.intl;
-    const {signedIn, username} = this.props;
-
-    let action = <RaisedButton type="submit" label={formatMessage(messages.signin)} primary={true} />;
-
-    if (loading) {
-      action = <CircularProgress size={20}/>;
-    }
-
-    if (signedIn && username) {
-      return (
-        <Redirect to={`/pokedex/${username}`}/>
-      );
-    }
-
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <Card>
-          <CardTitle title={formatMessage(messages.signin)} subtitle={formatMessage(messages.subtitle)}/>
-          <CardText>
-            <TextField
-              ref="email"
-              type="email"
-              floatingLabelText={formatMessage(messages.email)}
-              errorText={this.state.errors.email}
-              fullWidth={true}
-              errorText={errors.email && formatMessage(errors.email)}
-            />
-            <TextField
-              ref="password"
-              type="password"
-              floatingLabelText={formatMessage(messages.password)}
-              fullWidth={true}
-              errorText={errors.password && formatMessage(errors.password)}
-            />
-          </CardText>
-          <CardActions className="text-xs-center">
-            {action}
-          </CardActions>
-        </Card>
-      </form>
-    );
-  }
-
-  handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
 
-    this.setState({
-      loading: true,
-      errors: {},
-    });
+    setLoading(true);
+    setErrors({});
 
-    const email = this.refs.email.getValue();
-    const password = this.refs.password.getValue();
-
-    this.props.signin(email, password);
+    dispatch(actions.auth.signin(values.email, values.password));
   }
+
+  function handleValueChange(event) {
+    const { name, value } = event.target;
+
+    setValues((values) => ({
+      ...values,
+      [name]: value,
+    }));
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <Card>
+        <CardHeader
+          title={formatMessage(messages.signin)}
+          subtitle={formatMessage(messages.subtitle)}
+        />
+        <CardContent>
+          <TextField
+            name="email"
+            type="email"
+            value={values.email}
+            onChange={handleValueChange}
+            label={formatMessage(messages.email)}
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            error={Boolean(errors.email)}
+            helperText={errors.email && formatMessage(errors.email)}
+          />
+          <TextField
+            name="password"
+            type="password"
+            value={values.password}
+            onChange={handleValueChange}
+            label={formatMessage(messages.password)}
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            error={Boolean(errors.password)}
+            helperText={errors.password && formatMessage(errors.password)}
+          />
+        </CardContent>
+        <CardActions>
+          {loading ? (
+            <CircularProgress size={20} />
+          ) : (
+            <Button type="submit" color="primary" variant="contained">
+              {formatMessage(messages.signin)}
+            </Button>
+          )}
+        </CardActions>
+      </Card>
+    </form>
+  );
 }
 
-UserSignin.displayName = 'UserSignin';
-
-UserSignin.propTypes = {
-  intl: intlShape.isRequired,
-  history: PropTypes.object.isRequired,
-};
-
-const mapStateToProps = (state) => {
-  return {
-    error: state.auth.errors.signin,
-    signedIn: state.auth.signedIn,
-    username: state.profile.username,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    signin: (email, password) => {
-      dispatch(actions.auth.signin(email, password));
-    },
-  };
-}
-
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withRouter(UserSignin)));
+export default UserSignin;

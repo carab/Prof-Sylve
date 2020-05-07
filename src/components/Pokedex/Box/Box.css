@@ -1,11 +1,17 @@
 .PokedexBox {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(var(--pokedexBox-columns, 6), 1fr);
+  grid-template-rows: repeat(var(--pokedexBox-rows, 5), 1fr);
+  grid-gap: 4px;
+  padding: 4px;
   height: 100%;
 }
 
 .PokedexBox__loader {
   padding: 10rem 0 0;
   text-align: center;
+}
+
+.PokedexBox--condensed {
+  grid-gap: 0;
 }

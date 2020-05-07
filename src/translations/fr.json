@@ -2,13 +2,14 @@
   "app": "Prof. Sylve",
   "intro": {
     "subtitle": "Suivi et gestion d'un Living Pokédex",
-    "text": "T'as toujours voulu tous les capturer mais tu ne sais pas par où commencer ?<br/> Prof. Sylve est un outil qui te simplifiera la tâche : affichage par boîte comme en jeu, tag des Pokémons pour facilement les retrouver, liens vers le Wiki, etc.<br/><br/> Cette application est faite pour compléter un <a href=\"http://bulbapedia.bulbagarden.net/wiki/Living_Pok%C3%A9dex\">Living Pokédex</a> mais peut aussi être utilisée pour un simple Pokédex."
+    "text": "T'as toujours voulu tous les capturer mais tu ne sais pas par où commencer ?<br/> Prof. Sylve est un outil qui te simplifiera la tâche : affichage par boîte comme en jeu, tag des Pokémons pour facilement les retrouver, liens vers le Wiki, etc.<br/><br/> Cette application est surtout utile pour compléter un <a href=\"http://bulbapedia.bulbagarden.net/wiki/Living_Pok%C3%A9dex\">Living Pokédex</a> mais peut aussi être utilisée en tant que simple Pokédex."
   },
   "label": {
     "save": "Sauvegarder"
   },
   "nav": {
-    "back": "Retour",
+    "menu":"Ouvrir le menu",
+    "back": "Retour à mon Pokédex",
     "dashboard": "Résumé",
     "byBox": "PC",
     "byList": "Liste",
@@ -46,7 +47,9 @@
     "mine": "Mon Pokédex",
     "of": "Pokédex de {username}",
     "selected": "{selected, plural, one {# sélectionné} other {# sélectionnés}}",
-    "cancelSelection": "Annuler la sélection"
+    "cancelSelection": "Annuler la sélection",
+    "selectAll": "Tous sélectionner",
+    "unselectAll": "Tous déselectionner"
   },
   "settings": {
     "visibility": "Visibilité du Pokédex",
@@ -65,12 +68,15 @@
     }
   },
   "pokemon": {
-    "toolbar": {
+    "selector": {
       "counter": "{collected} sur {pokemons}",
-      "filteredPokemons": "{filteredPokemons} Pokémons",
-      "box": "{start} à {end}",
-      "previousBox": "Boîte Précédente",
-      "nextBox": "Boîte Suivante"
+      "filtered": "{filtered} Pokémons"
+    },
+    "pc": {
+      "box": "Boîte {name} ({start} à {end})",
+      "selectBox": "Choisir une boîte",
+      "previousBox": "Boîte précédente",
+      "nextBox": "Boîte suivante"
     },
     "filter": {
       "search": "Recherche...",
@@ -79,6 +85,11 @@
       "notCollected": "Non Collectés",
       "noResult": "Aucun Résultat"
     },
+    "menu": "Menu",
+    "collect": "Marquer {name} comme collecté",
+    "uncollect": "Marquer {name} comme non collecté",
+    "select": "Sélectionner {name}",
+    "unselect": "Déselectionner {name}",
     "collected": "Collecté",
     "notCollected": "Non Collecté",
     "externalService": "Voir sur Poképedia",

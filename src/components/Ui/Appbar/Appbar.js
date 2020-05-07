@@ -1,58 +1,50 @@
-import React, {Component } from 'react';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
-import {Link} from 'react-router-dom';
-import {injectIntl} from 'react-intl';
+import React, { useRef, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { defineMessages, useIntl } from 'react-intl';
+import BaseAppbar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import useAppbarContext from './useAppbarContext';
+import { selectUi } from 'selectors/selectors';
 
-import AppBar from 'material-ui/AppBar';
-import IconButton from 'material-ui/IconButton';
-import PowerSettingsNewIcon from 'material-ui/svg-icons/action/power-settings-new';
+const messages = defineMessages({
+  menu: { id: 'nav.menu' },
+  signout: { id: 'user.signout' },
+});
 
-class Appbar extends Component {
-  render() {
-    const {showMenuButton, onToggleNav} = this.props;
-    const {title} = this.props;
+function Appbar({ signed, showTitle, onToggleNav, ...props }) {
+  const { formatMessage } = useIntl();
+  const appbarRef = useRef();
+  const { title } = useSelector(selectUi);
+  const { secondary, setAppbarEl } = useAppbarContext();
 
-    const style = {
-      position: 'fixed',
-      zIndex: this.context.muiTheme.zIndex.drawer + 1,
-    }
+  useEffect(() => {
+    setAppbarEl(appbarRef.current);
+  }, [setAppbarEl]);
 
-    return (
-      <AppBar
-        title={title}
-        onLeftIconButtonTouchTap={onToggleNav}
-        iconElementRight={this.renderRight()}
-        showMenuIconButton={showMenuButton}
-        style={style}
-      />
-    );
-  }
-
-  renderRight() {
-    const {signedIn} = this.props;
-
-    if (signedIn) {
-      return <IconButton containerElement={<Link to="/signout" />}><PowerSettingsNewIcon/></IconButton>;
-    }
-  }
+  return (
+    <BaseAppbar position="fixed" color={secondary ? 'secondary' : undefined} {...props}>
+      <Toolbar>
+        {showTitle ? (
+          <Typography variant="h6" style={{ marginRight: '1em' }}>
+            {title}
+          </Typography>
+        ) : (
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label={formatMessage(messages.menu)}
+            onClick={onToggleNav}
+          >
+            <MenuIcon />
+          </IconButton>
+        )}
+        <div ref={appbarRef} style={{ flexGrow: 1 }}></div>
+      </Toolbar>
+    </BaseAppbar>
+  );
 }
 
-Appbar.displayName = 'UserAppbar';
-Appbar.propTypes = {};
-Appbar.contextTypes = {
-  muiTheme: PropTypes.object.isRequired,
-};
-
-const mapStateToProps = (state) => {
-  return {
-    signedIn: state.auth.signedIn,
-    title: state.ui.title,
-  };
-};
-
-const mapDispatchToProps = () => {
-  return {};
-}
-
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Appbar));
+export default Appbar;

@@ -1,90 +1,26 @@
-'use strict';
+import React from 'react';
+import ListItemText from '@material-ui/core/ListItemText';
+import MenuItem from '@material-ui/core/MenuItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
 
-import _ from 'lodash';
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {Link} from 'react-router-dom';
-
-import MenuItem from 'material-ui/MenuItem';
-import Checkbox from 'material-ui/Checkbox';
-
-import actions from 'actions';
-
-class FilterMenuItem extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    const {text, color, checkedIcon, uncheckedIcon} = this.props;
-    const style = {};
-    const iconStyle = {};
-
-    const isActive = this.isFilterActive();
-
-    if (color) {
-      iconStyle.fill = color;
-
-      if (isActive) {
-        style.color = color;
-      }
-    }
-
-    return (
-      <MenuItem primaryText={text}
-        leftIcon={<Checkbox checked={isActive} iconStyle={iconStyle} checkedIcon={checkedIcon} uncheckedIcon={uncheckedIcon}/>}
-        style={style}
-        containerElement={<Link to={this.getUrl()} />}
-      />
-    );
-  }
-
-  isFilterActive() {
-    const {name, value, filters} = this.props;
-    const filter = filters.get(name);
-
-    return (true && filter && filter.value === value);
-  }
-
-  getUrl() {
-    const {name, value, filters, currentUsername} = this.props;
-    const splat = {};
-
-    filters.forEach((filter) => {
-      splat[filter.name] = filter.value;
-    });
-
-    if (this.isFilterActive()) {
-      delete splat[name];
-    } else {
-      splat[name] = value;
-    }
-
-    return _.reduce(splat, function(path, value, name) {
-      return path + '/' + name + '=' + value;
-    }, `/pokedex/${currentUsername}/list`);
-  }
+function FilterMenuItem({
+  text,
+  color,
+  checkedIcon: CheckedIcon = CheckBoxIcon,
+  uncheckedIcon: UncheckedIcon = CheckBoxOutlineBlankIcon,
+  selected,
+  onChange
+}) {
+  return (
+    <MenuItem selected={selected} onClick={onChange}>
+      <ListItemIcon>
+        {selected ? <CheckedIcon color="secondary" style={{ color }} /> : <UncheckedIcon style={{ color }} />}
+      </ListItemIcon>
+      <ListItemText primary={text} />
+    </MenuItem>
+  );
 }
 
-FilterMenuItem.displayName = 'FilterMenuItem';
-FilterMenuItem.propTypes = {};
-
-const mapStateToProps = (state) => {
-  return {
-    filters: state.ui.filters,
-    currentUsername: state.ui.currentUsername,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onFilterToggle: (filter) => {
-      dispatch(actions.ui.toggleFilter(filter));
-    },
-  };
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(FilterMenuItem);
+export default FilterMenuItem;

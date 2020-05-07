@@ -1,220 +1,114 @@
-'use strict';
-
-import _ from 'lodash';
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
-import {BrowserRouter as Router, Route, Link, Switch} from 'react-router-dom';
-import {injectIntl, defineMessages} from 'react-intl';
+import React, { useState, useLayoutEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { Route, Switch } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-
-import Drawer from 'material-ui/Drawer';
-import Divider from 'material-ui/Divider';
-import {List, ListItem} from 'material-ui/List';
-import SettingsIcon from 'material-ui/svg-icons/action/settings';
-import ListIcon from 'material-ui/svg-icons/action/list';
-import DashboardIcon from 'material-ui/svg-icons/action/dashboard';
-import ViewModuleIcon from 'material-ui/svg-icons/action/view-module';
-import BugReportIcon from 'material-ui/svg-icons/action/bug-report';
-import LanguageIcon from 'material-ui/svg-icons/action/language';
-import HomeIcon from 'material-ui/svg-icons/action/home';
-import BackIcon from 'material-ui/svg-icons/navigation/arrow-back';
-
+import Drawer from '@material-ui/core/Drawer';
+import Toolbar from '@material-ui/core/Toolbar';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Appbar from 'components/Ui/Appbar/Appbar';
 import Pokedex from 'components/Pokedex/Pokedex';
 import UserSign from 'components/User/Sign/Sign';
 import UserSignout from 'components/User/Signout/Signout';
 import UserSettings from 'components/User/Settings/Settings';
 import UserFriends from 'components/User/Friends/Friends';
-
-import withWidth, {LG} from 'utils/with-width';
 import actions from 'actions';
+import Sidebar from 'components/Sidebar/Sidebar';
+import { AppbarContextProvider } from 'components/Ui/Appbar/AppbarContextProvider';
 
 import 'bootstrap/dist/css/bootstrap-grid.css';
 import './Main.css';
 
-const messages = defineMessages({
-  app: {id: 'app'},
-  dashboard: {id: 'nav.dashboard'},
-  back: {id: 'nav.back'},
-  home: {id: 'nav.home'},
-  byBox: {id: 'nav.byBox'},
-  byList: {id: 'nav.byList'},
-  friends: {id: 'nav.friends'},
-  language: {id: 'nav.language'},
-  bugs: {id: 'nav.bugs'},
-  settings: {id: 'user.settings'},
-  signout: {id: 'user.signout'},
-});
+const drawerWidth = 240;
 
-class Main extends Component {
-  constructor(props, context) {
-    super(props, context);
+const useStyles = makeStyles((theme) => ({
+  appbar: {
+    zIndex: theme.zIndex.drawer + 1,
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+  },
+  drawerPaper: {
+    width: drawerWidth,
+  },
+}));
 
-    this.handleToggleNav = this.handleToggleNav.bind(this);
-    this.handleToggleNavRequest = this.handleToggleNavRequest.bind(this);
-    this.setLocale = this.setLocale.bind(this);
+function Main() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const theme = useTheme();
+  const isUpMd = useMediaQuery(theme.breakpoints.up('md'));
+  const isUpSm = useMediaQuery(theme.breakpoints.up('sm'));
+  const classes = useStyles();
+  const dispatch = useDispatch();
 
-    this.state = {};
-  }
+  useLayoutEffect(() => {
+    dispatch(actions.ui.setMediaQuery('upMd', isUpMd));
+    dispatch(actions.ui.setMediaQuery('downMd', !isUpMd));
+    dispatch(actions.ui.setMediaQuery('upSm', isUpSm));
+    dispatch(actions.ui.setMediaQuery('downSm', !isUpSm));
+  }, [dispatch, isUpMd, isUpSm]);
 
-  render() {
-    return (
-      <div className="Main">
-        <Helmet title="Prof. Sylve" onChangeClientState={this.handleChangeTitle}/>
-        {this.renderLayout()}
-      </div>
-    );
-  }
+  return (
+    <div className="Main">
+      <Helmet title="Prof. Sylve" onChangeClientState={handleTitleChange} />
+      {renderLayout()}
+    </div>
+  );
 
-  handleChangeTitle = (newState) => {
-    this.props.setTitle(newState.title);
-  }
-
-  renderLayout() {
-    const {signedIn, profile, currentUsername, currentBox, width} = this.props;
-    const {formatMessage} = this.props.intl;
-
-    let navItems = [];
-
-    if (!signedIn) {
-      navItems.push(this.renderNavMenuItem(<HomeIcon/>, '/', formatMessage(messages.home)));
-      navItems.push(<Divider key="divider1"/>);
-    }
-
-    if (currentUsername) {
-      if (signedIn && currentUsername !== profile.username) {
-        navItems.push(this.renderNavMenuItem(<BackIcon/>, `/pokedex/${profile.username}`, formatMessage(messages.back)));
-        navItems.push(<Divider key="divider2"/>);
-      }
-
-      navItems.push(this.renderNavMenuItem(<DashboardIcon/>, `/pokedex/${currentUsername}`, formatMessage(messages.dashboard)));
-      navItems.push(this.renderNavMenuItem(<ViewModuleIcon/>, `/pokedex/${currentUsername}/pc/${currentBox}`, formatMessage(messages.byBox)));
-      navItems.push(this.renderNavMenuItem(<ListIcon/>, `/pokedex/${currentUsername}/list`, formatMessage(messages.byList)));
-      navItems.push(<Divider key="divider3"/>);
-
-      if (signedIn && currentUsername === profile.username) {
-        //navItems.push(this.renderNavMenuItem(<PeopleIcon/>, '/friends', formatMessage(messages.friends)));
-        navItems.push(this.renderNavMenuItem(<SettingsIcon/>, '/settings', formatMessage(messages.settings)));
-        navItems.push(<Divider key="divider4"/>);
-      }
-    }
-
-    // Handle drawer
-    const drawerDocked = width > LG;
-    let showMenuButton = true;
-    let drawerOpen = this.state.navOpen;
-
-    if (drawerDocked) {
-      showMenuButton = false;
-      drawerOpen = true;
-    }
+  function renderLayout() {
+    const sidebar = <Sidebar onNavigate={handleSidebarToggle} showTitle={!isUpMd} />;
 
     return (
-      <Router>
-        <div className="prof-sylve">
-          <Appbar onToggleNav={this.handleToggleNav} showMenuButton={showMenuButton}/>
+      <AppbarContextProvider>
+        <Appbar className={classes.appbar} onToggleNav={handleSidebarToggle} showTitle={isUpMd} />
+        {isUpMd ? (
           <Drawer
-            docked={drawerDocked}
-            open={drawerOpen}
-            onRequestChange={this.handleToggleNavRequest}
+            className={classes.drawer}
+            classes={{
+              paper: classes.drawerPaper,
+            }}
+            variant="permanent"
+            open
           >
-            <div className="Drawer">
-              <List onChange={this.handleToggleNav}>
-                {navItems}
-                <ListItem leftIcon={<BugReportIcon/>} href="https://github.com/carab/Prof-Sylve/issues" rel="noopener" target="blank">{formatMessage(messages.bugs)}</ListItem>
-                <ListItem
-                  primaryText={formatMessage(messages.language)}
-                  leftIcon={<LanguageIcon />}
-                  primaryTogglesNestedList={true}
-                  nestedItems={_.map({ en: 'English', fr: 'Français' }, this.renderLocaleMenuItem)}
-                />
-              </List>
-            </div>
+            {sidebar}
           </Drawer>
-          <div className="Content">
-            <Switch>
-              <Route exact path="/" component={UserSign}/>
-              <Route path="/signout" component={UserSignout}/>
-              <Route path="/pokedex/:username" component={Pokedex}/>
-              <Route path="/friends" component={UserFriends}/>
-              <Route path="/settings" component={UserSettings}/>
-            </Switch>
-          </div>
+        ) : null}
+        <Drawer
+          variant="temporary"
+          anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+          open={!isUpMd && sidebarOpen}
+          onClose={handleSidebarToggle}
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+          ModalProps={{
+            keepMounted: true,
+          }}
+        >
+          {sidebar}
+        </Drawer>
+        <div className="Content">
+          <Toolbar />
+          <Switch>
+            <Route exact path="/" component={UserSign} />
+            <Route path="/signout" component={UserSignout} />
+            <Route path="/pokedex/:username" component={Pokedex} />
+            <Route path="/friends" component={UserFriends} />
+            <Route path="/settings" component={UserSettings} />
+          </Switch>
         </div>
-      </Router>
+      </AppbarContextProvider>
     );
   }
 
-  renderNavMenuItem = (icon, path, text) => {
-    const style = {};
-
-    /*/if (this.context.router.isActive(path, true)) {
-      style.color = this.context.muiTheme.palette.primary1Color;
-    }/**/
-
-    return (
-      <ListItem key={path} leftIcon={icon} containerElement={<Link to={path}/>} onTouchTap={this.handleToggleNav} style={style}>
-        {text}
-      </ListItem>
-    );
+  function handleTitleChange(newState) {
+    dispatch(actions.ui.setTitle(newState.title));
   }
 
-  renderLocaleMenuItem = (text, locale) => {
-    const isActive = this.isActiveLocale(locale);
-    const style = {};
-
-    if (isActive) {
-      style.color = this.context.muiTheme.palette.accent1Color;
-    }
-
-    return <ListItem key={locale} onTouchTap={() => this.setLocale(locale)} primaryText={text} insetChildren={true} style={style}/>
-  }
-
-  handleToggleNavRequest(open) {
-    this.setState({ navOpen: open });
-  }
-
-  handleToggleNav() {
-    this.setState({ navOpen: !this.state.navOpen })
-  }
-
-  isActiveLocale(locale) {
-    return (locale === this.props.profile.locale);
-  }
-
-  setLocale(locale) {
-    this.props.setLocale(locale);
+  function handleSidebarToggle() {
+    setSidebarOpen((sidebarOpen) => !sidebarOpen);
   }
 }
 
-Main.displayName = 'Main';
-Main.propTypes = {};
-Main.contextTypes = {
-  muiTheme: PropTypes.object.isRequired,
-};
-
-const mapStateToProps = (state) => {
-  return {
-    signedIn: state.auth.signedIn,
-    profile: state.profile,
-    currentUsername: state.ui.currentUsername,
-    currentBox: state.ui.currentBox,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setLocale: (locale) => {
-      dispatch(actions.profile.setLocale(locale));
-    },
-    setTitle: (title) => {
-      dispatch(actions.ui.setTitle(title));
-    },
-  };
-}
-
-export default withWidth()(injectIntl(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Main)));
+export default Main;

@@ -1,0 +1,18 @@
+.PokemonSelector {
+  display: flex;
+  align-items: center;
+  margin-right: auto;
+}
+
+.PokemonSelector__group {
+}
+
+.PokemonSelector__selection {
+  display: flex;
+  align-items: center;
+}
+
+.PokemonSelector--selecting {
+  margin-left: auto;
+  margin-right: 0;
+}

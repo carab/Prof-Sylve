@@ -1,179 +1,133 @@
-'use strict';
-
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
-import ReactSwipe from 'react-swipe';
-import {injectIntl, defineMessages} from 'react-intl';
-import _ from 'lodash';
-
-import DropDownMenu from 'material-ui/DropDownMenu';
-import MenuItem from 'material-ui/MenuItem';
-import Paper from 'material-ui/Paper';
-import IconButton from 'material-ui/IconButton';
-import NavigateBeforeIcon from 'material-ui/svg-icons/image/navigate-before';
-import NavigateNextIcon from 'material-ui/svg-icons/image/navigate-next';
-
+import React, { useEffect, useMemo, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams, useHistory } from 'react-router-dom';
+import { defineMessages, useIntl } from 'react-intl';
+import Paper from '@material-ui/core/Paper';
+import IconButton from '@material-ui/core/IconButton';
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import PokedexBox from 'components/Pokedex/Box/Box';
-import PokedexToolbar from 'components/Pokedex/Toolbar/Toolbar';
-
+import PokemonSelector from 'components/Pokedex/PokemonSelector/PokemonSelector';
+import { selectUi } from 'selectors/selectors';
 import actions from 'actions';
+import { AppbarPortal } from 'components/Ui/Appbar/AppbarPortal';
+import PokedexBoxSwitcher from './PokedexBoxSwitcher';
+import Flex from 'components/Flex/Flex';
 
 import './Pc.css';
 
 const messages = defineMessages({
-  previousBox: {id: 'pokemon.toolbar.previousBox'},
-  nextBox: {id: 'pokemon.toolbar.nextBox'},
-  box: {id: 'pokemon.toolbar.box'},
+  previousBox: { id: 'pokemon.pc.previousBox' },
+  nextBox: { id: 'pokemon.pc.nextBox' },
+  box: { id: 'pokemon.pc.box' },
 });
 
 export const BOX_COLS = 6;
 export const BOX_ROWS = 5;
 export const BOX_SIZE = BOX_COLS * BOX_ROWS;
 
-class PokedexPc extends Component {
-  constructor(props) {
-    super(props);
+function PokedexPc() {
+  const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const { currentBox, currentUsername, currentPokedex, selecting } = useSelector(selectUi);
+  const params = useParams();
+  const history = useHistory();
+  const currentBoxFromParams = parseInt(params.currentBox);
 
-    this.handleSelectBox = this.handleSelectBox.bind(this);
-    this.handlePreviousBox = this.handlePreviousBox.bind(this);
-    this.handleNextBox = this.handleNextBox.bind(this);
-    this.handleSwipe = this.handleSwipe.bind(this);
+  const handleSetBox = useCallback(
+    (box) => {
+      dispatch(actions.ui.setCurrentBox(box));
+    },
+    [dispatch],
+  );
 
-    this.state = {
-      boxes: [],
-    };
-  }
-
-  componentWillMount() {
-    const {params} = this.props.match;
-    const {pokemons, setCurrentBox} = this.props;
-    const currentBox = parseInt(params.currentBox) || this.props.currentBox;
-
-    if (currentBox !== this.props.currentBox) {
-      setCurrentBox(currentBox);
+  useEffect(() => {
+    if (currentBoxFromParams && currentBoxFromParams !== currentBox) {
+      handleSetBox(currentBoxFromParams);
     }
+  }, [currentBox, currentBoxFromParams, handleSetBox]);
 
-    const count = Math.ceil(pokemons / BOX_SIZE);
+  const pokemons = currentPokedex?.pokemons ?? [];
+  const boxes = useMemo(() => {
+    const count = Math.ceil(pokemons.length / BOX_SIZE);
     const boxes = [];
 
     for (let i = 0; i < count; i++) {
       boxes.push({
-        index: i,
+        value: i + 1,
         start: i * BOX_SIZE,
         end: (i + 1) * BOX_SIZE,
       });
     }
 
-    this.setState({
-      currentBox,
-      boxes,
-    });
-  }
+    return boxes;
+  }, [pokemons]);
 
-  shouldComponentUpdate(nextProps) {
-    if (nextProps.match.params.currentBox !== this.props.currentBox) {
-      this.handleSelectBox(undefined, nextProps.match.params.currentBox);
-    }
+  const activeBox = boxes.find((b) => b.value === currentBox);
 
-    return (nextProps.currentBox !== this.props.currentBox);
-  }
-
-  render() {
-    const {formatMessage} = this.props.intl;
-    const {currentBox, boxes} = this.state;
-
-    return (
-      <div className="PokedexPc container">
-        <Paper zDepth={1} className="PokedexPc__paper">
-          <PokedexToolbar showFiltered={false} right={this.renderBoxes()}/>
-          <div className="PokedexPc__view">
-            <div className="PokedexPc__previousBox">
-              <IconButton onClick={this.handlePreviousBox} tooltip={formatMessage(messages.previousBox)}>
-                <NavigateBeforeIcon/>
-              </IconButton>
-            </div>
-            <div className="PokedexPc__boxes">
-              <ReactSwipe ref="swipe" swipeOptions={{continuous: false, startSlide: currentBox, transitionEnd: this.handleSwipe}}>
-                {_.map(boxes, (box) => (
-                  <div key={box.index}>
-                    <PokedexBox box={box}/>
-                  </div>
-                ))}
-              </ReactSwipe>
-            </div>
-            <div className="PokedexPc__nextBox">
-              <IconButton onClick={this.handleNextBox} tooltip={formatMessage(messages.nextBox)}>
-                <NavigateNextIcon/>
-              </IconButton>
-            </div>
+  return (
+    <div className="PokedexPc">
+      {boxes.length ? (
+        <AppbarPortal secondary={selecting}>
+          <Flex>
+            <PokemonSelector />
+            <PokedexBoxSwitcher activeBox={activeBox} boxes={boxes} onBoxChange={handleBoxChange} />
+          </Flex>
+        </AppbarPortal>
+      ) : null}
+      <Paper elevation={1} className="PokedexPc__paper">
+        <div className="PokedexPc__view">
+          <div className="PokedexPc__previousBox">
+            <IconButton
+              onClick={handleBoxPrevious}
+              aria-label={formatMessage(messages.previousBox)}
+              title={formatMessage(messages.previousBox)}
+            >
+              <NavigateBeforeIcon />
+            </IconButton>
           </div>
-        </Paper>
-      </div>
-    );
-  }
-
-  renderBoxes() {
-    const {formatMessage} = this.props.intl;
-    const {currentBox} = this.props;
-    const {boxes} = this.state;
-
-    if (boxes) {
-      return (
-        <div className="PokemonToolbar__boxes">
-          <DropDownMenu value={currentBox} onChange={this.handleSelectBox}>
-            {_.map(boxes, (box) => (
-              <MenuItem value={box.index} primaryText={formatMessage(messages.box, { start: box.start + 1, end: box.end })} key={box.index}/>
-            ))}
-          </DropDownMenu>
+          <div className="PokedexPc__boxes">
+            {activeBox ? <PokedexBox box={activeBox} /> : null}
+          </div>
+          <div className="PokedexPc__nextBox">
+            <IconButton
+              onClick={handleBoxNext}
+              aria-label={formatMessage(messages.nextBox)}
+              title={formatMessage(messages.nextBox)}
+            >
+              <NavigateNextIcon />
+            </IconButton>
+          </div>
         </div>
-      );
+      </Paper>
+    </div>
+  );
+
+  function handleBoxChange(box) {
+    history.push(`/pokedex/${currentUsername}/pc/${box}`);
+  }
+
+  function handleBoxNavigate(count) {
+    const currentIndex = boxes.findIndex((b) => b.value === currentBox) ?? 0;
+    let newIndex = currentIndex + count;
+
+    if (newIndex < 0) {
+      newIndex = 0;
+    } else if (newIndex >= boxes.length) {
+      newIndex = boxes.length - 1;
     }
+
+    const newBox = boxes[newIndex];
+    handleBoxChange(newBox.value);
   }
 
-  handleSwipe(currentBox) {
-    this.props.history.push(`/pokedex/${this.props.currentUsername}/pc/${currentBox}`);
-    this.props.setCurrentBox(currentBox);
+  function handleBoxPrevious() {
+    handleBoxNavigate(-1);
   }
 
-  handleSelectBox(event, index) {
-    this.refs.swipe.slide(index, 300);
-  }
-
-  handlePreviousBox() {
-    this.refs.swipe.prev();
-  }
-
-  handleNextBox() {
-    this.refs.swipe.next();
+  function handleBoxNext() {
+    handleBoxNavigate(+1);
   }
 }
 
-PokedexPc.displayName = 'PokedexPc';
-PokedexPc.propTypes = {};
-PokedexPc.contextTypes = {
-  router: PropTypes.object.isRequired,
-};
-
-const mapStateToProps = (state) => {
-  const currentPokedex = state.ui.pokedexes.get(state.ui.currentUsername);
-
-  return {
-    currentBox: state.ui.currentBox,
-    pokemons: currentPokedex.pokemons.length,
-    currentUsername: state.ui.currentUsername,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setCurrentBox(currentBox) {
-      dispatch(actions.ui.setCurrentBox(currentBox));
-    },
-  };
-}
-
-export default injectIntl(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PokedexPc));
+export default PokedexPc;

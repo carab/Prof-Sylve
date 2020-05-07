@@ -13,27 +13,3 @@
   flex: 1 1 0;
   padding: 0 !important;
 }
-
-@media (min-width: 34em) {
-  .PokemonList {
-    height: calc(100% - 2rem);
-  }
-}
-
-.PokedexSearch {
-  display: inline-block;
-  position: relative;
-  padding-left: 28px;
-}
-
-.PokedexSearch__icon {
-  position: absolute;
-  left: 0;
-  top: 12px;
-}
-
-.PokedexSearch__cancel {
-  position: absolute;
-  top: -2px;
-  right: 0;
-}

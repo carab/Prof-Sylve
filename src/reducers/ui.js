@@ -1,22 +1,58 @@
 import Immutable from 'immutable';
+import { getDefaultLocale } from 'components/LocaleProvider';
 
-import initial from '../store/initial';
+export const initialState = {
+  locale: getDefaultLocale(),
+  currentUsername: undefined,
+  currentPokedex: undefined,
+  currentPokemon: undefined,
+  mediaQuery: {
+    downSm: false,
+    upSm: true,
+    downMd: false,
+    upMd: true,
+  },
+  currentBox: 1,
+  filters: Immutable.Map(),
+  title: undefined,
+  filtered: Immutable.List(), // Filtered Pokémons on PC (by box) or List (by search of filters)
+  selected: Immutable.Map(), // Selected Pokémons for mass-actions
+  selecting: false, // true if at least one Pokémon is selected
+};
 
-export default (state = initial.ui, action) => {
+export default (state = initialState, action) => {
   let selected;
 
   switch (action.type) {
+    case 'SET_LOCALE':
+      return {
+        ...state,
+        locale: action.payload,
+      };
 
     case 'SET_CURRENT_BOX':
-      return Object.assign({}, state, action.payload);
+      return {
+        ...state,
+        currentBox: action.payload,
+      };
 
-    case 'SET_POKEDEX':
-      return Object.assign({}, state, {
-        pokedexes: state.pokedexes.set(action.meta.username, action.payload),
-      });
+    case 'SET_CURRENT_POKEDEX':
+      return {
+        ...state,
+        currentPokedex: action.payload,
+      };
 
     case 'SET_CURRENT_USERNAME':
-      return Object.assign({}, state, { currentUsername: action.payload });
+      return {
+        ...state,
+        currentUsername: action.payload,
+      };
+
+    case 'SET_CURRENT_POKEMON':
+      return {
+        ...state,
+        currentPokemon: action.payload,
+      };
 
     case 'SET_TITLE':
       return Object.assign({}, state, { title: action.payload });
@@ -28,7 +64,7 @@ export default (state = initial.ui, action) => {
 
     case 'RESET_FILTERS':
       return Object.assign({}, state, {
-        filters: initial.ui.filters,
+        filters: initialState.filters,
       });
 
     case 'SET_FILTERED':
@@ -45,20 +81,25 @@ export default (state = initial.ui, action) => {
 
       return Object.assign({}, state, {
         selected,
-        selecting: (selected.size > 0),
+        selecting: selected.size > 0,
       });
 
     case 'RESET_SELECTED':
       return Object.assign({}, state, {
-        selected: initial.ui.selected,
+        selected: initialState.selected,
         selecting: false,
       });
 
-    case 'SET_CURRENT_POKEMON':
-      return Object.assign({}, state, {
-        currentPokemon: action.payload,
-      });
+    case 'SET_MEDIA_QUERY':
+      return {
+        ...state,
+        mediaQuery: {
+          ...state.mediaQuery,
+          [action.payload.name]: action.payload.value,
+        },
+      };
 
-    default: return state;
+    default:
+      return state;
   }
 };

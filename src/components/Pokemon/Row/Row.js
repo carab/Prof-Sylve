@@ -1,183 +1,141 @@
-'use strict';
-
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {injectIntl} from 'react-intl';
+import React, { memo, useState } from 'react';
+import { connect, useDispatch } from 'react-redux';
+import { defineMessages, useIntl } from 'react-intl';
 import classnames from 'classnames';
-
-import Checkbox from 'material-ui/Checkbox';
-
-import PokemonMenu from 'components/Pokemon/Menu/Menu';
+import Checkbox from '@material-ui/core/Checkbox';
 import Pokeball from 'components/Pokemon/Pokeball';
-
 import actions from 'actions';
-import Colors from 'utils/colors';
+import Colors from 'data/colors';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
-import './Row.css';
+import './Row.scss';
+import PokemonMenuButton from '../Menu/PokemonMenuButton';
 
-class Row extends Component {
-  constructor(props) {
-    super(props);
+const messages = defineMessages({
+  collect: { id: 'pokemon.collect' },
+  uncollect: { id: 'pokemon.uncollect' },
+  select: { id: 'pokemon.select' },
+  unselect: { id: 'pokemon.unselect' },
+});
 
-    this.state = {
-      hover: false,
-    };
+function Row({ pokemon, selected, selecting, disabled }) {
+  const { formatMessage } = useIntl();
+  const [hover, setHover] = useState(false);
+  const dispatch = useDispatch();
+  const hasHover = useMediaQuery('(hover: hover)');
+
+  if (!pokemon) {
+    return null;
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    const {locale, selected, selecting, disabled} = this.props;
-    const {collected, tag} = this.props.pokemon;
-    const {hover} = this.state;
+  const name = formatMessage({ id: 'pokemon.name.' + pokemon.id });
+  const clickLabel = selecting
+    ? formatMessage(pokemon.selected ? messages.unselect : messages.select, {
+        name,
+      })
+    : formatMessage(pokemon.collected ? messages.uncollect : messages.collect, {
+        name,
+      });
 
-    return (
-      collected !== nextProps.pokemon.collected ||
-      tag !== nextProps.pokemon.tag ||
-      locale !== nextProps.locale ||
-      selected !== nextProps.selected ||
-      selecting !== nextProps.selecting ||
-      disabled !== nextProps.disabled ||
-      hover !== nextState.hover
-    );
+  const styles = {
+    tile: {},
+    footer: {},
+    id: { background: Colors.default },
+  };
+
+  if (pokemon.tag) {
+    styles.id.background = Colors.tags[pokemon.tag];
   }
 
-  render() {
-    const {pokemon, selected, selecting, disabled} = this.props;
-    const {formatMessage} = this.props.intl;
-    const {hover} = this.state;
+  if (pokemon.collected) {
+  }
 
-    const id = pokemon.id;
-    const name = formatMessage({ id: 'pokemon.name.' + pokemon.id });
+  const classes = classnames('PokemonRow', {
+    'PokemonRow--collected': pokemon.collected,
+    'PokemonRow--selected': selected,
+    'PokemonRow--selecting': selecting,
+    'PokemonRow--hover': !hasHover || hover,
+    'PokemonRow--disabled': disabled,
+  });
 
-    const styles = {
-      tile: {},
-      footer: {},
-      id: { background: Colors.default },
-    };
-
-    if (pokemon.tag !== 'none') {
-      styles.id.background = Colors.tags[pokemon.tag];
-    }
-
-    if (pokemon.collected) {
-
-    }
-
-    const classes = classnames({
-      'PokemonRow': true,
-      'PokemonRow--collected': pokemon.collected,
-      'PokemonRow--selected': selected,
-      'PokemonRow--selecting': selecting,
-      'PokemonRow--hover': hover,
-      'PokemonRow--disabled': disabled,
-    });
-
-    return (
-      <div className={classes} style={styles.tile}
-        onTouchTap={this.handleTouch}
-        onMouseEnter={this.handleMouseEnter}
-        onMouseLeave={this.handleMouseLeave}
-      >
-        {this.renderSelector()}
-        {this.renderPokeball()}
-        <div className="Pokemon__id" style={styles.id}>
-          {id}
-        </div>
-        <div className="PokemonRow__name">
-          {name}
-        </div>
-        {this.renderMenu()}
+  return (
+    <div
+      className={classes}
+      style={styles.tile}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div className="PokemonRow__selector">
+        <Checkbox
+          checked={selected}
+          onChange={handleSelected}
+          inputProps={{
+            'aria-label': formatMessage(selected ? messages.unselect : messages.select, { name }),
+          }}
+        />
       </div>
-    );
-  }
-
-  renderPokeball() {
-    return (
-      <div className="PokemonRow__pokeball">
+      <div
+        role="button"
+        aria-label={clickLabel}
+        className="PokemonRow__pokeball"
+        onClick={handleClick}
+      >
         <Pokeball />
       </div>
-    );
-  }
-
-  renderSelector() {
-    const {selected} = this.props;
-
-    return (
-      <div className="PokemonRow__selector" onTouchTap={this.handleStopPropagation}>
-        <Checkbox checked={selected} onCheck={this.handleSelected}/>
+      <div
+        role="button"
+        aria-label={clickLabel}
+        className="Pokemon__id"
+        style={styles.id}
+        onClick={handleClick}
+      >
+        {pokemon.id}
       </div>
-    );
-  }
-
-  renderMenu() {
-    const {pokemon} = this.props;
-
-    return (
+      <div role="button" aria-label={clickLabel} className="PokemonRow__name" onClick={handleClick}>
+        {name}
+      </div>
       <div className="PokemonRow__menu">
-        <PokemonMenu pokemon={pokemon} showPcLink={true}/>
+        <PokemonMenuButton pokemons={[pokemon]} />
       </div>
-    );
+    </div>
+  );
+
+  function handleMouseEnter() {
+    setHover(true);
   }
 
-  handleMouseEnter = () => {
-    this.setState({
-      hover: true,
-    });
+  function handleMouseLeave() {
+    setHover(false);
   }
 
-  handleMouseLeave = () => {
-    this.setState({
-      hover: false,
-    });
-  }
-
-  handleTouch = () => {
-    const {selecting} = this.props;
-    const {collected} = this.props.pokemon;
+  function handleClick() {
+    if (disabled) {
+      return;
+    }
 
     if (selecting) {
-      this.handleSelected();
+      handleSelected();
     } else {
-      this.props.onCollected(!collected);
+      dispatch(actions.pokedex.setCollected(pokemon.id, !pokemon.collected));
     }
   }
 
-  handleSelected = () => {
-    const {selected} = this.props;
-    this.props.onSelected(!selected);
-  }
+  function handleSelected() {
+    if (disabled) {
+      return;
+    }
 
-  handleStopPropagation = (event) => {
-    event.stopPropagation();
+    dispatch(actions.ui.setSelected(pokemon.id, !selected));
   }
 }
 
-Row.displayName = 'PokemonRow';
-Row.propTypes = {};
-
 const mapStateToProps = (state, ownProps) => {
-  const currentPokedex = state.ui.pokedexes.get(state.ui.currentUsername);
-
   return {
     disabled: state.ui.currentUsername !== state.profile.username,
-    pokemon: currentPokedex.pokemons[ownProps.id-1],
-    locale: state.profile.locale,
-    selected: state.ui.selected.get(ownProps.id) || false,
+    pokemon: state.ui.currentPokedex?.pokemons?.find((p) => p.id === ownProps.id),
+    selected: state.ui.selected.get(ownProps.id) ?? false,
     selecting: state.ui.selecting,
   };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    onCollected: (collected) => {
-      dispatch(actions.pokedex.setCollected(ownProps.id, collected));
-    },
-    onSelected: (selected) => {
-      dispatch(actions.ui.setSelected(ownProps.id, selected));
-    },
-  };
-}
-
-export default injectIntl(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Row));
+export default connect(mapStateToProps)(memo(Row));

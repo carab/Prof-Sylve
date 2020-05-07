@@ -1,0 +1,70 @@
+.PokemonRow {
+  display: flex;
+  align-items: center;
+  height: 48px;
+}
+
+.PokemonRow__selector {
+  opacity: 0;
+  transition: 200ms ease opacity;
+}
+
+.PokemonRow__pokeball {
+  width: 24px;
+  height: 24px;
+  opacity: 0;
+  transition: 300ms ease opacity;
+  cursor: pointer;
+}
+
+.PokemonRow__name {
+  flex: 1 1 auto;
+  cursor: pointer;
+}
+
+.PokemonRow__menu {
+  opacity: 0;
+  transition: 200ms ease opacity;
+}
+
+.PokemonRow--collected {
+  & .PokemonRow__pokeball {
+    opacity: 1;
+  }
+}
+
+.PokemonRow .Pokemon__id {
+  margin: 0 16px;
+  cursor: pointer;
+}
+
+.PokemonRow--hover {
+  background: #f6f6f6;
+
+  & .PokemonRow__selector {
+    opacity: 1;
+  }
+
+  & .PokemonRow__menu {
+    opacity: 1;
+  }
+}
+
+.PokemonRow--selecting {
+  & .PokemonRow__selector {
+    opacity: 1;
+  }
+}
+
+.PokemonRow--selected {
+  background: #b6bff333;
+}
+
+.PokemonRow--disabled {
+  cursor: default;
+  
+  & .PokemonRow__selector,
+  & .PokemonRow__menu {
+    display: none;
+  }
+}

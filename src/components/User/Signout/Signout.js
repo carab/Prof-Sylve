@@ -1,5 +1,3 @@
-'use strict';
-
 import {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
@@ -15,9 +13,9 @@ class Signout extends Component {
   }
 
   componentWillUpdate(nextProps) {
-    const {signedIn} = nextProps;
+    const {signed} = nextProps;
 
-    if (!signedIn) {
+    if (!signed) {
       this.props.history.replace('/');
     }
   }
@@ -31,7 +29,7 @@ Signout.displayName = 'UserSignout';
 
 const mapStateToProps = (state) => {
   return {
-    signedIn: state.auth.signedIn,
+    signed: state.auth.signed,
   };
 };
 

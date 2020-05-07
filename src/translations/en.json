@@ -2,13 +2,14 @@
   "app": "Prof. Sylve",
   "intro": {
     "subtitle": "The Living Pokédex follow up solution",
-    "text": "You have always wanted to catch'em all but do not know where to start?<br/> Prof. Sylve helps you to do so by organizing your journey : same display as in game PC, Pokémon tagging to group them, captured state, links to Wiki, etc.<br/><br/> The application is designed for completing a <a target='_blank' href='http://bulbapedia.bulbagarden.net/wiki/Living_Pok%C3%A9dex'>Living Pokédex</a> but can also be used for simple Pokédex."
+    "text": "You have always wanted to catch'em all but do not know where to start?<br/> Prof. Sylve helps you to do so by organizing your journey : same display as in game PC, Pokémon tagging to group them, captured state, links to Wiki, etc.<br/><br/> The application is most useful to complete a <a target='_blank' rel='noopener noreferrer' href='http://bulbapedia.bulbagarden.net/wiki/Living_Pok%C3%A9dex'>Living Pokédex</a> but can also be used as a simple Pokédex."
   },
   "label": {
     "save": "Save"
   },
   "nav": {
-    "back": "Back",
+    "menu": "Open menu",
+    "back": "Back to my Pokédex",
     "dashboard": "Dashboard",
     "byBox": "PC",
     "byList": "List",
@@ -46,7 +47,9 @@
     "mine": "My Pokédex",
     "of": "Pokédex of {username}",
     "selected": "{selected} selected",
-    "cancelSelection": "Cancel selection"
+    "cancelSelection": "Cancel selection",
+    "selectAll": "Select all visible",
+    "unselectAll": "Unselect all visible"
   },
   "settings": {
     "visibility": "Pokédex visibility",
@@ -66,12 +69,15 @@
     }
   },
   "pokemon": {
-    "toolbar": {
+    "selector": {
       "counter": "{collected} on {pokemons}",
-      "filteredPokemons": "{filteredPokemons} Pokémons",
-      "box": "{start} to {end}",
-      "previousBox": "Previous Box",
-      "nextBox": "Next Box"
+      "filtered": "{filtered} Pokémons"
+    },
+    "pc": {
+      "box": "Box {name} ({start} to {end})",
+      "selectBox": "Select a box",
+      "previousBox": "Previous box",
+      "nextBox": "Next box"
     },
     "filter": {
       "search": "Search...",
@@ -80,6 +86,11 @@
       "notCollected": "Not Collected",
       "noResult": "No Result"
     },
+    "menu": "Menu",
+    "collect": "Mark {name} as collected",
+    "uncollect": "Unmark {name} as collected",
+    "select": "Select {name}",
+    "unselect": "Unselect {name}",
     "collected": "Collected",
     "notCollected": "Not Collected",
     "externalService": "See on Bulbapedia",

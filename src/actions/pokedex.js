@@ -12,34 +12,42 @@ const refs = {
 const actions = {
   setCollected(id, collected) {
     return () => {
-      refs.user().child(`pokedex/pokemons/${id-1}/collected`).set(collected);
+      if (collected) {
+        refs.user().child(`pokedex/pokemons/${id}/collected`).set(collected);
+      } else {
+        refs.user().child(`pokedex/pokemons/${id}/collected`).remove();
+      }
     };
   },
   setTag(id, tag) {
     return () => {
-      refs.user().child(`pokedex/pokemons/${id-1}/tag`).set(tag);
-    };
-  },
-  setSettingsPublic(isPublic) {
-    return () => {
-      refs.user().child('pokedex/settings/public').set(isPublic);
-
-      if (isPublic) {
-        refs.root().child(`public_pokedex_lookup/${firebase.auth().currentUser.uid}`).set(true);
+      if (tag) {
+        refs.user().child(`pokedex/pokemons/${id}/tag`).set(tag);
       } else {
-        refs.root().child(`public_pokedex_lookup/${firebase.auth().currentUser.uid}`).remove();
+        refs.user().child(`pokedex/pokemons/${id}/tag`).remove();
       }
     };
   },
-  setSettingsUsername(username) {
+  setSettingsPublic(_public) {
     return () => {
-      refs.user().child('pokedex/settings/username').set(username);
-      refs.root().child('usernames').child(firebase.auth().currentUser.uid).set(username);
+      const uid = firebase.auth().currentUser.uid;
+
+      if (_public) {
+        refs.user().child('pokedex/settings/public').set(_public);
+        return refs.root().child(`public_pokedex_lookup/${uid}`).set(_public);
+      } else {
+        refs.user().child('pokedex/settings/public').remove();
+        return refs.root().child(`public_pokedex_lookup/${uid}`).remove();
+      }
     };
   },
-  setSettingsTagTitle(tag, title) {
+  setSettingsTag(tag, title) {
     return () => {
-      refs.user().child(`pokedex/settings/tags/${tag}/title`).set(title);
+      if (title) {
+        refs.user().child(`pokedex/settings/tags/${tag}`).set(title);
+      } else {
+        refs.user().child(`pokedex/settings/tags/${tag}`).remove();
+      }
     };
   },
 };

@@ -1,151 +1,144 @@
-'use strict';
-
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
-import {injectIntl, intlShape, defineMessages} from 'react-intl';
-
-import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
-import {Card, CardActions, CardTitle, CardText} from 'material-ui/Card';
-import CircularProgress from 'material-ui/CircularProgress';
-
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { defineMessages, useIntl } from 'react-intl';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import actions from 'actions';
+import { selectAuth } from 'selectors/selectors';
 
 import './Signup.css';
 
 const messages = defineMessages({
-  signup: {id: 'user.signup'},
-  subtitle: {id: 'user.signupSubtitle'},
-  email: {id: 'user.email'},
-  password: {id: 'user.password'},
-  passwordConfirmation: {id: 'user.passwordConfirmation'},
-  alreadyUsed: {id: 'errors.alreadyUsed'},
-  invalidEmail: {id: 'errors.invalidEmail'},
-  invalidPassword: {id: 'errors.invalidPassword'},
-  invalidConfirmation: {id: 'errors.invalidConfirmation'},
+  signup: { id: 'user.signup' },
+  subtitle: { id: 'user.signupSubtitle' },
+  email: { id: 'user.email' },
+  password: { id: 'user.password' },
+  passwordConfirmation: { id: 'user.passwordConfirmation' },
+  alreadyUsed: { id: 'errors.alreadyUsed' },
+  invalidEmail: { id: 'errors.invalidEmail' },
+  invalidPassword: { id: 'errors.invalidPassword' },
+  invalidConfirmation: { id: 'errors.invalidConfirmation' },
 });
 
-class UserSignup extends Component {
-  constructor(props, context) {
-    super(props, context);
+function UserSignup() {
+  const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const {
+    errors: { signup: signupError },
+  } = useSelector(selectAuth);
 
-    this.state = {
-      errors: {},
-      loading: false,
-    };
+  const [values, setValues] = useState({
+    email: '',
+    password: '',
+    passwordConfirmation: '',
+  });
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  componentWillReceiveProps(newsProps) {
-    const {error} = newsProps;
-
-    if (error) {
-      switch (error.code) {
+  useEffect(() => {
+    if (signupError) {
+      switch (signupError.code) {
         case 'auth/email-already-in-use':
-          this.setState({errors: { email: messages.alreadyUsed }})
+          setErrors({ email: messages.alreadyUsed });
           break;
         case 'auth/invalid-email':
-          this.setState({errors: { email: messages.invalidEmail }})
+          setErrors({ email: messages.invalidEmail });
           break;
         case 'auth/weak-password':
-          this.setState({errors: { password: messages.invalidPassword }})
+          setErrors({ password: messages.invalidPassword });
+          break;
+        default:
           break;
       }
 
-      this.setState({ loading: false });
+      setLoading(false);
     }
-  }
+  }, [signupError]);
 
-  render() {
-    const {loading, errors} = this.state;
-    const {formatMessage} = this.props.intl;
-
-    let action = <RaisedButton type="submit" label={formatMessage(messages.signup)} secondary={true} />;
-
-    if (loading) {
-      action = <CircularProgress size={20}/>;
-    }
-
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <Card>
-          <CardTitle title={formatMessage(messages.signup)} subtitle={formatMessage(messages.subtitle)}/>
-          <CardText>
-            <TextField
-              ref="email"
-              type="email"
-              floatingLabelText={formatMessage(messages.email)}
-              fullWidth={true}
-              errorText={errors.email && formatMessage(errors.email)}
-            />
-            <TextField
-              ref="password"
-              type="password"
-              floatingLabelText={formatMessage(messages.password)}
-              fullWidth={true}
-              errorText={errors.password && formatMessage(errors.password)}
-            />
-            <TextField
-              ref="passwordConfirmation"
-              type="password"
-              floatingLabelText={formatMessage(messages.passwordConfirmation)}
-              fullWidth={true}
-              errorText={errors.passwordConfirmation && formatMessage(errors.passwordConfirmation)}
-            />
-          </CardText>
-          <CardActions className="text-xs-center">
-            {action}
-          </CardActions>
-        </Card>
-      </form>
-    );
-  }
-
-  handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
 
-    this.setState({
-      loading: true,
-      errors: {},
-    });
+    setErrors({});
 
-    const email = this.refs.email.getValue();
-    const password = this.refs.password.getValue();
-    const passwordConfirmation = this.refs.passwordConfirmation.getValue();
-
-    if (password !== passwordConfirmation) {
-      this.setState({
-        errors: { passwordConfirmation: messages.invalidConfirmation },
-        loading: false,
-      });
+    if (values.password !== values.passwordConfirmation) {
+      setErrors({ passwordConfirmation: messages.invalidConfirmation });
     } else {
-      this.props.signup(email, password, this.props.locale);
+      setLoading(true);
+      dispatch(actions.auth.signup(values.email, values.password));
     }
   }
+
+  function handleValueChange(event) {
+    const { name, value } = event.target;
+
+    setValues((values) => ({
+      ...values,
+      [name]: value,
+    }));
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <Card>
+        <CardHeader
+          title={formatMessage(messages.signup)}
+          subtitle={formatMessage(messages.subtitle)}
+        />
+        <CardContent>
+          <TextField
+            name="email"
+            type="email"
+            value={values.email}
+            onChange={handleValueChange}
+            label={formatMessage(messages.email)}
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            error={Boolean(errors.email)}
+            helperText={errors.email && formatMessage(errors.email)}
+          />
+          <TextField
+            name="password"
+            type="password"
+            value={values.password}
+            onChange={handleValueChange}
+            label={formatMessage(messages.password)}
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            error={Boolean(errors.password)}
+            helperText={errors.password && formatMessage(errors.password)}
+          />
+          <TextField
+            name="passwordConfirmation"
+            type="password"
+            value={values.passwordConfirmation}
+            onChange={handleValueChange}
+            label={formatMessage(messages.passwordConfirmation)}
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            error={Boolean(errors.passwordConfirmation)}
+            helperText={errors.passwordConfirmation && formatMessage(errors.passwordConfirmation)}
+          />
+        </CardContent>
+        <CardActions className="text-xs-center">
+          {loading ? (
+            <CircularProgress size={20} />
+          ) : (
+            <Button type="submit" color="secondary" variant="contained">
+              {formatMessage(messages.signup)}
+            </Button>
+          )}
+        </CardActions>
+      </Card>
+    </form>
+  );
 }
 
-UserSignup.displayName = 'UserSignup';
-
-UserSignup.propTypes = {
-  locale: PropTypes.string.isRequired,
-  intl: intlShape.isRequired,
-};
-
-const mapStateToProps = (state) => {
-  return {
-    error: state.auth.errors.signup,
-    locale: state.profile.locale,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    signup: (email, password, locale) => {
-      dispatch(actions.auth.signup(email, password, locale));
-    },
-  };
-}
-
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(UserSignup));
+export default UserSignup;

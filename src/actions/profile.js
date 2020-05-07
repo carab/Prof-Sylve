@@ -1,15 +1,14 @@
 import firebase from 'utils/firebase';
 
-const refs = {
-  root() {
-    return firebase.database().ref();
-  },
-  user() {
-    return this.root().child('users').child(firebase.auth().currentUser.uid);
-  },
-};
+const rootRef = firebase.database().ref();
 
 const actions = {
+  setProfile(profile) {
+    return {
+      type: 'SET_PROFILE',
+      payload: profile,
+    };
+  },
   setLocale(locale) {
     return (dispatch) => {
       dispatch({
@@ -17,31 +16,34 @@ const actions = {
         payload: { locale },
       });
 
-      if (firebase.auth().currentUser) {
-        refs.user().child('profile/locale').set(locale);
+      const uid = firebase.auth().currentUser?.uid;
+
+      if (uid) {
+        rootRef.child(`users/${uid}/profile/locale`).set(locale);
       }
     };
   },
-  setProfile(profile) {
-    return (dispatch) => {
-      dispatch({
-        type: 'SET_PROFILE',
-        payload: profile,
-      });
+  setUsername(username, previousUsername) {
+    return async () => {
+      const uid = firebase.auth().currentUser?.uid;
 
-      refs.user().child('profile').set(profile);
-    };
-  },
-  setUsername(username, oldUsername) {
-    return () => {
-      // Add the new username and remove the old one only if it succeed
-      refs.root().child(`username_lookup/${username}`).set(firebase.auth().currentUser.uid).then(() => {
-        if (oldUsername) {
-          refs.root().child(`username_lookup/${oldUsername}`).remove();
+      if (uid) {
+        if (previousUsername) {
+          try {
+            await rootRef.child(`username_lookup/${previousUsername}`).remove();
+          } catch (error) {
+            console.error(error);
+          }
         }
 
-        refs.user().child('profile/username').set(username);
-      });
+        try {
+          await rootRef.child(`username_lookup/${username}`).set(uid);
+
+          return await rootRef.child(`users/${uid}/profile/username`).set(username);
+        } catch (error) {
+          console.error(error);
+        }
+      }
     };
   },
 };
