@@ -104,6 +104,7 @@ function PokemonMenu() {
         {pokemon ? (
           <>
             <MenuItem
+              onClick={handleClose}
               component={Link}
               to={formatMessage(messages.externalUrl, {
                 name: formatMessage({ id: 'pokemon.name.' + pokemon.id }),
@@ -115,8 +116,9 @@ function PokemonMenu() {
               <ListItemText primary={formatMessage(messages.externalService)} />
             </MenuItem>
             <MenuItem
+              onClick={handleClose}
               component={Link}
-              to={`/pokedex/${currentUsername}/pc/${parseInt((pokemon.id - 1) / BOX_SIZE)}`}
+              to={`/pokedex/${currentUsername}/pc/${Math.ceil(pokemon.id / BOX_SIZE)}`}
             >
               <ListItemIcon>
                 <ViewModuleIcon />
