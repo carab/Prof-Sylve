@@ -1,7 +1,8 @@
-import React, { useEffect, useMemo, useCallback } from 'react';
+import React, { useEffect, useMemo, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useHistory } from 'react-router-dom';
 import { defineMessages, useIntl } from 'react-intl';
+import { useDrag } from 'react-use-gesture';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
@@ -15,6 +16,9 @@ import PokedexBoxSwitcher from './PokedexBoxSwitcher';
 import Flex from 'components/Flex/Flex';
 
 import './Pc.css';
+
+/** Distance to which a next/previous box is triggered when swiping */
+const DRAG_TRESHOLD = 100;
 
 const messages = defineMessages({
   previousBox: { id: 'pokemon.pc.previousBox' },
@@ -95,6 +99,27 @@ function PokedexPc() {
     handleBoxNavigate(+1);
   }, [handleBoxNavigate]);
 
+  const [dragX, setDragX] = useState(0);
+  const bindDrag = useDrag(
+    ({ down, movement: [mx, my] }) => {
+      setDragX(down ? mx : 0);
+      if (!down) {
+        if (mx === -DRAG_TRESHOLD) {
+          handleBoxNext();
+        }
+        if (mx === DRAG_TRESHOLD) {
+          handleBoxPrevious();
+        }
+      }
+      // set({ x: down ? mx : 0, y: down ? my : 0 })
+    },
+    {
+      axis: 'x',
+      rubberband: true,
+      bounds: { left: -DRAG_TRESHOLD, right: DRAG_TRESHOLD },
+    },
+  );
+
   const activeBox = boxes.find((b) => b.value === currentBox);
 
   useEffect(() => {
@@ -139,7 +164,11 @@ function PokedexPc() {
               <NavigateBeforeIcon />
             </IconButton>
           </div>
-          <div className="PokedexPc__boxes">
+          <div
+            className="PokedexPc__box"
+            {...bindDrag()}
+            style={{ transform: `translate3d(${dragX}px , 0, 0)` }}
+          >
             {activeBox ? <PokedexBox box={activeBox} /> : null}
           </div>
           <div className="PokedexPc__nextBox">

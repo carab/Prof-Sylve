@@ -17,13 +17,14 @@
   position: relative;
 }
 
-.PokedexPc__boxes {
+.PokedexPc__box {
   overflow: auto;
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
   height: 100%;
+  transform: translate3d(0, 0, 0);
 }
 
 .PokedexPc__previousBox,
@@ -41,7 +42,7 @@
   .PokedexPc__view {
   }
 
-  .PokedexPc__boxes {
+  .PokedexPc__box {
     left: 60px;
     right: 60px;
   }
@@ -56,7 +57,7 @@
 
   .PokedexPc__previousBox {
     left: 5px;
-}
+  }
 
   .PokedexPc__nextBox {
     right: 5px;
