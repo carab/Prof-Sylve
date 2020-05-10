@@ -10,7 +10,8 @@
     "eject": "react-scripts eject",
     "serve": "serve -s build",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "firebase:deploy": "firebase deploy",
+    "release": "standard-version",
+    "deploy": "firebase deploy",
     "firebase:login": "firebase login --reauth"
   },
   "repository": "https://github.com/carab/Prof-Sylve",
@@ -64,6 +65,7 @@
     "serve": "^11.3.0",
     "sharp": "^0.25.2",
     "source-map-explorer": "^2.4.2",
+    "standard-version": "^8.0.0",
     "typescript": "~3.7.2"
   },
   "eslintConfig": {
