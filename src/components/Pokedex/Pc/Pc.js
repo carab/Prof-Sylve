@@ -63,7 +63,60 @@ function PokedexPc() {
     return boxes;
   }, [pokemons]);
 
+  const handleBoxChange = useCallback(
+    (box) => {
+      history.push(`/pokedex/${currentUsername}/pc/${box}`);
+    },
+    [currentUsername, history],
+  );
+
+  const handleBoxNavigate = useCallback(
+    (count) => {
+      const currentIndex = boxes.findIndex((b) => b.value === currentBox) ?? 0;
+      let newIndex = currentIndex + count;
+
+      if (newIndex < 0) {
+        newIndex = 0;
+      } else if (newIndex >= boxes.length) {
+        newIndex = boxes.length - 1;
+      }
+
+      const newBox = boxes[newIndex];
+      handleBoxChange(newBox.value);
+    },
+    [boxes, currentBox, handleBoxChange],
+  );
+
+  const handleBoxPrevious = useCallback(() => {
+    handleBoxNavigate(-1);
+  }, [handleBoxNavigate]);
+
+  const handleBoxNext = useCallback(() => {
+    handleBoxNavigate(+1);
+  }, [handleBoxNavigate]);
+
   const activeBox = boxes.find((b) => b.value === currentBox);
+
+  useEffect(() => {
+    function handleKeyDown(event) {
+      switch (event.key) {
+        case 'ArrowLeft':
+          handleBoxPrevious();
+          break;
+        case 'ArrowRight':
+          handleBoxNext();
+          break;
+        default:
+          break;
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleBoxNext, handleBoxPrevious]);
 
   return (
     <div className="PokedexPc">
@@ -102,32 +155,6 @@ function PokedexPc() {
       </Paper>
     </div>
   );
-
-  function handleBoxChange(box) {
-    history.push(`/pokedex/${currentUsername}/pc/${box}`);
-  }
-
-  function handleBoxNavigate(count) {
-    const currentIndex = boxes.findIndex((b) => b.value === currentBox) ?? 0;
-    let newIndex = currentIndex + count;
-
-    if (newIndex < 0) {
-      newIndex = 0;
-    } else if (newIndex >= boxes.length) {
-      newIndex = boxes.length - 1;
-    }
-
-    const newBox = boxes[newIndex];
-    handleBoxChange(newBox.value);
-  }
-
-  function handleBoxPrevious() {
-    handleBoxNavigate(-1);
-  }
-
-  function handleBoxNext() {
-    handleBoxNavigate(+1);
-  }
 }
 
 export default PokedexPc;
