@@ -1,11 +1,6 @@
 Changelog
 =========
 
-## v2.0.0 (2020-05-09)
-
-- Massive refactoring by updating every dependencies.
-- Only refactor saved data.
-
 ## v1.3.0 (2020-05-02)
 
 - Add Pokémon from Sword/Shield.
